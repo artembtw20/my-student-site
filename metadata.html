@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ метаданных</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🕵️ Анализ метаданных</h1>
+                    <p class="subtitle" style="font-size: 15px;">Информация о файле и ссылки для глубокого анализа</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== ЗАГРУЗКА ФОТО ===== -->
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <div style="font-size: 48px; margin-bottom: 10px;">🖼️</div>
+                <p style="color: var(--text-gray);">Нажми или перетащи сюда фото</p>
+                <p style="font-size: 13px; color: var(--text-gray); opacity: 0.6;">Поддерживаются: JPEG, PNG, WebP, TIFF</p>
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+            </div>
+
+            <!-- ===== РЕЗУЛЬТАТ ===== -->
+            <div id="resultArea" style="display: none; margin-top: 20px;">
+
+                <!-- Превью -->
+                <div class="preview-container">
+                    <img id="previewImage" src="" alt="Превью" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-medium);">
+                </div>
+
+                <!-- Информация о файле -->
+                <div class="metadata-section">
+                    <h3 style="color: var(--text-white); margin-bottom: 12px;">📋 Информация о файле</h3>
+                    <div class="metadata-grid" id="fileInfoGrid">
+                        <!-- Заполняется через JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Ссылки на внешние сервисы -->
+                <div class="metadata-section" style="margin-top: 16px;">
+                    <h3 style="color: var(--text-white); margin-bottom: 12px;">🔍 Глубокий анализ Exif</h3>
+                    <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 12px;">
+                        Эти сервисы покажут все скрытые метаданные, включая GPS, модель камеры и многое другое:
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <a href="#" id="exifDataLink" target="_blank" class="generate-btn" style="width: auto; padding: 10px 24px; font-size: 14px; text-decoration: none; text-align: center;">
+                            📸 ExifData.com
+                        </a>
+                        <a href="#" id="exifToolLink" target="_blank" class="generate-btn" style="width: auto; padding: 10px 24px; font-size: 14px; text-decoration: none; text-align: center; background: #3498db;">
+                            🛠️ ExifTool
+                        </a>
+                    </div>
+                    <p style="color: var(--text-gray); font-size: 13px; margin-top: 12px; opacity: 0.7;">
+                        ⚠️ Для работы сервисов нужно интернет-соединение. Фото загружается на их серверы.
+                    </p>
+                </div>
+
+                <!-- RAW -->
+                <div style="margin-top: 16px;">
+                    <button class="generate-btn" onclick="toggleRawData()" style="width: auto; padding: 8px 20px; font-size: 14px;">📄 Показать RAW-данные</button>
+                    <pre id="rawData" style="display: none; background: var(--bg-input); padding: 15px; border-radius: var(--radius-small); margin-top: 10px; color: var(--text-gray); font-size: 13px; max-height: 300px; overflow: auto; white-space: pre-wrap; word-break: break-all;"></pre>
+                </div>
+            </div>
+
+            <!-- ===== ИСТОРИЯ ===== -->
+            <div class="history-area" style="margin-top: 20px;">
+                <div class="history-header">
+                    <span>📋 История анализов</span>
+                    <button class="clear-history-btn" onclick="clearMetadataHistory()">🗑️ Очистить</button>
+                </div>
+                <div id="metadataHistoryList" class="history-list">
+                    <span style="color: var(--text-gray); font-size: 14px;">История пуста</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== ОБРАБОТКА ФАЙЛА =====
+        function handleFile(file) {
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('⚠️ Пожалуйста, выбери изображение!');
+                return;
+            }
+
+            // Превью
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('previewImage').src = e.target.result;
+                document.getElementById('resultArea').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            // Информация о файле
+            const fileInfo = [
+                { label: '📄 Имя файла', value: file.name },
+                { label: '📦 Тип файла', value: file.type || 'Неизвестно' },
+                { label: '📏 Размер', value: formatFileSize(file.size) },
+                { label: '📅 Дата изменения', value: new Date(file.lastModified).toLocaleString('ru-RU') },
+                { label: '🖼️ Ширина', value: '— (загрузите для получения)' },
+                { label: '🖼️ Высота', value: '— (загрузите для получения)' }
+            ];
+
+            const grid = document.getElementById('fileInfoGrid');
+            grid.innerHTML = fileInfo.map(item => `
+                        <div class="metadata-item">
+                            <span class="metadata-label">${item.label}</span>
+                            <span class="metadata-value">${item.value}</span>
+                        </div>
+                    `).join('');
+
+            // Получаем размеры изображения
+            const img = new Image();
+            img.onload = function () {
+                const items = grid.querySelectorAll('.metadata-item');
+                if (items.length >= 6) {
+                    items[4].querySelector('.metadata-value').textContent = img.width + ' px';
+                    items[5].querySelector('.metadata-value').textContent = img.height + ' px';
+                }
+            };
+            img.src = URL.createObjectURL(file);
+
+            // Ссылки на внешние сервисы (с превью)
+            const previewDataUrl = URL.createObjectURL(file);
+            document.getElementById('exifDataLink').href = `https://exifdata.com/?img=${encodeURIComponent(previewDataUrl)}`;
+            document.getElementById('exifToolLink').href = `https://exif.tools/?img=${encodeURIComponent(previewDataUrl)}`;
+
+            // Сохраняем в историю
+            addToMetadataHistory(file.name, file.size);
+
+            // RAW-данные
+            window._rawData = {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: new Date(file.lastModified).toISOString()
+            };
+        }
+
+        // ===== ФОРМАТИРОВАНИЕ РАЗМЕРА =====
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' Б';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' КБ';
+            if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' МБ';
+            return (bytes / 1073741824).toFixed(1) + ' ГБ';
+        }
+
+        // ===== Toggle RAW-данных =====
+        function toggleRawData() {
+            const el = document.getElementById('rawData');
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+                el.textContent = JSON.stringify(window._rawData, null, 2);
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        // ===== ИСТОРИЯ =====
+        function addToMetadataHistory(filename, size) {
+            let history = JSON.parse(localStorage.getItem('metadataHistory')) || [];
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+            history.unshift({
+                filename: filename,
+                date: timeStr,
+                size: formatFileSize(size)
+            });
+
+            if (history.length > 50) history.pop();
+            localStorage.setItem('metadataHistory', JSON.stringify(history));
+            renderMetadataHistory();
+        }
+
+        function renderMetadataHistory() {
+            const history = JSON.parse(localStorage.getItem('metadataHistory')) || [];
+            const list = document.getElementById('metadataHistoryList');
+
+            if (history.length === 0) {
+                list.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">История пуста</span>';
+                return;
+            }
+
+            list.innerHTML = history.map((item, index) => `
+                        <div class="history-item">
+                            <span style="flex:1; color: var(--text-light); font-size:13px;">${item.filename}</span>
+                            <span style="font-size:12px; color:var(--text-gray);">${item.size}</span>
+                            <span style="font-size:11px; color:var(--text-gray);">${item.date}</span>
+                            <button class="history-delete" onclick="removeMetadataHistoryItem(${index})">✕</button>
+                        </div>
+                    `).join('');
+        }
+
+        function removeMetadataHistoryItem(index) {
+            let history = JSON.parse(localStorage.getItem('metadataHistory')) || [];
+            history.splice(index, 1);
+            localStorage.setItem('metadataHistory', JSON.stringify(history));
+            renderMetadataHistory();
+        }
+
+        function clearMetadataHistory() {
+            if (confirm('🗑️ Удалить всю историю?')) {
+                localStorage.removeItem('metadataHistory');
+                renderMetadataHistory();
+            }
+        }
+
+        // ===== DRAG & DROP =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const zone = document.getElementById('uploadZone');
+
+            zone.addEventListener('dragover', function (e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--red-primary)';
+                this.style.background = 'rgba(232, 0, 32, 0.1)';
+            });
+
+            zone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--border-color)';
+                this.style.background = 'transparent';
+            });
+
+            zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--border-color)';
+                this.style.background = 'transparent';
+                const file = e.dataTransfer.files[0];
+                if (file) handleFile(file);
+            });
+        });
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function () {
+            loadTheme();
+            renderMetadataHistory();
+            console.log('🕵️ Анализатор метаданных загружен (упрощённая версия)');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

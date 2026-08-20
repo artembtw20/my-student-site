@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">📅 Расписание</h1>
+                    <p class="subtitle" style="font-size: 15px;">2-й семестр · Первая подгруппа</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <!-- Чипсы -->
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+                <span class="chip">📌 1-я неделя</span>
+                <span class="chip chip-blue">📌 2-я неделя</span>
+                <span class="chip chip-green">✅ Сегодня: 4 пары</span>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ НЕДЕЛЬ ===== -->
+            <div class="schedule-tabs animate-on-scroll">
+                <button class="schedule-tab active" data-week="1" onclick="switchWeek(1)">📌 1-я неделя</button>
+                <button class="schedule-tab" data-week="2" onclick="switchWeek(2)">📌 2-я неделя</button>
+            </div>
+
+            <!-- ===== КОНТЕЙНЕР ДЛЯ ТАБЛИЦЫ ===== -->
+            <div id="scheduleContainer" class="schedule-table-wrapper animate-on-scroll" style="margin-top:15px;">
+                <!-- Заполняется через JavaScript -->
+            </div>
+
+            <!-- ===== ПОДСКАЗКА ===== -->
+            <div style="margin-top: 12px; font-size: 13px; color: var(--text-gray); text-align: center;">
+                ✏️ Кликни по ячейке, чтобы изменить название или преподавателя
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== КНОПКА "НАВЕРХ" ===== -->
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="schedule-data.js"></script>
+    <script>
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== РЕНДЕРИНГ ТАБЛИЦЫ =====
+        function renderSchedule(weekNumber) {
+            const data = getSchedule();
+            const weekKey = weekNumber === 1 ? 'week1' : 'week2';
+            const weekData = data[weekKey];
+
+            // ⚠️ ДОБАВЛЯЕМ СУББОТУ!
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const dayNames = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            const timeSlots = [
+                '08:15 – 09:45',
+                '09:55 – 11:25',
+                '11:35 – 13:05',
+                '14:00 – 15:30',
+                '15:40 – 17:10',
+                '17:20 – 18:50'
+            ];
+
+            let html = `
+            <div style="overflow-x: auto;">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Время</th>
+                            ${dayNames.map(d => `<th>${d}</th>`).join('')}
+                            <th style="width:40px;">🔄</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+            for (let row = 0; row < timeSlots.length; row++) {
+                html += `<tr>`;
+                html += `<td class="time">${timeSlots[row]}</td>`;
+
+                for (let col = 0; col < days.length; col++) {
+                    const day = days[col];
+                    // Защита от undefined
+                    const lesson = (weekData[day] && weekData[day][row])
+                        ? weekData[day][row]
+                        : { time: timeSlots[row], name: '—', teacher: '' };
+
+                    const displayName = lesson.name || '—';
+                    const displayTeacher = lesson.teacher || '';
+                    // Проверяем и '-' и '—' как пустые
+                    const isPlaceholder = displayName === '—' || displayName === '-' || displayName === '';
+
+                    html += `
+                    <td class="subject editable-cell"
+                        data-week="${weekKey}"
+                        data-day="${day}"
+                        data-row="${row}"
+                        onclick="editCell(this)"
+                        style="cursor:pointer; ${isPlaceholder ? 'color:var(--text-gray);' : ''}">
+                        <div class="cell-content">
+                            <div class="cell-name">${displayName}</div>
+                            ${displayTeacher ? `<div class="cell-teacher" style="font-size:11px; color:var(--text-gray);">${displayTeacher}</div>` : ''}
+                        </div>
+                    </td>
+                `;
+                }
+
+                // Кнопка "Сбросить строку"
+                html += `
+                <td style="text-align:center;">
+                    <button onclick="resetRow('${weekKey}', ${row})"
+                            style="background:none; border:none; color:var(--text-gray); cursor:pointer; font-size:14px;"
+                            title="Сбросить строку к стандарту">
+                        🔄
+                    </button>
+                </td>
+            `;
+
+                html += `</tr>`;
+            }
+
+            html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+            return html;
+        }
+
+        // ===== РЕДАКТИРОВАНИЕ ЯЧЕЙКИ =====
+        function editCell(cell) {
+            const week = cell.dataset.week;
+            const day = cell.dataset.day;
+            const row = parseInt(cell.dataset.row);
+
+            const data = getSchedule();
+            const lesson = data[week][day][row] || { name: '', teacher: '' };
+
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                        position: fixed; top:0; left:0; width:100%; height:100%;
+                        background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+                        display: flex; justify-content:center; align-items:center;
+                        z-index: 2000; padding:20px;
+                    `;
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                        background: var(--bg-card); border-radius:16px; padding:24px;
+                        max-width:500px; width:100%; border:1px solid var(--border-color);
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+                    `;
+
+            modal.innerHTML = `
+                        <h3 style="color:var(--text-white); margin-bottom:16px;">✏️ Редактировать пару</h3>
+                        <div style="margin-bottom:12px;">
+                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">📚 Название</label>
+                            <input id="editName" value="${lesson.name || ''}"
+                                   placeholder="Название пары"
+                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                        </div>
+                        <div style="margin-bottom:16px;">
+                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">👨‍🏫 Преподаватель / аудитория</label>
+                            <input id="editTeacher" value="${lesson.teacher || ''}"
+                                   placeholder="ауд. 123 · Иванов И.И."
+                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button onclick="saveCell('${week}','${day}',${row})"
+                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:var(--red-primary); color:white; font-weight:600; cursor:pointer;">
+                                💾 Сохранить
+                            </button>
+                            <button onclick="this.closest('div[style]').remove()"
+                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:#666; color:white; font-weight:600; cursor:pointer;">
+                                ❌ Отмена
+                            </button>
+                        </div>
+                    `;
+
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            setTimeout(() => document.getElementById('editName').focus(), 100);
+
+            overlay.addEventListener('click', function (e) {
+                if (e.target === this) this.remove();
+            });
+
+            window._editContext = { week, day, row };
+        }
+
+        // ===== СОХРАНЕНИЕ ЯЧЕЙКИ =====
+        function saveCell(week, day, row) {
+            const name = document.getElementById('editName').value.trim();
+            const teacher = document.getElementById('editTeacher').value.trim();
+
+            const data = getSchedule();
+            data[week][day][row] = {
+                time: data[week][day][row]?.time || '',
+                name: name || '—',
+                teacher: teacher || ''
+            };
+
+            saveSchedule(data);
+
+            document.querySelector('div[style*="fixed"]')?.remove();
+
+            const activeWeek = document.querySelector('.schedule-tab.active');
+            const weekNum = activeWeek ? parseInt(activeWeek.dataset.week) : 1;
+            renderCurrentWeek(weekNum);
+        }
+
+        // ===== СБРОС СТРОКИ =====
+        function resetRow(weekKey, rowIndex) {
+            if (!confirm(`Сбросить все пары в этой строке (${rowIndex + 1}-я пара) к стандартному расписанию?`)) return;
+
+            const data = getSchedule();
+            const defaultData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            days.forEach(day => {
+                if (defaultData[weekKey][day] && defaultData[weekKey][day][rowIndex]) {
+                    data[weekKey][day][rowIndex] = {
+                        time: defaultData[weekKey][day][rowIndex].time || '',
+                        name: defaultData[weekKey][day][rowIndex].name || '—',
+                        teacher: defaultData[weekKey][day][rowIndex].teacher || ''
+                    };
+                }
+            });
+
+            saveSchedule(data);
+
+            const activeWeek = document.querySelector('.schedule-tab.active');
+            const weekNum = activeWeek ? parseInt(activeWeek.dataset.week) : 1;
+            renderCurrentWeek(weekNum);
+        }
+
+        // ===== СБРОС ВСЕЙ НЕДЕЛИ =====
+        function resetWeek(weekNum) {
+            const weekKey = weekNum === 1 ? 'week1' : 'week2';
+            if (!confirm(`Сбросить всю ${weekNum}-ю неделю к стандартному расписанию?`)) return;
+
+            const data = getSchedule();
+            const defaultData = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+            data[weekKey] = defaultData[weekKey];
+            saveSchedule(data);
+
+            renderCurrentWeek(weekNum);
+        }
+
+        // ===== СБРОС ВСЕГО =====
+        function resetAllSchedule() {
+            if (!confirm('⚠️ Сбросить всё расписание (обе недели) к стандартному?')) return;
+            resetSchedule();
+            const activeWeek = document.querySelector('.schedule-tab.active');
+            const weekNum = activeWeek ? parseInt(activeWeek.dataset.week) : 1;
+            renderCurrentWeek(weekNum);
+        }
+
+        // ===== РЕНДЕРИНГ ТЕКУЩЕЙ НЕДЕЛИ =====
+        function renderCurrentWeek(weekNum) {
+            const container = document.getElementById('scheduleContainer');
+            container.innerHTML = renderSchedule(weekNum);
+        }
+
+        // ===== ПЕРЕКЛЮЧЕНИЕ НЕДЕЛЬ =====
+        function switchWeek(weekNum) {
+            document.querySelectorAll('.schedule-tab').forEach(tab => {
+                tab.classList.toggle('active', parseInt(tab.dataset.week) === weekNum);
+            });
+
+            renderCurrentWeek(weekNum);
+        }
+
+        // ===== КНОПКА "НАВЕРХ" =====
+        window.addEventListener('scroll', function () {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== АНИМАЦИЯ =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        });
+
+        // ===== ОПРЕДЕЛЕНИЕ НЕДЕЛИ =====
+        function getCurrentWeekNumber() {
+            const now = new Date();
+            const startDate = new Date(2026, 1, 1);
+            const diff = Math.floor((now - startDate) / (7 * 24 * 60 * 60 * 1000));
+            return (diff % 2 === 0) ? 1 : 2;
+        }
+
+        // ===== ДОБАВЛЯЕМ КНОПКИ СБРОСА =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabsContainer = document.querySelector('.schedule-tabs');
+            if (tabsContainer) {
+                const resetButtons = document.createElement('div');
+                resetButtons.style.cssText = 'display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; justify-content:center;';
+                resetButtons.innerHTML = `
+                            <button onclick="resetWeek(1)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22;">
+                                🔄 Сброс 1-й недели
+                            </button>
+                            <button onclick="resetWeek(2)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22;">
+                                🔄 Сброс 2-й недели
+                            </button>
+                            <button onclick="resetAllSchedule()" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e74c3c;">
+                                🔄 Сброс всего
+                            </button>
+                        `;
+                tabsContainer.parentNode.insertBefore(resetButtons, tabsContainer.nextSibling);
+            }
+        });
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function () {
+            loadTheme();
+            const currentWeek = getCurrentWeekNumber();
+            switchWeek(currentWeek);
+            console.log('📅 Расписание с редактором загружено');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

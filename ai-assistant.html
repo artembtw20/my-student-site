@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИИ-помощник</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🤖 ИИ-помощник</h1>
+                    <p class="subtitle" style="font-size: 15px;">DeepSeek анализирует твои данные и даёт персонализированные советы</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== КНОПКИ ===== -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="generate-btn" onclick="runAttendanceAdvice()" style="width: auto; padding: 12px 25px;">
+                    📊 Анализ посещаемости
+                </button>
+                <button class="generate-btn" onclick="runDeadlinePlan()" style="width: auto; padding: 12px 25px; background: #f39c12;">
+                    📅 План дедлайнов
+                </button>
+                <button class="generate-btn" onclick="runWeeklyReport()" style="width: auto; padding: 12px 25px; background: #2ecc71;">
+                    🎯 ИИ-коуч
+                </button>
+                <button class="generate-btn" onclick="clearResult()" style="width: auto; padding: 12px 25px; background: #666;">
+                    🗑️ Очистить
+                </button>
+            </div>
+
+            <!-- ===== РЕЗУЛЬТАТ ===== -->
+            <div id="resultArea" class="ai-result">
+                <div style="text-align:center; color: var(--text-gray); padding: 40px 0; font-size: 16px;">
+                    🤖 Нажми на одну из кнопок, чтобы получить персонализированный совет от ИИ
+                </div>
+            </div>
+
+            <!-- ===== СТАТУС ===== -->
+            <div id="statusMessage" style="margin-top: 12px; font-size: 14px; color: var(--text-gray);"></div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="ai-helper.js"></script>
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== ФУНКЦИИ ВЫЗОВА =====
+        async function runAttendanceAdvice() {
+            const area = document.getElementById('resultArea');
+            const status = document.getElementById('statusMessage');
+
+            status.textContent = '⏳ Анализ посещаемости...';
+            status.style.color = 'var(--text-gray)';
+            area.innerHTML = '<div style="text-align:center; padding: 20px;">⏳ Запрос к ИИ... (может занять до 10 секунд)</div>';
+
+            try {
+                const result = await getAttendanceAdvice();
+                area.innerHTML = formatResult(result);
+                status.textContent = '✅ Анализ завершён';
+                status.style.color = '#27ae60';
+            } catch (error) {
+                area.innerHTML = `<div style="color: #e74c3c; padding: 20px;">❌ Ошибка: ${error.message}</div>`;
+                status.textContent = '❌ Ошибка';
+                status.style.color = '#e74c3c';
+            }
+        }
+
+        async function runDeadlinePlan() {
+            const area = document.getElementById('resultArea');
+            const status = document.getElementById('statusMessage');
+
+            status.textContent = '⏳ Составление плана...';
+            status.style.color = 'var(--text-gray)';
+            area.innerHTML = '<div style="text-align:center; padding: 20px;">⏳ Запрос к ИИ... (может занять до 10 секунд)</div>';
+
+            try {
+                const result = await getDeadlinePlan();
+                area.innerHTML = formatResult(result);
+                status.textContent = '✅ План составлен';
+                status.style.color = '#27ae60';
+            } catch (error) {
+                area.innerHTML = `<div style="color: #e74c3c; padding: 20px;">❌ Ошибка: ${error.message}</div>`;
+                status.textContent = '❌ Ошибка';
+                status.style.color = '#e74c3c';
+            }
+        }
+
+        async function runWeeklyReport() {
+            const area = document.getElementById('resultArea');
+            const status = document.getElementById('statusMessage');
+
+            status.textContent = '⏳ Генерация отчёта...';
+            status.style.color = 'var(--text-gray)';
+            area.innerHTML = '<div style="text-align:center; padding: 20px;">⏳ Запрос к ИИ... (может занять до 10 секунд)</div>';
+
+            try {
+                const result = await getWeeklyReport();
+                area.innerHTML = formatResult(result);
+                status.textContent = '✅ Отчёт готов';
+                status.style.color = '#27ae60';
+            } catch (error) {
+                area.innerHTML = `<div style="color: #e74c3c; padding: 20px;">❌ Ошибка: ${error.message}</div>`;
+                status.textContent = '❌ Ошибка';
+                status.style.color = '#e74c3c';
+            }
+        }
+
+        function clearResult() {
+            const area = document.getElementById('resultArea');
+            const status = document.getElementById('statusMessage');
+            area.innerHTML = `
+                    <div style="text-align:center; color: var(--text-gray); padding: 40px 0; font-size: 16px;">
+                        🤖 Нажми на одну из кнопок, чтобы получить персонализированный совет от ИИ
+                    </div>
+                `;
+            status.textContent = '';
+        }
+
+        function formatResult(text) {
+            // Преобразуем текст в HTML (разбиваем на абзацы)
+            const paragraphs = text.split('\n').filter(p => p.trim() !== '');
+            return paragraphs.map(p => {
+                // Проверяем, является ли строка заголовком (начинается с # или **)
+                if (p.startsWith('**') && p.endsWith('**')) {
+                    return `<h3 style="color: var(--text-white); margin: 12px 0 8px 0;">${p.replace(/\*\*/g, '')}</h3>`;
+                }
+                if (p.startsWith('#') || p.startsWith('##')) {
+                    return `<h3 style="color: var(--text-white); margin: 12px 0 8px 0;">${p.replace(/^#+ /, '')}</h3>`;
+                }
+                if (p.startsWith('•') || p.startsWith('-')) {
+                    return `<div style="color: var(--text-light); padding-left: 20px; margin: 4px 0;">${p}</div>`;
+                }
+                return `<p style="color: var(--text-light); line-height: 1.7; margin: 6px 0;">${p}</p>`;
+            }).join('');
+        }
+
+        window.onload = function () {
+            loadTheme();
+            console.log('🤖 ИИ-помощник загружен');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

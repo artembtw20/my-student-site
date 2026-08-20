@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сканер поддоменов</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🌐 Сканер поддоменов</h1>
+                    <p class="subtitle" style="font-size: 15px;">Находит поддомены по домену с помощью DNS-запросов</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== ПОИСК ===== -->
+            <div class="subdomain-search">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <input type="text" id="domainInput" placeholder="Введите домен (например: google.com)" style="flex:1; padding:14px 20px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:200px;">
+                    <button class="generate-btn" onclick="startScan()" style="width:auto; padding:14px 35px;">🔍 Сканировать</button>
+                    <button class="generate-btn" onclick="stopScan()" style="width:auto; padding:14px 25px; background:#666;" id="stopBtn" disabled>⏹️ Стоп</button>
+                </div>
+                <div id="statusMessage" style="margin-top:12px; font-size:14px; color:var(--text-gray);"></div>
+            </div>
+
+            <!-- ===== СТАТИСТИКА ===== -->
+            <div class="subdomain-stats" id="statsArea" style="display: none;">
+                <div class="subdomain-stat">
+                    <span class="subdomain-stat-label">📊 Всего проверено</span>
+                    <span class="subdomain-stat-value" id="totalChecked">0</span>
+                </div>
+                <div class="subdomain-stat">
+                    <span class="subdomain-stat-label">🟢 Найдено</span>
+                    <span class="subdomain-stat-value" id="foundCount" style="color:#27ae60;">0</span>
+                </div>
+                <div class="subdomain-stat">
+                    <span class="subdomain-stat-label">🔴 Не найдено</span>
+                    <span class="subdomain-stat-value" id="notFoundCount" style="color:#e74c3c;">0</span>
+                </div>
+                <div class="subdomain-stat">
+                    <span class="subdomain-stat-label">⏱️ Время</span>
+                    <span class="subdomain-stat-value" id="scanTime">0с</span>
+                </div>
+            </div>
+
+            <!-- ===== РЕЗУЛЬТАТЫ ===== -->
+            <div id="resultsArea" style="margin-top: 20px;">
+                <div id="resultsList" class="subdomain-list">
+                    <div style="text-align:center; color: var(--text-gray); padding: 30px 0;">
+                        🌐 Введите домен и нажмите «Сканировать»
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ИСТОРИЯ ===== -->
+            <div class="history-area" style="margin-top: 25px;">
+                <div class="history-header">
+                    <span>📋 История сканирований</span>
+                    <button class="clear-history-btn" onclick="clearSubdomainHistory()">🗑️ Очистить</button>
+                </div>
+                <div id="subdomainHistoryList" class="history-list">
+                    <span style="color: var(--text-gray); font-size: 14px;">История пуста</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        let isScanning = false;
+        let abortController = null;
+        let foundSubdomains = [];
+        let notFoundSubdomains = [];
+        let startTime = 0;
+
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== СПИСОК ПОПУЛЯРНЫХ ПОДДОМЕНОВ =====
+        const commonSubdomains = [
+            'www', 'mail', 'ftp', 'localhost', 'webmail', 'smtp', 'pop', 'ns1', 'ns2', 'webdisk',
+            'ns3', 'ns4', 'ns5', 'ns6', 'ns7', 'ns8', 'ns9', 'ns10', 'admin', 'cpanel',
+            'whm', 'autodiscover', 'autoconfig', 'm', 'imap', 'test', 'ns', 'blog', 'pop3',
+            'dev', 'www2', 'help', 'support', 'api', 'beta', 'shop', 'ftp2', 'sql', 'mail2',
+            'new', 'vps', 'smtp2', 'info', 'web', 'cloud', 'app', 'demo', 'server', 'secure',
+            'vpn', 'remote', 'git', 'jenkins', 'jira', 'confluence', 'staging', 'backup',
+            'monitor', 'stats', 'analytics', 'media', 'cdn', 'static', 'assets', 'images',
+            'video', 'download', 'upload', 'files', 'docs', 'wiki', 'forums', 'community',
+            'news', 'events', 'calendar', 'contacts', 'directory', 'maps', 'translate',
+            'books', 'music', 'play', 'plus', 'drive', 'photos', 'podcasts', 'sites',
+            'groups', 'answers', 'finance', 'newsletters', 'jobs', 'careers', 'press',
+            'about', 'team', 'partners', 'clients', 'dashboard', 'manage', 'system',
+            'backstage', 'build', 'code', 'deploy', 'release', 'review', 'sandbox',
+            'stage', 'test2', 'dev2', 'api2', 'beta2', 'production', 'prod', 'live',
+            'edge', 'gateway', 'auth', 'login', 'signin', 'register', 'account',
+            'profile', 'settings', 'preferences', 'user', 'users', 'member', 'members',
+            'store', 'cart', 'checkout', 'payment', 'orders', 'billing', 'invoice',
+            'subscription', 'upgrade', 'premium', 'enterprise', 'business'
+        ];
+
+        // ===== DNS-ПРОВЕРКА =====
+        async function checkSubdomain(subdomain, domain) {
+            const fullDomain = `${subdomain}.${domain}`;
+            try {
+                // Используем Google DNS-over-HTTPS для проверки
+                const response = await fetch(
+                    `https://dns.google/resolve?name=${encodeURIComponent(fullDomain)}&type=A`,
+                    { signal: abortController.signal }
+                );
+                const data = await response.json();
+                if (data.Answer && data.Answer.length > 0) {
+                    return { subdomain: fullDomain, exists: true, ips: data.Answer.map(a => a.data) };
+                } else {
+                    return { subdomain: fullDomain, exists: false };
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return { subdomain: fullDomain, exists: false, aborted: true };
+                }
+                return { subdomain: fullDomain, exists: false };
+            }
+        }
+
+        // ===== СТАРТ СКАНИРОВАНИЯ =====
+        async function startScan() {
+            const domain = document.getElementById('domainInput').value.trim();
+            const statusEl = document.getElementById('statusMessage');
+
+            if (!domain) {
+                statusEl.textContent = '⚠️ Введите домен';
+                statusEl.style.color = '#f39c12';
+                return;
+            }
+
+            // Проверка формата домена
+            if (!domain.includes('.') || domain.includes(' ')) {
+                statusEl.textContent = '⚠️ Введите корректный домен (например: google.com)';
+                statusEl.style.color = '#e74c3c';
+                return;
+            }
+
+            if (isScanning) return;
+
+            isScanning = true;
+            abortController = new AbortController();
+            document.querySelector('[onclick="startScan()"]').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            statusEl.textContent = '⏳ Сканирование... (может занять несколько минут)';
+            statusEl.style.color = 'var(--text-gray)';
+
+            foundSubdomains = [];
+            notFoundSubdomains = [];
+            startTime = Date.now();
+
+            document.getElementById('statsArea').style.display = 'grid';
+            document.getElementById('totalChecked').textContent = '0';
+            document.getElementById('foundCount').textContent = '0';
+            document.getElementById('notFoundCount').textContent = '0';
+            document.getElementById('scanTime').textContent = '0с';
+            document.getElementById('resultsList').innerHTML = '<div style="text-align:center; color: var(--text-gray); padding: 20px;">⏳ Сканирование... (пожалуйста, подождите)</div>';
+
+            try {
+                let checked = 0;
+                const batchSize = 20;
+                const allSubdomains = [...commonSubdomains];
+
+                // Добавляем случайные поддомены для расширения поиска
+                for (let i = 0; i < 50; i++) {
+                    const random = Math.random().toString(36).substring(2, 8);
+                    allSubdomains.push(random);
+                }
+
+                for (let i = 0; i < allSubdomains.length; i += batchSize) {
+                    if (!isScanning) break;
+                    const batch = allSubdomains.slice(i, i + batchSize);
+                    const promises = batch.map(sub => checkSubdomain(sub, domain));
+                    const results = await Promise.all(promises);
+
+                    results.forEach(result => {
+                        checked++;
+                        if (result.exists) {
+                            foundSubdomains.push(result);
+                        } else {
+                            notFoundSubdomains.push(result);
+                        }
+                    });
+
+                    // Обновляем статистику
+                    document.getElementById('totalChecked').textContent = checked;
+                    document.getElementById('foundCount').textContent = foundSubdomains.length;
+                    document.getElementById('notFoundCount').textContent = notFoundSubdomains.length;
+                    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                    document.getElementById('scanTime').textContent = elapsed + 'с';
+
+                    // Обновляем список найденных
+                    renderResults();
+
+                    // Небольшая задержка между батчами
+                    await new Promise(r => setTimeout(r, 100));
+                }
+
+                if (isScanning) {
+                    statusEl.textContent = `✅ Сканирование завершено! Найдено ${foundSubdomains.length} поддоменов`;
+                    statusEl.style.color = '#27ae60';
+                    addToSubdomainHistory(domain, foundSubdomains.length);
+                }
+
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    statusEl.textContent = '❌ Ошибка: ' + error.message;
+                    statusEl.style.color = '#e74c3c';
+                    console.error(error);
+                }
+            } finally {
+                isScanning = false;
+                document.querySelector('[onclick="startScan()"]').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        // ===== ОСТАНОВКА =====
+        function stopScan() {
+            if (abortController) {
+                abortController.abort();
+                isScanning = false;
+                document.getElementById('statusMessage').textContent = '⏹️ Сканирование остановлено';
+                document.getElementById('statusMessage').style.color = '#f39c12';
+                document.querySelector('[onclick="startScan()"]').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        // ===== ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ =====
+        function renderResults() {
+            const list = document.getElementById('resultsList');
+            if (foundSubdomains.length === 0) {
+                list.innerHTML = `
+                    <div style="text-align:center; color: var(--text-gray); padding: 20px;">
+                        🔍 Поддомены не найдены
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = foundSubdomains.map(item => `
+                <div class="subdomain-item found">
+                    <span class="subdomain-name">🟢 ${item.subdomain}</span>
+                    <span class="subdomain-ips">${item.ips ? item.ips.join(', ') : '—'}</span>
+                    <a href="http://${item.subdomain}" target="_blank" class="subdomain-link">🔗</a>
+                </div>
+            `).join('');
+        }
+
+        // ===== ИСТОРИЯ =====
+        function addToSubdomainHistory(domain, found) {
+            let history = JSON.parse(localStorage.getItem('subdomainHistory')) || [];
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+            history.unshift({
+                domain: domain,
+                found: found,
+                date: timeStr
+            });
+
+            if (history.length > 50) history.pop();
+            localStorage.setItem('subdomainHistory', JSON.stringify(history));
+            renderSubdomainHistory();
+        }
+
+        function renderSubdomainHistory() {
+            const history = JSON.parse(localStorage.getItem('subdomainHistory')) || [];
+            const list = document.getElementById('subdomainHistoryList');
+
+            if (history.length === 0) {
+                list.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">История пуста</span>';
+                return;
+            }
+
+            list.innerHTML = history.map((item, index) => `
+                <div class="history-item">
+                    <span style="color: var(--text-light); font-size:13px;">${item.domain}</span>
+                    <span style="color: #27ae60;">🟢 ${item.found} поддоменов</span>
+                    <span style="font-size:11px; color:var(--text-gray);">${item.date}</span>
+                    <button class="history-delete" onclick="removeSubdomainHistoryItem(${index})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function removeSubdomainHistoryItem(index) {
+            let history = JSON.parse(localStorage.getItem('subdomainHistory')) || [];
+            history.splice(index, 1);
+            localStorage.setItem('subdomainHistory', JSON.stringify(history));
+            renderSubdomainHistory();
+        }
+
+        function clearSubdomainHistory() {
+            if (confirm('🗑️ Удалить всю историю?')) {
+                localStorage.removeItem('subdomainHistory');
+                renderSubdomainHistory();
+            }
+        }
+
+        // ===== ENTER =====
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('domainInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    startScan();
+                }
+            });
+        });
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function() {
+            loadTheme();
+            renderSubdomainHistory();
+            console.log('🌐 Сканер поддоменов загружен');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дискретная алгебра — Конспекты</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="notes.html" class="active">📓 Конспекты</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+
+        <div class="subject-header">
+            <a href="notes.html" class="back-link">← Назад к предметам</a>
+            <h1>⊂ Дискретная алгебра</h1>
+            <p class="subtitle">Конспекты по дискретной алгебре</p>
+        </div>
+
+        <div class="storage-info" id="storageInfo" style="text-align:center; font-size:14px; color: var(--text-gray); margin-bottom:15px;"></div>
+
+        <div class="upload-area">
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                📤 Добавить фото конспекта
+            </button>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+            <div id="uploadStatus" style="margin-top: 8px; font-size: 14px; color: var(--text-gray);"></div>
+        </div>
+
+        <div class="notes-grid" id="notesGrid"></div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="db.js"></script>
+    <script>
+        const SUBJECT = 'discrete';
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        async function loadNotes() {
+            try {
+                const notes = await getNotesBySubject(SUBJECT);
+                const grid = document.getElementById('notesGrid');
+                grid.innerHTML = '';
+
+                if (notes.length === 0) {
+                    grid.innerHTML = `
+                                <div class="empty-notes">
+                                    <span style="font-size: 48px;">📭</span>
+                                    <p>Нет конспектов. Добавь первое фото!</p>
+                                </div>
+                            `;
+                    updateStorageInfo(0);
+                    return;
+                }
+
+                notes.forEach((item) => {
+                    const div = document.createElement('div');
+                    div.className = 'note-item';
+                    div.innerHTML = `
+                                <img src="${item.data}" alt="Конспект" onclick="openFullscreen('${item.data}')">
+                                <div class="note-info">
+                                    <span class="note-date">${item.date || 'Без даты'}</span>
+                                    <span style="font-size:12px; color:var(--text-gray); margin-right:8px;">${Math.round(item.data.length * 0.75 / 1024)} КБ</span>
+                                    <button class="note-delete" onclick="deleteNote(${item.id})">🗑️</button>
+                                </div>
+                            `;
+                    grid.appendChild(div);
+                });
+                const count = notes.length;
+                updateStorageInfo(count);
+            } catch (error) {
+                console.error('Ошибка загрузки конспектов:', error);
+                document.getElementById('notesGrid').innerHTML = `
+                            <div class="empty-notes">
+                                <span style="font-size: 48px;">⚠️</span>
+                                <p>Ошибка загрузки данных</p>
+                            </div>
+                        `;
+            }
+        }
+
+        async function updateStorageInfo(count) {
+            const el = document.getElementById('storageInfo');
+            if (el) {
+                el.textContent = `📊 ${count} фото · Безлимитное хранилище 🚀`;
+            }
+        }
+
+        function handleFiles(files) {
+            const statusEl = document.getElementById('uploadStatus');
+            if (!files || files.length === 0) {
+                statusEl.textContent = '⚠️ Файлы не выбраны';
+                return;
+            }
+
+            let loaded = 0;
+            let errors = 0;
+
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    statusEl.textContent = `⚠️ Файл "${file.name}" не является изображением`;
+                    errors++;
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = async function (e) {
+                    try {
+                        const now = new Date();
+                        const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                        await addNote(SUBJECT, e.target.result, dateStr, file.name);
+                        loaded++;
+                        statusEl.textContent = `✅ Загружено ${loaded + errors} из ${files.length} файлов...`;
+
+                        if (loaded + errors === files.length) {
+                            await loadNotes();
+                            statusEl.textContent = `✅ Загружено ${loaded} файлов!`;
+                            setTimeout(() => { statusEl.textContent = ''; }, 3000);
+                            updateSubjectCount();
+                        }
+                    } catch (error) {
+                        errors++;
+                        statusEl.textContent = `❌ Ошибка при загрузке "${file.name}"`;
+                        console.error('Ошибка чтения файла:', error);
+                    }
+                };
+                reader.onerror = function () {
+                    errors++;
+                    statusEl.textContent = `❌ Ошибка чтения файла "${file.name}"`;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function deleteNote(id) {
+            if (confirm('Удалить этот конспект?')) {
+                try {
+                    await deleteNoteById(id);
+                    await loadNotes();
+                    updateSubjectCount();
+                    document.getElementById('uploadStatus').textContent = '🗑️ Фото удалено';
+                    setTimeout(() => { document.getElementById('uploadStatus').textContent = ''; }, 2000);
+                } catch (error) {
+                    alert('❌ Ошибка при удалении!');
+                    console.error('Ошибка удаления:', error);
+                }
+            }
+        }
+
+        function openFullscreen(src) {
+            const overlay = document.createElement('div');
+            overlay.className = 'fullscreen-overlay';
+            overlay.innerHTML = `
+                        <div class="fullscreen-content">
+                            <img src="${src}" alt="Конспект">
+                            <button class="fullscreen-close" onclick="this.parentElement.parentElement.remove()">✕</button>
+                        </div>
+                    `;
+            overlay.onclick = function (e) {
+                if (e.target === this) this.remove();
+            };
+            document.body.appendChild(overlay);
+        }
+
+        async function updateSubjectCount() {
+            try {
+                const count = await getNotesCount(SUBJECT);
+                window.subjectCounts = window.subjectCounts || {};
+                window.subjectCounts[SUBJECT] = count;
+            } catch (error) {
+                console.error('Ошибка обновления счётчика:', error);
+            }
+        }
+
+        window.onload = function () {
+            loadTheme();
+            loadNotes();
+            updateSubjectCount();
+            const statusEl = document.getElementById('uploadStatus');
+            if (statusEl) statusEl.textContent = '';
+            console.log(`📓 ${SUBJECT} загружен через IndexedDB`);
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

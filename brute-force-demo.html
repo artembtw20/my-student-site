@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Имитация атаки перебором</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🎯 Атака перебором (Brute Force)</h1>
+                    <p class="subtitle" style="font-size: 15px;">Демонстрация того, как быстро можно подобрать пароль</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== ПАРОЛЬ ===== -->
+            <div class="bf-section">
+                <h3 style="color: var(--text-white); margin-bottom: 10px;">🔑 Введите пароль для проверки</h3>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <input type="text" id="passwordInput" placeholder="Введите пароль..." value="qwerty123" style="flex:1; padding:12px 18px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:200px;">
+                    <button class="generate-btn" onclick="startBruteForce()" style="width:auto; padding:12px 30px;">⚡ Начать атаку</button>
+                    <button class="generate-btn" onclick="resetDemo()" style="width:auto; padding:12px 25px; background:#666;">🔄 Сброс</button>
+                </div>
+                <div id="passwordStrength" style="margin-top: 8px; font-size: 14px; color: var(--text-gray);"></div>
+            </div>
+
+            <!-- ===== СТАТИСТИКА ===== -->
+            <div class="bf-stats" id="statsArea">
+                <div class="bf-stat-item">
+                    <span class="bf-stat-label">⏱️ Время атаки</span>
+                    <span class="bf-stat-value" id="attackTime">0с</span>
+                </div>
+                <div class="bf-stat-item">
+                    <span class="bf-stat-label">🔢 Попыток</span>
+                    <span class="bf-stat-value" id="attemptsCount">0</span>
+                </div>
+                <div class="bf-stat-item">
+                    <span class="bf-stat-label">⚡ Скорость</span>
+                    <span class="bf-stat-value" id="speedCount">0/с</span>
+                </div>
+                <div class="bf-stat-item">
+                    <span class="bf-stat-label">📊 Прогресс</span>
+                    <span class="bf-stat-value" id="progressPercent">0%</span>
+                </div>
+            </div>
+
+            <!-- ===== ПРОГРЕСС-БАР ===== -->
+            <div class="bf-progress">
+                <div class="bf-progress-bar" id="bfProgressBar" style="width: 0%;"></div>
+            </div>
+
+            <!-- ===== ЛОГ АТАКИ ===== -->
+            <div class="bf-log" id="attackLog">
+                <div style="color: var(--text-gray); text-align: center; padding: 20px;">
+                    ⚡ Нажмите «Начать атаку» для запуска симуляции
+                </div>
+            </div>
+
+            <!-- ===== РЕЗУЛЬТАТ ===== -->
+            <div id="bfResult" style="display: none; margin-top: 20px; padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 18px; font-weight: 600;">
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        let isRunning = false;
+        let animationId = null;
+        let startTime = 0;
+        let attempts = 0;
+        const speed = 1000; // попыток в секунду
+
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== РАСЧЁТ СЛОЖНОСТИ =====
+        function getPasswordComplexity(password) {
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSymbol = /[^a-zA-Z0-9]/.test(password);
+
+            let charsetSize = 0;
+            if (hasLower) charsetSize += 26;
+            if (hasUpper) charsetSize += 26;
+            if (hasNumber) charsetSize += 10;
+            if (hasSymbol) charsetSize += 32;
+
+            if (charsetSize === 0) charsetSize = 1;
+
+            const length = password.length;
+            const totalCombinations = Math.pow(charsetSize, length);
+            const seconds = totalCombinations / speed;
+
+            return {
+                charsetSize,
+                length,
+                totalCombinations,
+                seconds,
+                displayTime: formatTime(seconds),
+                strength: getStrength(seconds)
+            };
+        }
+
+        function getStrength(seconds) {
+            if (seconds < 1) return { label: 'Мгновенно', color: '#e74c3c', level: 1 };
+            if (seconds < 60) return { label: 'Секунды', color: '#e67e22', level: 2 };
+            if (seconds < 3600) return { label: 'Минуты', color: '#f39c12', level: 3 };
+            if (seconds < 86400) return { label: 'Часы', color: '#f1c40f', level: 4 };
+            if (seconds < 31536000) return { label: 'Дни', color: '#2ecc71', level: 5 };
+            if (seconds < 315360000) return { label: 'Годы', color: '#27ae60', level: 6 };
+            return { label: 'Вечность 💪', color: '#1abc9c', level: 7 };
+        }
+
+        function formatTime(seconds) {
+            if (seconds < 1) return 'менее 1 секунды';
+            if (seconds < 60) return `${Math.round(seconds)} секунд`;
+            if (seconds < 3600) return `${Math.round(seconds / 60)} минут`;
+            if (seconds < 86400) return `${Math.round(seconds / 3600)} часов`;
+            if (seconds < 31536000) return `${Math.round(seconds / 86400)} дней`;
+            if (seconds < 315360000) return `${Math.round(seconds / 31536000)} лет`;
+            return `${Math.round(seconds / 31536000)}+ лет`;
+        }
+
+        // ===== СТАРТ АТАКИ =====
+        function startBruteForce() {
+            if (isRunning) return;
+
+            const password = document.getElementById('passwordInput').value.trim();
+            if (!password) {
+                alert('⚠️ Введите пароль для проверки');
+                return;
+            }
+
+            const complexity = getPasswordComplexity(password);
+            const strengthEl = document.getElementById('passwordStrength');
+
+            // Показываем сложность
+            strengthEl.innerHTML = `
+                    <span>🔢 Длина: <strong>${complexity.length}</strong> · </span>
+                    <span>🎯 Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
+                    <span>⏱️ Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
+                `;
+
+            // Сброс
+            resetDemo();
+
+            // Настройка
+            isRunning = true;
+            startTime = Date.now();
+            attempts = 0;
+            const totalAttempts = Math.min(complexity.totalCombinations, 10000000);
+
+            document.getElementById('attackLog').innerHTML = '';
+            document.getElementById('bfResult').style.display = 'none';
+
+            // Анимируем
+            animateAttack(totalAttempts, complexity);
+        }
+
+        // ===== АНИМАЦИЯ АТАКИ =====
+        function animateAttack(total, complexity) {
+            const log = document.getElementById('attackLog');
+            const progressBar = document.getElementById('bfProgressBar');
+            const timeEl = document.getElementById('attackTime');
+            const attemptsEl = document.getElementById('attemptsCount');
+            const speedEl = document.getElementById('speedCount');
+            const progressEl = document.getElementById('progressPercent');
+
+            let lastUpdate = Date.now();
+            let speedCount = 0;
+
+            function update() {
+                if (!isRunning) return;
+
+                const now = Date.now();
+                const elapsed = (now - startTime) / 1000;
+                const attemptsPerSecond = Math.round(speed * (0.8 + Math.random() * 0.4));
+                attempts += attemptsPerSecond;
+
+                if (attempts > total) attempts = total;
+
+                const progress = (attempts / total) * 100;
+
+                // Обновляем статистику
+                timeEl.textContent = elapsed.toFixed(1) + 'с';
+                attemptsEl.textContent = Math.round(attempts).toLocaleString();
+                speedEl.textContent = attemptsPerSecond.toLocaleString() + '/с';
+                progressEl.textContent = Math.min(progress, 100).toFixed(1) + '%';
+                progressBar.style.width = Math.min(progress, 100) + '%';
+
+                // Добавляем записи в лог
+                if (log.children.length < 50 && attempts % 10 < 1) {
+                    const entry = document.createElement('div');
+                    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                    let guess = '';
+                    for (let i = 0; i < Math.min(complexity.length, 8); i++) {
+                        guess += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                    entry.className = 'bf-log-entry';
+                    entry.textContent = `🔍 ${guess}... (${Math.round(attempts).toLocaleString()} попыток)`;
+                    log.appendChild(entry);
+                    log.scrollTop = log.scrollHeight;
+                }
+
+                // Проверяем завершение
+                if (attempts >= total || progress >= 100) {
+                    finishAttack(complexity, elapsed);
+                    return;
+                }
+
+                animationId = requestAnimationFrame(update);
+            }
+
+            animationId = requestAnimationFrame(update);
+        }
+
+        // ===== ЗАВЕРШЕНИЕ =====
+        function finishAttack(complexity, elapsed) {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+
+            const result = document.getElementById('bfResult');
+            result.style.display = 'block';
+
+            const strength = complexity.strength;
+
+            if (strength.level >= 5) {
+                result.style.background = 'rgba(39, 174, 96, 0.2)';
+                result.style.color = '#27ae60';
+                result.innerHTML = `
+                        🛡️ <strong>Пароль надёжный!</strong><br>
+                        <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Это слишком долго для реальной атаки.</span>
+                    `;
+            } else if (strength.level >= 3) {
+                result.style.background = 'rgba(243, 156, 18, 0.2)';
+                result.style.color = '#f39c12';
+                result.innerHTML = `
+                        ⚠️ <strong>Пароль средний</strong><br>
+                        <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Рекомендуется сделать пароль длиннее и сложнее.</span>
+                    `;
+            } else {
+                result.style.background = 'rgba(231, 76, 60, 0.2)';
+                result.style.color = '#e74c3c';
+                result.innerHTML = `
+                        ❌ <strong>Пароль слабый!</strong><br>
+                        <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Пароль будет подобран мгновенно!</span>
+                    `;
+            }
+
+            // Добавляем финальную запись в лог
+            const log = document.getElementById('attackLog');
+            const entry = document.createElement('div');
+            entry.className = 'bf-log-entry final';
+            entry.textContent = `🎯 ПАРОЛЬ ПОДОБРАН! (${Math.round(attempts).toLocaleString()} попыток, ${elapsed.toFixed(1)}с)`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+
+            document.getElementById('bfProgressBar').style.width = '100%';
+            document.getElementById('progressPercent').textContent = '100%';
+        }
+
+        // ===== СБРОС =====
+        function resetDemo() {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+
+            document.getElementById('bfProgressBar').style.width = '0%';
+            document.getElementById('attackTime').textContent = '0с';
+            document.getElementById('attemptsCount').textContent = '0';
+            document.getElementById('speedCount').textContent = '0/с';
+            document.getElementById('progressPercent').textContent = '0%';
+            document.getElementById('bfResult').style.display = 'none';
+
+            document.getElementById('attackLog').innerHTML = `
+                    <div style="color: var(--text-gray); text-align: center; padding: 20px;">
+                        ⚡ Нажмите «Начать атаку» для запуска симуляции
+                    </div>
+                `;
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function () {
+            loadTheme();
+            // Показываем сложность для пароля по умолчанию
+            const defaultPassword = document.getElementById('passwordInput').value;
+            const complexity = getPasswordComplexity(defaultPassword);
+            document.getElementById('passwordStrength').innerHTML = `
+                    <span>🔢 Длина: <strong>${complexity.length}</strong> · </span>
+                    <span>🎯 Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
+                    <span>⏱️ Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
+                `;
+            console.log('🎯 Brute Force Demo загружена');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

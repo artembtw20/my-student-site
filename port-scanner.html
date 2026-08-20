@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сканер портов</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🕸️ Сканер открытых портов</h1>
+                    <p class="subtitle" style="font-size: 15px;">Проверяет, какие порты открыты на вашем компьютере</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== НАСТРОЙКИ ===== -->
+            <div class="scanner-settings">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">IP-адрес</label>
+                        <input type="text" id="targetIp" value="127.0.0.1" style="width:100%; padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">Диапазон портов</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="number" id="portStart" value="1" style="width:80px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                            <span style="color:var(--text-gray);">—</span>
+                            <input type="number" id="portEnd" value="1024" style="width:100px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: 18px;">
+                        <button class="generate-btn" onclick="startScan()" style="width:auto; padding:10px 30px;">🔍 Сканировать</button>
+                        <button class="generate-btn" onclick="stopScan()" style="width:auto; padding:10px 25px; background:#666;" id="stopBtn" disabled>⏹️ Стоп</button>
+                    </div>
+                </div>
+                <div id="scanStatus" style="margin-top:12px; font-size:14px; color:var(--text-gray);"></div>
+            </div>
+
+            <!-- ===== РЕЗУЛЬТАТЫ ===== -->
+            <div id="resultArea" style="margin-top: 20px;">
+
+                <!-- Открытые порты -->
+                <div id="openPortsSection">
+                    <h3 style="color: var(--text-white); margin-bottom: 12px;">🟢 Открытые порты</h3>
+                    <div id="openPortsList" class="ports-list">
+                        <span style="color: var(--text-gray); font-size: 14px;">Нажмите «Сканировать» для проверки</span>
+                    </div>
+                </div>
+
+                <!-- Закрытые порты (сворачиваемые) -->
+                <div style="margin-top: 16px;">
+                    <button class="generate-btn" onclick="toggleClosedPorts()" style="width: auto; padding: 8px 20px; font-size: 14px; background: #666;">
+                        📋 Показать закрытые порты
+                    </button>
+                    <div id="closedPortsSection" style="display: none; margin-top: 12px;">
+                        <h3 style="color: var(--text-gray); margin-bottom: 8px; font-size: 16px;">🔴 Закрытые порты</h3>
+                        <div id="closedPortsList" class="ports-list closed"></div>
+                    </div>
+                </div>
+
+                <!-- Статистика -->
+                <div id="scanStats" style="margin-top: 16px; display: none;">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 12px; background: var(--bg-input); border-radius: var(--radius-small);">
+                        <span style="color: var(--text-gray);">📊 Всего: <strong id="statTotal" style="color: var(--text-white);">0</strong></span>
+                        <span style="color: #27ae60;">✅ Открыто: <strong id="statOpen" style="color: #27ae60;">0</strong></span>
+                        <span style="color: #e74c3c;">❌ Закрыто: <strong id="statClosed" style="color: #e74c3c;">0</strong></span>
+                        <span style="color: var(--text-gray);">⏱️ Время: <strong id="statTime" style="color: var(--text-white);">0с</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ИСТОРИЯ ===== -->
+            <div class="history-area" style="margin-top: 25px;">
+                <div class="history-header">
+                    <span>📋 История сканирований</span>
+                    <button class="clear-history-btn" onclick="clearScanHistory()">🗑️ Очистить</button>
+                </div>
+                <div id="scanHistoryList" class="history-list">
+                    <span style="color: var(--text-gray); font-size: 14px;">История пуста</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        let isScanning = false;
+        let abortController = null;
+        let openPorts = [];
+        let closedPorts = [];
+        let scanStartTime = 0;
+
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== ПОЛУЧЕНИЕ ИНФОРМАЦИИ О ПОРТЕ =====
+        function getPortInfo(port) {
+            const commonPorts = {
+                20: 'FTP (данные)',
+                21: 'FTP (управление)',
+                22: 'SSH (удалённый доступ)',
+                23: 'Telnet (устаревший)',
+                25: 'SMTP (почта)',
+                53: 'DNS (домены)',
+                80: 'HTTP (веб)',
+                110: 'POP3 (почта)',
+                111: 'RPC',
+                135: 'RPC (Windows)',
+                139: 'NetBIOS (Windows)',
+                143: 'IMAP (почта)',
+                443: 'HTTPS (безопасный веб)',
+                445: 'SMB (Windows)',
+                465: 'SMTPS (почта SSL)',
+                587: 'SMTP (почта)',
+                993: 'IMAPS (почта SSL)',
+                995: 'POP3S (почта SSL)',
+                1433: 'MS SQL (базы данных)',
+                1521: 'Oracle (базы данных)',
+                3306: 'MySQL (базы данных)',
+                3389: 'RDP (удалённый рабочий стол)',
+                5432: 'PostgreSQL (базы данных)',
+                6379: 'Redis (базы данных)',
+                8080: 'HTTP-прокси',
+                8443: 'HTTPS-прокси',
+                27017: 'MongoDB (базы данных)'
+            };
+            return commonPorts[port] || '—';
+        }
+
+        // ===== СКАНИРОВАНИЕ =====
+        async function startScan() {
+            const ip = document.getElementById('targetIp').value.trim();
+            const start = parseInt(document.getElementById('portStart').value);
+            const end = parseInt(document.getElementById('portEnd').value);
+
+            if (!ip) {
+                alert('⚠️ Введите IP-адрес');
+                return;
+            }
+            if (isNaN(start) || isNaN(end) || start < 1 || end > 65535 || start > end) {
+                alert('⚠️ Введите корректный диапазон портов (1-65535)');
+                return;
+            }
+
+            // Проверка на локальный IP
+            if (!ip.startsWith('127.') && !ip.startsWith('192.168.') && !ip.startsWith('10.') && !ip.startsWith('172.')) {
+                if (!confirm(`⚠️ Вы сканируете внешний IP: ${ip}\nЭто может быть незаконно без разрешения владельца.\nПродолжить?`)) {
+                    return;
+                }
+            }
+
+            isScanning = true;
+            abortController = new AbortController();
+            document.querySelector('[onclick="startScan()"]').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('scanStatus').textContent = '⏳ Сканирование...';
+            document.getElementById('scanStatus').style.color = 'var(--text-gray)';
+
+            openPorts = [];
+            closedPorts = [];
+            document.getElementById('openPortsList').innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">⏳ Сканирование... (пожалуйста, подождите)</span>';
+            document.getElementById('closedPortsSection').style.display = 'none';
+            document.getElementById('scanStats').style.display = 'none';
+
+            scanStartTime = Date.now();
+
+            try {
+                const promises = [];
+                for (let port = start; port <= end; port++) {
+                    if (!isScanning) break;
+                    promises.push(checkPort(ip, port));
+                }
+
+                const results = await Promise.allSettled(promises);
+                results.forEach(result => {
+                    if (result.status === 'fulfilled' && result.value) {
+                        if (result.value.open) {
+                            openPorts.push(result.value);
+                        } else {
+                            closedPorts.push(result.value);
+                        }
+                    }
+                });
+
+                displayResults();
+
+            } catch (error) {
+                document.getElementById('scanStatus').textContent = '❌ Ошибка: ' + error.message;
+                document.getElementById('scanStatus').style.color = '#e74c3c';
+            } finally {
+                isScanning = false;
+                document.querySelector('[onclick="startScan()"]').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                if (document.getElementById('scanStatus').textContent === '⏳ Сканирование...') {
+                    document.getElementById('scanStatus').textContent = '✅ Сканирование завершено';
+                    document.getElementById('scanStatus').style.color = '#27ae60';
+                }
+            }
+        }
+
+        // ===== ПРОВЕРКА ПОРТА =====
+        function checkPort(ip, port) {
+            return new Promise((resolve) => {
+                const timeout = 2000;
+                let resolved = false;
+
+                const timeoutId = setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        resolve({ port, open: false, error: 'Timeout' });
+                    }
+                }, timeout);
+
+                try {
+                    const url = `http://${ip}:${port}`;
+                    fetch(url, {
+                        mode: 'no-cors',
+                        signal: abortController.signal
+                    })
+                        .then(() => {
+                            if (!resolved) {
+                                resolved = true;
+                                clearTimeout(timeoutId);
+                                resolve({ port, open: true });
+                            }
+                        })
+                        .catch(() => {
+                            if (!resolved) {
+                                resolved = true;
+                                clearTimeout(timeoutId);
+                                resolve({ port, open: false });
+                            }
+                        });
+                } catch {
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeoutId);
+                        resolve({ port, open: false });
+                    }
+                }
+            });
+        }
+
+        // ===== ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ =====
+        function displayResults() {
+            const openList = document.getElementById('openPortsList');
+            const closedList = document.getElementById('closedPortsList');
+
+            if (openPorts.length === 0) {
+                openList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">🟢 Открытых портов не найдено</span>';
+            } else {
+                openList.innerHTML = openPorts.map(p => `
+                        <div class="port-item open">
+                            <span class="port-number">${p.port}</span>
+                            <span class="port-service">${getPortInfo(p.port)}</span>
+                            <span class="port-status">✅ Открыт</span>
+                        </div>
+                    `).join('');
+            }
+
+            if (closedPorts.length === 0) {
+                closedList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">🔴 Закрытых портов не найдено</span>';
+            } else {
+                closedList.innerHTML = closedPorts.slice(0, 100).map(p => `
+                        <div class="port-item closed">
+                            <span class="port-number">${p.port}</span>
+                            <span class="port-service">${getPortInfo(p.port)}</span>
+                            <span class="port-status">❌ Закрыт</span>
+                        </div>
+                    `).join('');
+                if (closedPorts.length > 100) {
+                    closedList.innerHTML += `<div style="color: var(--text-gray); font-size: 13px; padding: 8px;">... и ещё ${closedPorts.length - 100} портов</div>`;
+                }
+            }
+
+            // Статистика
+            const elapsed = ((Date.now() - scanStartTime) / 1000).toFixed(1);
+            document.getElementById('statTotal').textContent = openPorts.length + closedPorts.length;
+            document.getElementById('statOpen').textContent = openPorts.length;
+            document.getElementById('statClosed').textContent = closedPorts.length;
+            document.getElementById('statTime').textContent = elapsed + 'с';
+            document.getElementById('scanStats').style.display = 'block';
+
+            // Сохраняем в историю
+            addToScanHistory(openPorts.length, closedPorts.length, elapsed);
+
+            document.getElementById('scanStatus').textContent = `✅ Сканирование завершено (${openPorts.length} открытых, ${closedPorts.length} закрытых)`;
+            document.getElementById('scanStatus').style.color = '#27ae60';
+        }
+
+        // ===== ОСТАНОВКА СКАНИРОВАНИЯ =====
+        function stopScan() {
+            if (abortController) {
+                abortController.abort();
+                isScanning = false;
+                document.getElementById('scanStatus').textContent = '⏹️ Сканирование остановлено';
+                document.getElementById('scanStatus').style.color = '#f39c12';
+                document.querySelector('[onclick="startScan()"]').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        // ===== Toggle закрытых портов =====
+        function toggleClosedPorts() {
+            const section = document.getElementById('closedPortsSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // ===== ИСТОРИЯ =====
+        function addToScanHistory(open, closed, time) {
+            let history = JSON.parse(localStorage.getItem('scanHistory')) || [];
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            const ip = document.getElementById('targetIp').value;
+
+            history.unshift({
+                ip: ip,
+                open: open,
+                closed: closed,
+                total: open + closed,
+                time: time,
+                date: timeStr
+            });
+
+            if (history.length > 50) history.pop();
+            localStorage.setItem('scanHistory', JSON.stringify(history));
+            renderScanHistory();
+        }
+
+        function renderScanHistory() {
+            const history = JSON.parse(localStorage.getItem('scanHistory')) || [];
+            const list = document.getElementById('scanHistoryList');
+
+            if (history.length === 0) {
+                list.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">История пуста</span>';
+                return;
+            }
+
+            list.innerHTML = history.map((item, index) => `
+                    <div class="history-item">
+                        <span style="color: var(--text-light); font-size:13px;">${item.ip}</span>
+                        <span style="color:#27ae60;">${item.open} открытых</span>
+                        <span style="color:#e74c3c;">${item.closed} закрытых</span>
+                        <span style="font-size:11px; color:var(--text-gray);">${item.time}с</span>
+                        <span style="font-size:11px; color:var(--text-gray);">${item.date}</span>
+                        <button class="history-delete" onclick="removeScanHistoryItem(${index})">✕</button>
+                    </div>
+                `).join('');
+        }
+
+        function removeScanHistoryItem(index) {
+            let history = JSON.parse(localStorage.getItem('scanHistory')) || [];
+            history.splice(index, 1);
+            localStorage.setItem('scanHistory', JSON.stringify(history));
+            renderScanHistory();
+        }
+
+        function clearScanHistory() {
+            if (confirm('🗑️ Удалить всю историю?')) {
+                localStorage.removeItem('scanHistory');
+                renderScanHistory();
+            }
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function () {
+            loadTheme();
+            renderScanHistory();
+            console.log('🕸️ Сканер портов загружен');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хранилище паролей</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">🔑 Хранилище паролей</h1>
+                    <p class="subtitle" style="font-size: 15px;">Все логины и пароли в одном месте</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== МАСТЕР-ПАРОЛЬ ===== -->
+            <div id="loginScreen" class="vault-login">
+                <h3 style="color: var(--text-white); margin-bottom: 12px;">🔐 Введите мастер-пароль</h3>
+                <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 12px;">Это единственный пароль, который нужно запомнить</p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="password" id="masterPassword" placeholder="Мастер-пароль" style="flex:1; padding:10px 16px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:200px;">
+                    <button class="generate-btn" onclick="unlockVault()" style="width:auto; padding:10px 30px;">🔓 Войти</button>
+                </div>
+                <div id="loginError" style="color:#e74c3c; margin-top:10px; display:none;">❌ Неверный мастер-пароль!</div>
+                <div style="margin-top:12px; font-size:13px; color:var(--text-gray);">
+                    <span>🔑 Мастер-пароль не сохраняется — только ты знаешь его</span>
+                </div>
+            </div>
+
+            <!-- ===== ХРАНИЛИЩЕ (скрыто) ===== -->
+            <div id="vaultContent" style="display: none;">
+
+                <!-- Статистика -->
+                <div class="vault-stats" id="vaultStats">
+                    <span>📊 <span id="totalPasswords">0</span> паролей</span>
+                </div>
+
+                <!-- Поиск и добавление -->
+                <div class="vault-toolbar">
+                    <input type="text" id="searchInput" placeholder="🔍 Поиск по сайту или логину..." oninput="renderVault()" style="flex:1; padding:10px 16px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; min-width:150px;">
+                    <button class="add-btn" onclick="showAddForm()">➕ Добавить</button>
+                </div>
+
+                <!-- Форма добавления -->
+                <div id="addForm" class="vault-form" style="display:none;">
+                    <h4 style="color:var(--text-white); margin-bottom:10px;">Добавить пароль</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <input type="text" id="newSite" placeholder="🌐 Сайт (example.com)" style="padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white);">
+                        <input type="text" id="newLogin" placeholder="👤 Логин" style="padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white);">
+                        <input type="password" id="newPassword" placeholder="🔑 Пароль" style="padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white);">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" id="newCategory" placeholder="📁 Категория (соцсети, банк...)" style="flex:1; padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white);">
+                            <button class="generate-btn" onclick="generateVaultPassword()" style="width:auto; padding:10px 18px; font-size:14px;">🎲</button>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="add-btn" onclick="addPassword()" style="background:#27ae60;">💾 Сохранить</button>
+                        <button class="add-btn" onclick="document.getElementById('addForm').style.display='none'" style="background:#666;">❌ Отмена</button>
+                    </div>
+                </div>
+
+                <!-- Список паролей -->
+                <div id="vaultList" class="vault-list">
+                    <!-- Записи будут добавляться через JavaScript -->
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== МАСТЕР-ПАРОЛЬ =====
+        // По умолчанию мастер-пароль "admin123" — при первом входе ты сменишь его
+        function getMasterPassword() {
+            return localStorage.getItem('masterPassword') || 'admin123';
+        }
+
+        function setMasterPassword(newPassword) {
+            localStorage.setItem('masterPassword', newPassword);
+        }
+
+        // ===== ВХОД В ХРАНИЛИЩЕ =====
+        function unlockVault() {
+            const input = document.getElementById('masterPassword').value;
+            const correct = getMasterPassword();
+
+            if (input === correct) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('vaultContent').style.display = 'block';
+                document.getElementById('loginError').style.display = 'none';
+                renderVault();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        // ===== ШИФРОВАНИЕ (простое для демонстрации) =====
+        function encrypt(text) {
+            return btoa(encodeURIComponent(text));
+        }
+
+        function decrypt(encrypted) {
+            try {
+                return decodeURIComponent(atob(encrypted));
+            } catch {
+                return encrypted;
+            }
+        }
+
+        // ===== ПОЛУЧЕНИЕ ДАННЫХ =====
+        function getVaultData() {
+            const data = localStorage.getItem('vaultData');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function setVaultData(data) {
+            localStorage.setItem('vaultData', JSON.stringify(data));
+        }
+
+        // ===== ДОБАВЛЕНИЕ ПАРОЛЯ =====
+        function addPassword() {
+            const site = document.getElementById('newSite').value.trim();
+            const login = document.getElementById('newLogin').value.trim();
+            const password = document.getElementById('newPassword').value.trim();
+            const category = document.getElementById('newCategory').value.trim() || 'Без категории';
+
+            if (!site || !login || !password) {
+                alert('⚠️ Заполни все поля!');
+                return;
+            }
+
+            const data = getVaultData();
+            data.push({
+                id: Date.now(),
+                site,
+                login,
+                password: encrypt(password),
+                category,
+                created: new Date().toLocaleDateString('ru-RU')
+            });
+
+            setVaultData(data);
+            renderVault();
+            document.getElementById('addForm').style.display = 'none';
+            document.getElementById('newSite').value = '';
+            document.getElementById('newLogin').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newCategory').value = '';
+        }
+
+        // ===== ПОКАЗАТЬ ФОРМУ ДОБАВЛЕНИЯ =====
+        function showAddForm() {
+            document.getElementById('addForm').style.display = 'block';
+        }
+
+        // ===== ГЕНЕРАТОР ПАРОЛЯ ДЛЯ ВАЛТА =====
+        function generateVaultPassword() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            let password = '';
+            for (let i = 0; i < 16; i++) {
+                password += chars[Math.floor(Math.random() * chars.length)];
+            }
+            document.getElementById('newPassword').value = password;
+        }
+
+        // ===== ОТОБРАЖЕНИЕ ВАЛТА =====
+        function renderVault() {
+            const data = getVaultData();
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const list = document.getElementById('vaultList');
+
+            const filtered = data.filter(item =>
+                item.site.toLowerCase().includes(search) ||
+                item.login.toLowerCase().includes(search) ||
+                item.category.toLowerCase().includes(search)
+            );
+
+            document.getElementById('totalPasswords').textContent = data.length;
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:var(--text-gray); padding:40px 0;">🔍 Ничего не найдено</div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(item => `
+                    <div class="vault-item">
+                        <div class="vault-item-info">
+                            <div class="vault-item-site">
+                                <span style="font-weight:600; color:var(--text-white);">${item.site}</span>
+                                <span class="vault-item-category">📁 ${item.category}</span>
+                            </div>
+                            <div class="vault-item-login">
+                                👤 <span style="color:var(--text-gray);">${item.login}</span>
+                            </div>
+                            <div class="vault-item-password">
+                                🔑 <span class="password-hidden" id="pass-${item.id}">••••••••</span>
+                                <button class="show-pass-btn" onclick="togglePassword(${item.id})">👁️</button>
+                                <button class="copy-pass-btn" onclick="copyVaultPassword('${item.id}')">📋</button>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-gray);">${item.created}</div>
+                        </div>
+                        <div class="vault-item-actions">
+                            <button class="delete-btn" onclick="deletePassword(${item.id})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+
+            // Сохраняем данные для расшифровки
+            window._vaultItems = filtered;
+        }
+
+        // ===== ПОКАЗАТЬ/СКРЫТЬ ПАРОЛЬ =====
+        function togglePassword(id) {
+            const span = document.getElementById(`pass-${id}`);
+            const item = window._vaultItems.find(i => i.id === id);
+            if (span.textContent === '••••••••') {
+                span.textContent = decrypt(item.password);
+            } else {
+                span.textContent = '••••••••';
+            }
+        }
+
+        // ===== КОПИРОВАТЬ ПАРОЛЬ =====
+        function copyVaultPassword(id) {
+            const item = window._vaultItems.find(i => i.id === id);
+            navigator.clipboard.writeText(decrypt(item.password)).then(() => {
+                alert('✅ Пароль скопирован!');
+            });
+        }
+
+        // ===== УДАЛИТЬ ПАРОЛЬ =====
+        function deletePassword(id) {
+            if (!confirm('Удалить эту запись?')) return;
+            let data = getVaultData();
+            data = data.filter(item => item.id !== id);
+            setVaultData(data);
+            renderVault();
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.onload = function () {
+            loadTheme();
+            // Если мастер-пароль не установлен — установим
+            if (!localStorage.getItem('masterPassword')) {
+                setMasterPassword('admin123');
+                alert('🔐 Мастер-пароль по умолчанию: admin123\n⚠️ Рекомендуем сменить его в настройках!');
+            }
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

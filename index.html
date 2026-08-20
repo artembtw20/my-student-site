@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой студенческий сайт</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html" class="active">🏠 Главная</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+
+        <!-- ===== ВЕРХНИЕ КАРТОЧКИ ===== -->
+        <div class="top-grid animate-on-scroll">
+
+            <!-- Погода -->
+            <div class="info-card weather-card">
+                <div class="card-header">☀️ ПОГОДА</div>
+                <div class="weather-temp" id="w-temp">--°</div>
+                <div class="weather-desc" id="w-desc">Загрузка...</div>
+                <div class="weather-details" id="w-details">📍 Благовещенск</div>
+                <div class="weather-source" id="w-source">Данные: Open-Meteo</div>
+            </div>
+
+            <!-- ===== ПОСЕЩАЕМОСТЬ (НОВАЯ ЛОГИКА) ===== -->
+            <div class="info-card attendance-card">
+                <div class="card-header">📊 ПОСЕЩАЕМОСТЬ</div>
+                <div class="attendance-semester">📚 Весь семестр</div>
+                <div class="attendance-stats">
+                    <span class="attendance-number" id="attendedCount">0</span>
+                    <span class="attendance-total">из <span id="totalCount">0</span></span>
+                </div>
+                <div class="attendance-bar">
+                    <div class="attendance-bar-fill" id="attendanceBar" data-width="0%"></div>
+                </div>
+                <div class="attendance-percent" id="attendancePercent">0%</div>
+                <div class="attendance-sub" id="attendanceSub">Посещено 0 из 0 пар</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="attendance-btn" onclick="markAttendance()">➕ Отметить пару</button>
+                    <button class="attendance-btn" onclick="markMiss()" style="background:#e67e22;">❌ Пропустил</button>
+                    <button class="attendance-btn" onclick="resetAttendance()" style="background:#666;">🔄 Сброс</button>
+                </div>
+                <div style="font-size:11px; color:var(--text-gray); margin-top:8px; opacity:0.7;">
+                    💡 Отмечай пары в блоке «Мои пары» ниже
+                </div>
+            </div>
+
+            <!-- Время -->
+            <div class="info-card time-card">
+                <div class="card-header">⏰ СЕЙЧАС</div>
+                <div class="time-display" id="currentTime">00:00</div>
+                <div class="time-date" id="currentDate">13 июля 2026</div>
+                <div style="margin-top: 12px; font-size: 14px; color: var(--text-gray);">
+                    📅 <span id="weekNumber">Неделя 0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== БЫСТРЫЙ ДОСТУП ===== -->
+        <div class="quick-access animate-on-scroll">
+            <div class="quick-title">📋 БЫСТРЫЙ ДОСТУП</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+                <span class="chip">📚 1-й семестр</span>
+                <span class="chip chip-blue">✅ 8 посещений</span>
+                <span class="chip chip-green">⏰ 3 дедлайна</span>
+            </div>
+            <div class="quick-grid">
+                <a href="schedule.html" class="quick-item animate-on-scroll">
+                    <span class="quick-icon">📅</span>
+                    <span>Расписание</span>
+                </a>
+                <a href="deadlines.html" class="quick-item animate-on-scroll">
+                    <span class="quick-icon">⏰</span>
+                    <span>Дедлайны</span>
+                </a>
+                <a href="notes.html" class="quick-item animate-on-scroll">
+                    <span class="quick-icon">📓</span>
+                    <span>Конспекты</span>
+                </a>
+                <a href="sitemap.html" class="quick-item animate-on-scroll">
+                    <span class="quick-icon">🗺️</span>
+                    <span>Все разделы</span>
+                </a>
+            </div>
+
+            <!-- Уведомления -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; padding: 10px 0; border-top: 1px solid var(--border-color); margin-top: 8px;">
+                <span style="color: var(--text-gray); font-size: 13px;">🔔 Уведомления в 20:00</span>
+                <label style="display: flex; align-items: center; gap: 8px; color: var(--text-light); cursor: pointer; font-size: 14px;">
+                    <input type="checkbox" id="notifyToggle" onchange="toggleNotifications(this.checked)" style="width: 18px; height: 18px; accent-color: var(--red-primary);">
+                    <span id="notifyStatus">🔔 Включены</span>
+                </label>
+                <button onclick="testNotification()" style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-light); padding: 4px 14px; border-radius: var(--radius-small); cursor: pointer; font-size: 13px; transition: all 0.3s ease;">
+                    📢 Тест
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ДВЕ КОЛОНКИ ===== -->
+        <div class="two-columns animate-on-scroll">
+            <div class="column-left">
+                <div class="schedule-today">
+                    <div class="schedule-title" id="todayTitle">📅 МОИ ПАРЫ</div>
+                    <div id="todaySchedule" class="schedule-list">
+                        <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
+                        <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
+                        <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-gray); margin-top: 8px;">
+                        ✅ Нажми на пару, чтобы отметить посещение
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-right">
+                <div class="deadlines-today">
+                    <div class="schedule-title">⏰ СРОЧНЫЕ ДЕДЛАЙНЫ</div>
+                    <div id="urgentDeadlinesList" class="deadlines-compact-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ФАКТ ДНЯ ===== -->
+        <div class="fact-card animate-on-scroll">
+            <div class="fact-label">💡 Факт дня</div>
+            <div class="fact-category" id="factCategory">Физика</div>
+            <div class="fact-text" id="factText">Загрузка факта...</div>
+            <button class="fact-btn" onclick="showRandomFact()">🔀 Другой факт</button>
+        </div>
+
+        <!-- ===== РЕЗЕРВНОЕ КОПИРОВАНИЕ ===== -->
+        <div class="backup-section animate-on-scroll">
+            <div class="backup-title">💾 РЕЗЕРВНОЕ КОПИРОВАНИЕ</div>
+            <div class="backup-buttons">
+                <button class="backup-btn export-btn" onclick="exportData()">📥 Скачать бэкап</button>
+                <button class="backup-btn import-btn" onclick="document.getElementById('importInput').click()">📤 Загрузить бэкап</button>
+                <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)">
+            </div>
+            <div class="backup-hint">Сохраняет все данные: конспекты, посещаемость, расписание, тему</div>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+
+    </div>
+
+    <!-- ===== КНОПКА "НАВЕРХ" ===== -->
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+
+    <!-- ===== ПОДКЛЮЧЕНИЕ СКРИПТОВ ===== -->
+    <script src="db.js"></script>
+    <script src="schedule-data.js"></script>
+    <script src="schedule-notify.js"></script>
+
+    <!-- ===== ОСНОВНОЙ JS ===== -->
+    <script>
+        // ===== КООРДИНАТЫ БЛАГОВЕЩЕНСКА =====
+        const BLAGOVESHCHENSK_LAT = 50.2907;
+        const BLAGOVESHCHENSK_LON = 127.5272;
+
+        // ===== КОЛИЧЕСТВО НЕДЕЛЬ В СЕМЕСТРЕ =====
+        const WEEKS_IN_SEMESTER = 17; // ← УКАЖИ СВОЁ КОЛИЧЕСТВО НЕДЕЛЬ!
+
+        // ===== АВТОМАТИЧЕСКИЙ ПОДСЧЁТ ПАР ЗА СЕМЕСТР =====
+        function calculateTotalLessons() {
+            const data = getSchedule();
+            let totalPerTwoWeeks = 0;
+
+            ['week1', 'week2'].forEach(weekKey => {
+                const week = data[weekKey];
+                if (!week) return;
+
+                Object.keys(week).forEach(day => {
+                    const lessons = week[day] || [];
+                    lessons.forEach(lesson => {
+                        // Считаем только НЕПУСТЫЕ пары
+                        if (lesson.name && lesson.name !== '—' && lesson.name !== '-' && lesson.name !== '') {
+                            totalPerTwoWeeks++;
+                        }
+                    });
+                });
+            });
+
+            // Всего пар за семестр = пары за 2 недели × (всего недель / 2)
+            const total = Math.round(totalPerTwoWeeks * (WEEKS_IN_SEMESTER / 2));
+            return total > 0 ? total : 1; // Защита от деления на 0
+        }
+
+        // ============================================
+        // 📊 ПОСЕЩАЕМОСТЬ (ЗА ВЕСЬ СЕМЕСТР)
+        // ============================================
+
+        const TOTAL_LESSONS = calculateTotalLessons();
+
+        function getOverallAttendance() {
+            const data = JSON.parse(localStorage.getItem('attendance')) || {
+                attended: 0,
+                total: TOTAL_LESSONS
+            };
+            // Обновляем total, если изменилось расписание
+            if (data.total !== TOTAL_LESSONS) {
+                data.total = TOTAL_LESSONS;
+                localStorage.setItem('attendance', JSON.stringify(data));
+            }
+            return data;
+        }
+
+        function saveOverallAttendance(data) {
+            localStorage.setItem('attendance', JSON.stringify(data));
+        }
+
+        function updateAttendanceDisplay() {
+            const overall = getOverallAttendance();
+            const p = overall.total === 0 ? 0 : Math.round((overall.attended / overall.total) * 100);
+
+            document.getElementById('attendedCount').textContent = overall.attended;
+            document.getElementById('totalCount').textContent = overall.total;
+
+            const fill = document.getElementById('attendanceBar');
+            fill.style.width = p + '%';
+            fill.setAttribute('data-width', p + '%');
+
+            document.getElementById('attendancePercent').textContent = p + '%';
+            document.getElementById('attendanceSub').textContent = `Посещено ${overall.attended} из ${overall.total} пар (${p}%)`;
+        }
+
+        // ===== РУЧНАЯ ОТМЕТКА =====
+        function markAttendance() {
+            const overall = getOverallAttendance();
+            if (overall.attended < overall.total) {
+                overall.attended++;
+                saveOverallAttendance(overall);
+                updateAttendanceDisplay();
+                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended / overall.total) * 100)}%)`);
+            } else {
+                alert('🎉 Вы посетили все пары в семестре!');
+            }
+        }
+
+        // ===== ПРОПУСТИЛ =====
+        function markMiss() {
+            const overall = getOverallAttendance();
+            if (overall.attended > 0) {
+                overall.attended--;
+                saveOverallAttendance(overall);
+                updateAttendanceDisplay();
+                alert(`❌ Отмечено как пропуск. Посещено ${overall.attended} из ${overall.total} пар`);
+            } else {
+                alert('⚠️ Вы не можете иметь отрицательное количество посещений!');
+            }
+        }
+
+        // ===== СБРОС =====
+        function resetAttendance() {
+            if (confirm('🔄 Сбросить все данные посещаемости?')) {
+                localStorage.removeItem('attendance');
+                localStorage.removeItem('todayAttendance');
+                updateAttendanceDisplay();
+                renderTodaySchedule();
+                alert('✅ Сброшено!');
+            }
+        }
+
+        // ============================================
+        // 📅 РАСПИСАНИЕ
+        // ============================================
+
+        const ATTENDANCE_KEY = 'todayAttendance';
+
+        function getCurrentWeekNumber() {
+            const now = new Date();
+            const start = new Date(2026, 1, 1);
+            const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+            return (diff % 2 === 0) ? 1 : 2;
+        }
+
+        function getTodayDay() {
+            return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date().getDay()];
+        }
+
+        function getTodayLessons() {
+            const week = getCurrentWeekNumber();
+            const weekKey = week === 1 ? 'week1' : 'week2';
+            const day = getTodayDay();
+            const data = getSchedule();
+            return data[weekKey]?.[day] || [];
+        }
+
+        function getTodayAttendance() {
+            return JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || '{}');
+        }
+
+        function saveTodayAttendance(data) {
+            localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(data));
+        }
+
+        function isAttended(index) {
+            const key = `${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
+            return getTodayAttendance()[key] || false;
+        }
+
+        function toggleAttendance(index) {
+            const att = getTodayAttendance();
+            const key = `${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
+            const wasAttended = att[key] || false;
+
+            att[key] = !wasAttended;
+            saveTodayAttendance(att);
+
+            // Обновляем общую статистику
+            const overall = getOverallAttendance();
+            const lessons = getTodayLessons();
+            const validLessons = lessons.filter(l => l.name && l.name !== '—' && l.name !== '-' && l.name !== '');
+
+            if (overall.total === 0 && validLessons.length > 0) {
+                overall.total = validLessons.length;
+            }
+
+            if (!wasAttended) {
+                overall.attended++;
+            } else {
+                overall.attended--;
+            }
+
+            if (overall.attended < 0) overall.attended = 0;
+
+            saveOverallAttendance(overall);
+
+            renderTodaySchedule();
+            updateAttendanceDisplay();
+        }
+
+        function renderTodaySchedule() {
+            const container = document.getElementById('todaySchedule');
+            const title = document.getElementById('todayTitle');
+            const lessons = getTodayLessons();
+            const todayName = getTodayDay();
+
+            const dayNames = {
+                monday: 'Понедельник',
+                tuesday: 'Вторник',
+                wednesday: 'Среда',
+                thursday: 'Четверг',
+                friday: 'Пятница',
+                saturday: 'Суббота',
+                sunday: 'Воскресенье'
+            };
+
+            const validLessons = lessons.filter(l => l.name && l.name !== '—' && l.name !== '-' && l.name !== '');
+
+            if (validLessons.length === 0) {
+                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px;">🎉 Сегодня пар нет! Отдыхай.</div>`;
+                return;
+            }
+
+            const overall = getOverallAttendance();
+            if (overall.total === 0) {
+                overall.total = TOTAL_LESSONS;
+                saveOverallAttendance(overall);
+            }
+
+            title.textContent = `📅 ${dayNames[todayName] || 'Сегодня'} (${getCurrentWeekNumber()}-я неделя)`;
+
+            container.innerHTML = validLessons.map((lesson, index) => {
+                const attended = isAttended(index);
+                const teacher = lesson.teacher || '';
+                return `
+                            <div class="schedule-item ${attended ? 'present' : 'upcoming'}" onclick="toggleAttendance(${index})" style="cursor:pointer;">
+                                <span class="schedule-time">${lesson.time || ''}</span>
+                                <span class="schedule-name">${lesson.name}</span>
+                                ${teacher ? `<span class="schedule-teacher">${teacher}</span>` : ''}
+                                <span class="schedule-status">${attended ? '✅ Присутствовал' : '⏳ Отметить'}</span>
+                            </div>
+                        `;
+            }).join('');
+        }
+
+        // ============================================
+        // ⏰ СРОЧНЫЕ ДЕДЛАЙНЫ
+        // ============================================
+
+        function getDeadlines() {
+            const data = localStorage.getItem('deadlines');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function getDaysLeft(dateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(dateStr + 'T00:00:00');
+            return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function shouldShowOnMain(deadline) {
+            const daysLeft = getDaysLeft(deadline.date);
+            if (daysLeft <= 0) return true;
+            if (deadline.priority === 'high' && daysLeft <= 14) return true;
+            if (deadline.priority === 'medium' && daysLeft <= 7) return true;
+            if (deadline.priority === 'low' && daysLeft <= 3) return true;
+            return false;
+        }
+
+        function renderUrgentDeadlines() {
+            const container = document.getElementById('urgentDeadlinesList');
+            if (!container) return;
+
+            const all = getDeadlines();
+            const urgent = all.filter(d => shouldShowOnMain(d));
+            urgent.sort((a, b) => getDaysLeft(a.date) - getDaysLeft(b.date));
+
+            if (urgent.length === 0) {
+                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px 0;font-size:14px;">🎉 Нет срочных дедлайнов</div>`;
+                return;
+            }
+
+            container.innerHTML = urgent.map(d => {
+                const daysLeft = getDaysLeft(d.date);
+                const color = daysLeft <= 0 || daysLeft <= 2 ? '#e74c3c' : daysLeft <= 5 ? '#f39c12' : daysLeft <= 14 ? '#f1c40f' : '#27ae60';
+                const priorityLabel = { high: '🔴', medium: '🟡', low: '🟢' }[d.priority] || '🟡';
+                const status = daysLeft < 0 ? '❌ Просрочено' : daysLeft === 0 ? '⚠️ Сегодня!' : daysLeft <= 2 ? '🔴 Срочно!' : daysLeft <= 5 ? '🟠 Скоро' : daysLeft <= 14 ? '🟡 Не забыть' : '🟢 Есть время';
+                return `
+                            <div class="deadline-item" style="border-left-color:${color};">
+                                <div class="deadline-info">
+                                    <span class="deadline-subject">${priorityLabel} ${d.subject}</span>
+                                    <span class="deadline-task">${d.task}</span>
+                                </div>
+                                <span class="deadline-status" style="color:${color};">${status}</span>
+                                <span class="deadline-date">📅 ${d.date}</span>
+                            </div>
+                        `;
+            }).join('');
+        }
+
+        // ============================================
+        // 🔝 КНОПКА "НАВЕРХ"
+        // ============================================
+
+        window.addEventListener('scroll', function () {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================
+        // 🎬 АНИМАЦИЯ ПРИ СКРОЛЛЕ
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        });
+
+        // ============================================
+        // 🚀 ЗАПУСК
+        // ============================================
+
+        window.onload = function () {
+            loadTheme();
+            fetchWeather();
+            showRandomFact();
+            updateTime();
+            renderTodaySchedule();
+            updateAttendanceDisplay();
+            renderUrgentDeadlines();
+            setInterval(fetchWeather, 600000);
+            console.log('🏠 Главная страница загружена');
+            console.log('📊 Всего пар за семестр:', TOTAL_LESSONS);
+        };
+
+        // ============================================
+        // ⚙️ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (погода, тема, бэкап, факты)
+        // ============================================
+
+        // ===== ПОГОДА =====
+        async function fetchWeather() {
+            try {
+                const res = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${BLAGOVESHCHENSK_LAT}&longitude=${BLAGOVESHCHENSK_LON}&current_weather=true&timezone=Asia/Yakutsk`
+                );
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                const wind = data.current_weather.windspeed;
+                const map = {
+                    0: 'Ясно ☀️', 1: 'Малооблачно 🌤️', 2: 'Переменная облачность ⛅',
+                    3: 'Пасмурно ☁️', 45: 'Туман 🌫️', 48: 'Иней 🌫️',
+                    51: 'Морось 🌦️', 53: 'Морось 🌦️', 55: 'Морось 🌧️',
+                    61: 'Дождь 🌧️', 63: 'Дождь 🌧️', 65: 'Дождь 🌧️',
+                    71: 'Снег ❄️', 73: 'Снег ❄️', 75: 'Снег ❄️',
+                    80: 'Ливень 🌧️', 81: 'Ливень 🌧️', 82: 'Ливень 🌧️',
+                    95: 'Гроза ⛈️', 96: 'Гроза с градом ⛈️', 99: 'Гроза с градом ⛈️'
+                };
+                document.getElementById('w-temp').textContent = `${temp}°`;
+                document.getElementById('w-desc').textContent = map[code] || 'Неизвестно';
+                document.getElementById('w-details').innerHTML = `📍 Благовещенск<br>💨 Ветер: ${wind} км/ч`;
+            } catch {
+                document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
+            }
+        }
+
+        // ===== ТЕМА =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (saved === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ===== ВРЕМЯ =====
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+            const start = new Date(2026, 8, 1);
+            const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+            document.getElementById('weekNumber').textContent = `Неделя ${Math.max(0, diff + 1)}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // ===== БЭКАП =====
+        async function exportData() {
+            try {
+                const data = await exportAllNotes();
+                if (data.length === 0) { alert('⚠️ Нет данных'); return; }
+                const scheduleData = getSchedule();
+                const exportData = {
+                    notes: data,
+                    attendance: JSON.parse(localStorage.getItem('attendance')) || { attended: 0, total: TOTAL_LESSONS },
+                    lessons: JSON.parse(localStorage.getItem('lessons')) || [],
+                    theme: localStorage.getItem('theme') || 'dark',
+                    schedule: scheduleData
+                };
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const now = new Date();
+                a.download = `backup-${now.toLocaleDateString('ru-RU').replace(/\./g, '-')}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                alert(`✅ Бэкап сохранен (${data.length} конспектов)`);
+            } catch (e) {
+                alert('❌ Ошибка: ' + e.message);
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (!data.notes || !Array.isArray(data.notes)) { alert('⚠️ Неверный формат'); return; }
+                    await importAllNotes(data.notes);
+                    if (data.attendance) localStorage.setItem('attendance', JSON.stringify(data.attendance));
+                    if (data.lessons) localStorage.setItem('lessons', JSON.stringify(data.lessons));
+                    if (data.theme) localStorage.setItem('theme', data.theme);
+                    if (data.schedule) localStorage.setItem('scheduleData', JSON.stringify(data.schedule));
+                    alert(`✅ Восстановлено ${data.notes.length} конспектов`);
+                    location.reload();
+                } catch (err) {
+                    alert('❌ Ошибка: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ===== ФАКТЫ =====
+        const facts = [
+            { text: 'Время течёт медленнее вблизи сильных гравитационных полей. На поверхности Земли атомные часы идут на несколько микросекунд в год медленнее, чем в космосе.', category: 'Физика' },
+            { text: 'Скорость света составляет 299 792 458 м/с. За одну секунду свет может обогнуть Землю почти 7,5 раз.', category: 'Физика' },
+            { text: 'Температура внутри Солнца достигает 15 миллионов градусов Цельсия, а на поверхности — всего 5500°C.', category: 'Физика' },
+            { text: 'Квантовые частицы могут находиться в двух местах одновременно — это называется суперпозицией.', category: 'Физика' },
+            { text: 'Звук не распространяется в вакууме, потому что ему нужна среда (воздух, вода, твёрдое тело) для передачи колебаний.', category: 'Физика' },
+            { text: 'На Марсе находится самая высокая гора в Солнечной системе — Олимп. Её высота — 21,9 км, почти в 2,5 раза выше Эвереста.', category: 'Космос' },
+            { text: 'Год на Венере короче дня на Венере: она обращается вокруг Солнца за 225 земных суток, а вокруг своей оси — за 243.', category: 'Космос' },
+            { text: 'Вселенная состоит примерно на 68% из тёмной энергии, на 27% из тёмной материи и только на 5% из обычной материи, которую мы видим.', category: 'Космос' },
+            { text: 'Если бы Солнце было размером с теннисный мяч, Земля находилась бы на расстоянии 4 метров, а ближайшая звезда — Проксима Центавра — была бы на расстоянии 1100 км.', category: 'Космос' },
+            { text: 'На Меркурии один день длится около 59 земных суток, а один год — 88 земных суток.', category: 'Космос' },
+            { text: 'Великая Китайская стена — это не одна непрерывная стена, а сеть стен, построенных разными династиями. Общая длина — более 21 000 км.', category: 'История' },
+            { text: 'Древние египтяне использовали пиво в качестве платы рабочим, строившим пирамиды. Один рабочий получал около 4-5 литров пива в день.', category: 'История' },
+            { text: 'Первая в мире программа была написана Адой Лавлейс в 1843 году для вычислительной машины Чарльза Бэббиджа.', category: 'История' },
+            { text: 'В Древней Греции Олимпийские игры проводились каждые четыре года в течение почти 1200 лет, с 776 года до н.э. по 393 год н.э.', category: 'История' },
+            { text: 'Первое в мире метро было открыто в Лондоне в 1863 году. Его строили 10 лет, и в первый день им воспользовались около 30 000 человек.', category: 'История' },
+            { text: 'Первый компьютерный вирус был создан в 1971 году и назывался Creeper. Он просто выводил на экран сообщение: "I\'m the creeper, catch me if you can!"', category: 'IT' },
+            { text: 'Среднестатистический современный смартфон имеет больше вычислительной мощности, чем компьютеры, использовавшиеся в программе Apollo 11 для посадки на Луну.', category: 'IT' },
+            { text: 'Первая веб-камера была создана в Кембриджском университете в 1991 году. Она следила за кофейником, чтобы сотрудники знали, когда он пуст.', category: 'IT' },
+            { text: 'В 1969 году был отправлен первый e-mail. Его отправил Рэй Томлинсон, и он был просто тестовым текстом без особого смысла.', category: 'IT' },
+            { text: 'Термин "баг" (ошибка) в программировании появился после того, как в 1947 году в компьютере Mark II нашли настоящую моль, замкнувшую контакты.', category: 'IT' },
+            { text: 'Человеческий мозг состоит примерно на 75% из воды. Даже небольшое обезвоживание может ухудшить когнитивные способности.', category: 'Психология' },
+            { text: 'Человек может запомнить около 10 000 различных лиц за свою жизнь. Это примерно столько же, сколько слов в среднем словарном запасе.', category: 'Психология' },
+            { text: 'Стресс вызывает изменения в работе мозга: увеличивается выработка кортизола, что может ухудшать память и концентрацию.', category: 'Психология' },
+            { text: 'Мозг не чувствует боли, потому что в нём нет болевых рецепторов. Головная боль возникает из-за нервов в оболочке мозга, сосудах или мышцах головы.', category: 'Психология' },
+            { text: 'Человек в среднем принимает около 35 000 решений в день, начиная от "что надеть" и заканчивая "как ответить на сообщение".', category: 'Психология' },
+            { text: 'Осьминоги имеют три сердца. Одно перегоняет кровь по телу, а два других — через жабры. А ещё у них синяя кровь, потому что в ней содержится медь, а не железо.', category: 'Природа' },
+            { text: 'У жирафа самое высокое кровяное давление среди всех животных — около 280/180 мм рт. ст., чтобы прокачивать кровь до головы на высоту 5-6 метров.', category: 'Природа' },
+            { text: 'Муравьи могут поднимать предметы в 10–50 раз тяжелее собственного веса. Если бы человек обладал такой силой, он мог бы поднять легковой автомобиль.', category: 'Природа' },
+            { text: 'Дельфины спят с одним открытым глазом и одним полушарием мозга, которое остаётся активным, чтобы следить за опасностью и всплывать для дыхания.', category: 'Природа' },
+            { text: 'Слон — единственное животное, которое не умеет прыгать. Его вес и строение ног не позволяют ему оторвать все четыре ноги от земли одновременно.', category: 'Природа' },
+            { text: 'Пчелы могут распознавать лица людей. Они используют ту же зрительную стратегию, что и человек, запоминая особенности лица.', category: 'Природа' }
+        ];
+
+        function showRandomFact() {
+            const idx = Math.floor(Math.random() * facts.length);
+            const f = facts[idx];
+            document.getElementById('factText').textContent = f.text;
+            document.getElementById('factCategory').textContent = f.category;
+        }
+    </script>
+
+    <!-- ===== УВЕДОМЛЕНИЯ ===== -->
+    <script>
+        // ============================================
+        // 🔔 УВЕДОМЛЕНИЯ
+        // ============================================
+
+        function updateNotifyStatus(enabled) {
+            const status = document.getElementById('notifyStatus');
+            if (status) {
+                status.textContent = enabled ? '🔔 Включены' : '🔕 Отключены';
+                status.style.color = enabled ? '#27ae60' : '#e74c3c';
+            }
+        }
+
+        function toggleNotifications(checked) {
+            if (typeof toggleScheduleNotifications === 'function') {
+                toggleScheduleNotifications(checked);
+            } else {
+                localStorage.setItem('scheduleNotifyEnabled', String(checked));
+            }
+            updateNotifyStatus(checked);
+            if (checked) {
+                if (typeof requestNotificationPermission === 'function') {
+                    requestNotificationPermission();
+                } else if ('Notification' in window && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            }
+        }
+
+        function sendTestNotifications() {
+            try {
+                const notif = new Notification('📢 Тестовое уведомление', {
+                    body: 'Уведомления о парах работают! 🎉',
+                    icon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png'
+                });
+                console.log('✅ Тестовое уведомление отправлено');
+
+                setTimeout(() => {
+                    console.log('⏳ Отправка уведомления о завтрашних парах...');
+                    if (typeof showTomorrowNotification === 'function') {
+                        showTomorrowNotification();
+                    } else {
+                        new Notification('📅 Завтрашние пары', {
+                            body: 'Функция showTomorrowNotification не загружена. Проверьте schedule-notify.js',
+                            icon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4da.png'
+                        });
+                    }
+                }, 1500);
+
+            } catch (e) {
+                console.error('❌ Ошибка:', e);
+                alert('❌ Ошибка при отправке уведомления: ' + e.message);
+            }
+        }
+
+        function testNotification() {
+            console.log('🔔 Тест уведомлений запущен...');
+
+            if (!('Notification' in window)) {
+                alert('❌ Ваш браузер не поддерживает уведомления');
+                return;
+            }
+
+            if (Notification.permission === 'denied') {
+                alert('⚠️ Уведомления заблокированы в настройках браузера.\n\nРазрешите их и обновите страницу.');
+                return;
+            }
+
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    console.log('📢 Разрешение:', permission);
+                    if (permission === 'granted') {
+                        sendTestNotifications();
+                    } else {
+                        alert('⚠️ Разрешение на уведомления не получено.');
+                    }
+                });
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                sendTestNotifications();
+            }
+        }
+
+        function initNotifications() {
+            try {
+                if (typeof startNotificationScheduler === 'function') {
+                    startNotificationScheduler();
+                    console.log('🔔 Планировщик уведомлений запущен');
+                } else {
+                    console.warn('⚠️ startNotificationScheduler не найдена');
+                }
+
+                const toggle = document.getElementById('notifyToggle');
+                if (toggle) {
+                    const enabled = localStorage.getItem('scheduleNotifyEnabled') !== 'false';
+                    toggle.checked = enabled;
+                    updateNotifyStatus(enabled);
+                }
+            } catch (e) {
+                console.error('❌ Ошибка инициализации уведомлений:', e);
+            }
+        }
+
+        window.toggleNotifications = toggleNotifications;
+        window.testNotification = testNotification;
+        window.updateNotifyStatus = updateNotifyStatus;
+        window.initNotifications = initNotifications;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initNotifications();
+        });
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>

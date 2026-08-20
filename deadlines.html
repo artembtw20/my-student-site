@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дедлайны</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <div class="header">
+        <div class="logo">
+            <img src="10837270.png" alt="Логотип">
+            <span id="headerName">Беккер Артём</span>
+        </div>
+        <div class="nav">
+            <a href="index.html">🏠 Главная</a>
+            <a href="sitemap.html">🗺️ Все разделы</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== КОНТЕЙНЕР ===== -->
+    <div class="container">
+        <div class="page-card" style="text-align: left; align-items: stretch;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h1 style="font-size: 28px; color: var(--text-white);">⏰ Дедлайны</h1>
+                    <p class="subtitle" style="font-size: 15px;">Все задания и сроки их сдачи</p>
+                </div>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+            </div>
+
+            <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
+
+            <!-- ===== КНОПКА ДОБАВЛЕНИЯ ===== -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                <button class="add-deadline-btn" onclick="showAddDeadline()">➕ Добавить дедлайн</button>
+            </div>
+
+            <!-- ===== ФОРМА ДОБАВЛЕНИЯ ===== -->
+            <div id="addDeadlineForm" style="display: none; margin-bottom: 16px; padding: 16px; background: var(--bg-input); border-radius: var(--radius-medium);">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="text" id="deadlineSubject" placeholder="Предмет" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
+                    <input type="text" id="deadlineTask" placeholder="Что сделать" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
+                    <input type="date" id="deadlineDate" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
+                    <select id="deadlinePriority" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
+                        <option value="high">🔴 Высокий</option>
+                        <option value="medium">🟡 Средний</option>
+                        <option value="low">🟢 Низкий</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="generate-btn" onclick="addDeadline()" style="width: auto; padding: 10px 25px;">💾 Сохранить</button>
+                    <button class="generate-btn" onclick="document.getElementById('addDeadlineForm').style.display='none'" style="width: auto; padding: 10px 25px; background: #666;">❌ Отмена</button>
+                </div>
+            </div>
+
+            <!-- ===== СПИСОК ДЕДЛАЙНОВ ===== -->
+            <div id="deadlinesList" class="deadlines-list">
+                <!-- Заполняется через JavaScript -->
+            </div>
+
+        </div>
+
+        <div class="footer">
+            © 2026 Мой студенческий сайт
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+
+        // ============================================
+        // ДЕДЛАЙНЫ
+        // ============================================
+
+        function getDeadlines() {
+            const data = localStorage.getItem('deadlines');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveDeadlines(deadlines) {
+            localStorage.setItem('deadlines', JSON.stringify(deadlines));
+            renderDeadlines();
+        }
+
+        function showAddDeadline() {
+            const form = document.getElementById('addDeadlineForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if (form.style.display === 'block') {
+                document.getElementById('deadlineDate').value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        function addDeadline() {
+            const subject = document.getElementById('deadlineSubject').value.trim();
+            const task = document.getElementById('deadlineTask').value.trim();
+            const date = document.getElementById('deadlineDate').value;
+            const priority = document.getElementById('deadlinePriority').value;
+
+            if (!subject || !task || !date) {
+                alert('⚠️ Заполните все поля');
+                return;
+            }
+
+            const deadlines = getDeadlines();
+            deadlines.push({
+                id: Date.now(),
+                subject,
+                task,
+                date,
+                priority,
+                createdAt: new Date().toISOString()
+            });
+
+            saveDeadlines(deadlines);
+            document.getElementById('addDeadlineForm').style.display = 'none';
+            document.getElementById('deadlineSubject').value = '';
+            document.getElementById('deadlineTask').value = '';
+        }
+
+        function deleteDeadline(id) {
+            if (!confirm('Удалить дедлайн?')) return;
+            let deadlines = getDeadlines();
+            deadlines = deadlines.filter(d => d.id !== id);
+            saveDeadlines(deadlines);
+        }
+
+        function getPriorityLabel(priority) {
+            const map = {
+                high: '🔴 Высокий',
+                medium: '🟡 Средний',
+                low: '🟢 Низкий'
+            };
+            return map[priority] || '🟡 Средний';
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            return `${parts[2]}.${parts[1]}.${parts[0]}`;
+        }
+
+        function getDaysLeft(dateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const target = new Date(dateStr + 'T00:00:00');
+            return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function getStatusText(daysLeft) {
+            if (daysLeft < 0) return '❌ Просрочено';
+            if (daysLeft === 0) return '⚠️ Сегодня!';
+            if (daysLeft <= 2) return '🔴 Срочно!';
+            if (daysLeft <= 5) return '🟠 Скоро';
+            if (daysLeft <= 14) return '🟡 Не забыть';
+            return '🟢 Есть время';
+        }
+
+        function getStatusColor(daysLeft) {
+            if (daysLeft < 0) return '#e74c3c';
+            if (daysLeft === 0) return '#e74c3c';
+            if (daysLeft <= 2) return '#e74c3c';
+            if (daysLeft <= 5) return '#f39c12';
+            if (daysLeft <= 14) return '#f1c40f';
+            return '#27ae60';
+        }
+
+        function renderDeadlines() {
+            const deadlines = getDeadlines();
+            const container = document.getElementById('deadlinesList');
+
+            if (deadlines.length === 0) {
+                container.innerHTML = `
+                        <div style="text-align:center; color: var(--text-gray); padding: 30px 0; font-size: 15px;">
+                            Нет дедлайнов. Добавьте первый!
+                        </div>
+                    `;
+                return;
+            }
+
+            // Сортировка по дате (ближайшие сверху)
+            deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            container.innerHTML = deadlines.map(d => {
+                const daysLeft = getDaysLeft(d.date);
+                const statusText = getStatusText(daysLeft);
+                const statusColor = getStatusColor(daysLeft);
+                const formattedDate = formatDate(d.date);
+
+                return `
+                        <div class="deadline-card" style="border-left: 4px solid ${statusColor};">
+                            <div class="deadline-card-content">
+                                <div class="deadline-card-header">
+                                    <span class="deadline-card-subject">${d.subject}</span>
+                                    <span class="deadline-card-status" style="color: ${statusColor}; background: ${statusColor}22; padding: 2px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                                        ${statusText}
+                                    </span>
+                                </div>
+                                <div class="deadline-card-task">📋 ${d.task}</div>
+                                <div class="deadline-card-meta">
+                                    <span class="deadline-card-date">📅 ${formattedDate}</span>
+                                    <span class="deadline-card-priority">${getPriorityLabel(d.priority)}</span>
+                                    <button class="deadline-card-delete" onclick="deleteDeadline(${d.id})">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+        }
+
+        window.onload = function () {
+            loadTheme();
+            renderDeadlines();
+            console.log('⏰ Дедлайны загружены');
+        };
+    </script>
+
+    <script src="header.js"></script>
+
+</body>
+</html>
