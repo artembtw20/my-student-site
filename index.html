@@ -33,11 +33,20 @@
                 <div class="card-header">☀️ ПОГОДА</div>
                 <div class="weather-temp" id="w-temp">--°</div>
                 <div class="weather-desc" id="w-desc">Загрузка...</div>
-                <div class="weather-details" id="w-details">📍 Благовещенск</div>
+                <div class="weather-details" id="w-details">📍 <span id="cityName">Благовещенск</span></div>
                 <div class="weather-source" id="w-source">Данные: Open-Meteo</div>
+
+                <!-- ===== ВЫБОР ГОРОДА ===== -->
+                <div style="margin-top: 10px;">
+                    <select id="citySelect" onchange="changeCity(this.value)" style="width:100%; padding:6px 10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-light); font-size:13px; cursor:pointer;">
+                        <option value="50.2907,127.5272,Благовещенск">📍 Благовещенск</option>
+                        <option value="55.7558,37.6173,Москва">📍 Москва</option>
+                        <option value="59.9343,30.3351,Санкт-Петербург">📍 Санкт-Петербург</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- ===== ПОСЕЩАЕМОСТЬ (НОВАЯ ЛОГИКА) ===== -->
+            <!-- Посещаемость -->
             <div class="info-card attendance-card">
                 <div class="card-header">📊 ПОСЕЩАЕМОСТЬ</div>
                 <div class="attendance-semester">📚 Весь семестр</div>
@@ -169,15 +178,12 @@
     <script src="db.js"></script>
     <script src="schedule-data.js"></script>
     <script src="schedule-notify.js"></script>
+    <script src="header.js"></script>
 
     <!-- ===== ОСНОВНОЙ JS ===== -->
     <script>
-        // ===== КООРДИНАТЫ БЛАГОВЕЩЕНСКА =====
-        const BLAGOVESHCHENSK_LAT = 50.2907;
-        const BLAGOVESHCHENSK_LON = 127.5272;
-
         // ===== КОЛИЧЕСТВО НЕДЕЛЬ В СЕМЕСТРЕ =====
-        const WEEKS_IN_SEMESTER = 17; // ← УКАЖИ СВОЁ КОЛИЧЕСТВО НЕДЕЛЬ!
+        const WEEKS_IN_SEMESTER = 18;
 
         // ===== АВТОМАТИЧЕСКИЙ ПОДСЧЁТ ПАР ЗА СЕМЕСТР =====
         function calculateTotalLessons() {
@@ -191,7 +197,6 @@
                 Object.keys(week).forEach(day => {
                     const lessons = week[day] || [];
                     lessons.forEach(lesson => {
-                        // Считаем только НЕПУСТЫЕ пары
                         if (lesson.name && lesson.name !== '—' && lesson.name !== '-' && lesson.name !== '') {
                             totalPerTwoWeeks++;
                         }
@@ -199,9 +204,8 @@
                 });
             });
 
-            // Всего пар за семестр = пары за 2 недели × (всего недель / 2)
             const total = Math.round(totalPerTwoWeeks * (WEEKS_IN_SEMESTER / 2));
-            return total > 0 ? total : 1; // Защита от деления на 0
+            return total > 0 ? total : 1;
         }
 
         // ============================================
@@ -215,7 +219,6 @@
                 attended: 0,
                 total: TOTAL_LESSONS
             };
-            // Обновляем total, если изменилось расписание
             if (data.total !== TOTAL_LESSONS) {
                 data.total = TOTAL_LESSONS;
                 localStorage.setItem('attendance', JSON.stringify(data));
@@ -242,20 +245,18 @@
             document.getElementById('attendanceSub').textContent = `Посещено ${overall.attended} из ${overall.total} пар (${p}%)`;
         }
 
-        // ===== РУЧНАЯ ОТМЕТКА =====
         function markAttendance() {
             const overall = getOverallAttendance();
             if (overall.attended < overall.total) {
                 overall.attended++;
                 saveOverallAttendance(overall);
                 updateAttendanceDisplay();
-                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended / overall.total) * 100)}%)`);
+                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended/overall.total)*100)}%)`);
             } else {
                 alert('🎉 Вы посетили все пары в семестре!');
             }
         }
 
-        // ===== ПРОПУСТИЛ =====
         function markMiss() {
             const overall = getOverallAttendance();
             if (overall.attended > 0) {
@@ -268,7 +269,6 @@
             }
         }
 
-        // ===== СБРОС =====
         function resetAttendance() {
             if (confirm('🔄 Сбросить все данные посещаемости?')) {
                 localStorage.removeItem('attendance');
@@ -280,6 +280,58 @@
         }
 
         // ============================================
+        // 🌤️ ПОГОДА С ВЫБОРОМ ГОРОДА
+        // ============================================
+
+        let currentCity = { lat: 50.2907, lon: 127.5272, name: 'Благовещенск' };
+
+        function changeCity(value) {
+            const [lat, lon, name] = value.split(',');
+            currentCity = { lat: parseFloat(lat), lon: parseFloat(lon), name: name };
+            document.getElementById('cityName').textContent = name;
+            localStorage.setItem('selectedCity', value);
+            fetchWeather();
+        }
+
+        function loadSavedCity() {
+            const saved = localStorage.getItem('selectedCity');
+            if (saved) {
+                const [lat, lon, name] = saved.split(',');
+                currentCity = { lat: parseFloat(lat), lon: parseFloat(lon), name: name };
+                document.getElementById('cityName').textContent = name;
+                document.getElementById('citySelect').value = saved;
+            }
+        }
+
+        async function fetchWeather() {
+            try {
+                const res = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${currentCity.lat}&longitude=${currentCity.lon}&current_weather=true&timezone=auto`
+                );
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                const wind = data.current_weather.windspeed;
+
+                const map = {
+                    0: 'Ясно ☀️', 1: 'Малооблачно 🌤️', 2: 'Переменная облачность ⛅',
+                    3: 'Пасмурно ☁️', 45: 'Туман 🌫️', 48: 'Иней 🌫️',
+                    51: 'Морось 🌦️', 53: 'Морось 🌦️', 55: 'Морось 🌧️',
+                    61: 'Дождь 🌧️', 63: 'Дождь 🌧️', 65: 'Дождь 🌧️',
+                    71: 'Снег ❄️', 73: 'Снег ❄️', 75: 'Снег ❄️',
+                    80: 'Ливень 🌧️', 81: 'Ливень 🌧️', 82: 'Ливень 🌧️',
+                    95: 'Гроза ⛈️', 96: 'Гроза с градом ⛈️', 99: 'Гроза с градом ⛈️'
+                };
+
+                document.getElementById('w-temp').textContent = `${temp}°`;
+                document.getElementById('w-desc').textContent = map[code] || 'Неизвестно';
+                document.getElementById('w-details').innerHTML = `📍 ${currentCity.name}<br>💨 Ветер: ${wind} км/ч`;
+            } catch {
+                document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
+            }
+        }
+
+        // ============================================
         // 📅 РАСПИСАНИЕ
         // ============================================
 
@@ -287,7 +339,8 @@
 
         function getCurrentWeekNumber() {
             const now = new Date();
-            const start = new Date(2026, 1, 1);
+            const start = new Date(2026, 8, 1);
+            if (now < start) return 1;
             const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
             return (diff % 2 === 0) ? 1 : 2;
         }
@@ -325,7 +378,6 @@
             att[key] = !wasAttended;
             saveTodayAttendance(att);
 
-            // Обновляем общую статистику
             const overall = getOverallAttendance();
             const lessons = getTodayLessons();
             const validLessons = lessons.filter(l => l.name && l.name !== '—' && l.name !== '-' && l.name !== '');
@@ -383,13 +435,13 @@
                 const attended = isAttended(index);
                 const teacher = lesson.teacher || '';
                 return `
-                            <div class="schedule-item ${attended ? 'present' : 'upcoming'}" onclick="toggleAttendance(${index})" style="cursor:pointer;">
-                                <span class="schedule-time">${lesson.time || ''}</span>
-                                <span class="schedule-name">${lesson.name}</span>
-                                ${teacher ? `<span class="schedule-teacher">${teacher}</span>` : ''}
-                                <span class="schedule-status">${attended ? '✅ Присутствовал' : '⏳ Отметить'}</span>
-                            </div>
-                        `;
+                    <div class="schedule-item ${attended ? 'present' : 'upcoming'}" onclick="toggleAttendance(${index})" style="cursor:pointer;">
+                        <span class="schedule-time">${lesson.time || ''}</span>
+                        <span class="schedule-name">${lesson.name}</span>
+                        ${teacher ? `<span class="schedule-teacher">${teacher}</span>` : ''}
+                        <span class="schedule-status">${attended ? '✅ Присутствовал' : '⏳ Отметить'}</span>
+                    </div>
+                `;
             }).join('');
         }
 
@@ -437,33 +489,16 @@
                 const priorityLabel = { high: '🔴', medium: '🟡', low: '🟢' }[d.priority] || '🟡';
                 const status = daysLeft < 0 ? '❌ Просрочено' : daysLeft === 0 ? '⚠️ Сегодня!' : daysLeft <= 2 ? '🔴 Срочно!' : daysLeft <= 5 ? '🟠 Скоро' : daysLeft <= 14 ? '🟡 Не забыть' : '🟢 Есть время';
                 return `
-                            <div class="deadline-item" style="border-left-color:${color};">
-                                <div class="deadline-info">
-                                    <span class="deadline-subject">${priorityLabel} ${d.subject}</span>
-                                    <span class="deadline-task">${d.task}</span>
-                                </div>
-                                <span class="deadline-status" style="color:${color};">${status}</span>
-                                <span class="deadline-date">📅 ${d.date}</span>
-                            </div>
-                        `;
+                    <div class="deadline-item" style="border-left-color:${color};">
+                        <div class="deadline-info">
+                            <span class="deadline-subject">${priorityLabel} ${d.subject}</span>
+                            <span class="deadline-task">${d.task}</span>
+                        </div>
+                        <span class="deadline-status" style="color:${color};">${status}</span>
+                        <span class="deadline-date">📅 ${d.date}</span>
+                    </div>
+                `;
             }).join('');
-        }
-
-        // ============================================
-        // 🔝 КНОПКА "НАВЕРХ"
-        // ============================================
-
-        window.addEventListener('scroll', function () {
-            const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ============================================
@@ -491,6 +526,7 @@
 
         window.onload = function () {
             loadTheme();
+            loadSavedCity();
             fetchWeather();
             showRandomFact();
             updateTime();
@@ -503,35 +539,8 @@
         };
 
         // ============================================
-        // ⚙️ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (погода, тема, бэкап, факты)
+        // ⚙️ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
         // ============================================
-
-        // ===== ПОГОДА =====
-        async function fetchWeather() {
-            try {
-                const res = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${BLAGOVESHCHENSK_LAT}&longitude=${BLAGOVESHCHENSK_LON}&current_weather=true&timezone=Asia/Yakutsk`
-                );
-                const data = await res.json();
-                const temp = Math.round(data.current_weather.temperature);
-                const code = data.current_weather.weathercode;
-                const wind = data.current_weather.windspeed;
-                const map = {
-                    0: 'Ясно ☀️', 1: 'Малооблачно 🌤️', 2: 'Переменная облачность ⛅',
-                    3: 'Пасмурно ☁️', 45: 'Туман 🌫️', 48: 'Иней 🌫️',
-                    51: 'Морось 🌦️', 53: 'Морось 🌦️', 55: 'Морось 🌧️',
-                    61: 'Дождь 🌧️', 63: 'Дождь 🌧️', 65: 'Дождь 🌧️',
-                    71: 'Снег ❄️', 73: 'Снег ❄️', 75: 'Снег ❄️',
-                    80: 'Ливень 🌧️', 81: 'Ливень 🌧️', 82: 'Ливень 🌧️',
-                    95: 'Гроза ⛈️', 96: 'Гроза с градом ⛈️', 99: 'Гроза с градом ⛈️'
-                };
-                document.getElementById('w-temp').textContent = `${temp}°`;
-                document.getElementById('w-desc').textContent = map[code] || 'Неизвестно';
-                document.getElementById('w-details').innerHTML = `📍 Благовещенск<br>💨 Ветер: ${wind} км/ч`;
-            } catch {
-                document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
-            }
-        }
 
         // ===== ТЕМА =====
         function toggleTheme() {
@@ -664,6 +673,20 @@
             document.getElementById('factText').textContent = f.text;
             document.getElementById('factCategory').textContent = f.category;
         }
+
+        // ===== КНОПКА "НАВЕРХ" =====
+        window.addEventListener('scroll', function () {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 
     <!-- ===== УВЕДОМЛЕНИЯ ===== -->
@@ -777,12 +800,10 @@
         window.updateNotifyStatus = updateNotifyStatus;
         window.initNotifications = initNotifications;
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             initNotifications();
         });
     </script>
-
-    <script src="header.js"></script>
 
 </body>
 </html>
