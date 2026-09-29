@@ -81,7 +81,7 @@ function getTomorrowLessons() {
 // ===== ОПРЕДЕЛЕНИЕ НЕДЕЛИ =====
 function getCurrentWeekNumber() {
     const now = new Date();
-    const start = new Date(2026, 1, 1);
+    const start = new Date(2026, 7, 31);
     const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
     return (diff % 2 === 0) ? 1 : 2;
 }

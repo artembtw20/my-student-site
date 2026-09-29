@@ -182,10 +182,25 @@
 
     <!-- ===== ОСНОВНОЙ JS ===== -->
     <script>
-        // ===== КОЛИЧЕСТВО НЕДЕЛЬ В СЕМЕСТРЕ =====
+        // ============================================
+        // ⚙️ НАСТРОЙКИ СЕМЕСТРА
+        // ============================================
         const WEEKS_IN_SEMESTER = 18;
+        const SEMESTER_START = new Date(2026, 7, 31); // 31 августа 2026 (понедельник)
 
-        // ===== АВТОМАТИЧЕСКИЙ ПОДСЧЁТ ПАР ЗА СЕМЕСТР =====
+        // ============================================
+        // 📅 ОПРЕДЕЛЕНИЕ НЕДЕЛИ (1 / 2)
+        // ============================================
+        function getCurrentWeekNumber() {
+            const now = new Date();
+            if (now < SEMESTER_START) return 1;
+            const diff = Math.floor((now - SEMESTER_START) / (7 * 24 * 60 * 60 * 1000));
+            return (diff % 2 === 0) ? 1 : 2;
+        }
+
+        // ============================================
+        // 📊 ПОДСЧЁТ ПАР ЗА СЕМЕСТР
+        // ============================================
         function calculateTotalLessons() {
             const data = getSchedule();
             let totalPerTwoWeeks = 0;
@@ -208,12 +223,11 @@
             return total > 0 ? total : 1;
         }
 
-        // ============================================
-        // 📊 ПОСЕЩАЕМОСТЬ (ЗА ВЕСЬ СЕМЕСТР)
-        // ============================================
-
         const TOTAL_LESSONS = calculateTotalLessons();
 
+        // ============================================
+        // 📊 ПОСЕЩАЕМОСТЬ
+        // ============================================
         function getOverallAttendance() {
             const data = JSON.parse(localStorage.getItem('attendance')) || {
                 attended: 0,
@@ -251,7 +265,7 @@
                 overall.attended++;
                 saveOverallAttendance(overall);
                 updateAttendanceDisplay();
-                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended/overall.total)*100)}%)`);
+                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended / overall.total) * 100)}%)`);
             } else {
                 alert('🎉 Вы посетили все пары в семестре!');
             }
@@ -280,9 +294,8 @@
         }
 
         // ============================================
-        // 🌤️ ПОГОДА С ВЫБОРОМ ГОРОДА
+        // 🌤️ ПОГОДА
         // ============================================
-
         let currentCity = { lat: 50.2907, lon: 127.5272, name: 'Благовещенск' };
 
         function changeCity(value) {
@@ -332,18 +345,9 @@
         }
 
         // ============================================
-        // 📅 РАСПИСАНИЕ
+        // 📅 РАСПИСАНИЕ И ОТМЕТКИ
         // ============================================
-
         const ATTENDANCE_KEY = 'todayAttendance';
-
-        function getCurrentWeekNumber() {
-            const now = new Date();
-            const start = new Date(2026, 8, 1);
-            if (now < start) return 1;
-            const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
-            return (diff % 2 === 0) ? 1 : 2;
-        }
 
         function getTodayDay() {
             return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][new Date().getDay()];
@@ -365,26 +369,29 @@
             localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(data));
         }
 
+        // ===== КЛЮЧ С ДАТОЙ (чтобы отметки не "переезжали") =====
+        function getTodayKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         function isAttended(index) {
-            const key = `${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
+            const key = `${getTodayKey()}_${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
             return getTodayAttendance()[key] || false;
         }
 
         function toggleAttendance(index) {
             const att = getTodayAttendance();
-            const key = `${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
+            const key = `${getTodayKey()}_${getCurrentWeekNumber()}_${getTodayDay()}_${index}`;
             const wasAttended = att[key] || false;
 
             att[key] = !wasAttended;
             saveTodayAttendance(att);
 
             const overall = getOverallAttendance();
-            const lessons = getTodayLessons();
-            const validLessons = lessons.filter(l => l.name && l.name !== '—' && l.name !== '-' && l.name !== '');
-
-            if (overall.total === 0 && validLessons.length > 0) {
-                overall.total = validLessons.length;
-            }
 
             if (!wasAttended) {
                 overall.attended++;
@@ -423,12 +430,6 @@
                 return;
             }
 
-            const overall = getOverallAttendance();
-            if (overall.total === 0) {
-                overall.total = TOTAL_LESSONS;
-                saveOverallAttendance(overall);
-            }
-
             title.textContent = `📅 ${dayNames[todayName] || 'Сегодня'} (${getCurrentWeekNumber()}-я неделя)`;
 
             container.innerHTML = validLessons.map((lesson, index) => {
@@ -448,7 +449,6 @@
         // ============================================
         // ⏰ СРОЧНЫЕ ДЕДЛАЙНЫ
         // ============================================
-
         function getDeadlines() {
             const data = localStorage.getItem('deadlines');
             return data ? JSON.parse(data) : [];
@@ -504,7 +504,6 @@
         // ============================================
         // 🎬 АНИМАЦИЯ ПРИ СКРОЛЛЕ
         // ============================================
-
         document.addEventListener('DOMContentLoaded', function () {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -523,7 +522,6 @@
         // ============================================
         // 🚀 ЗАПУСК
         // ============================================
-
         window.onload = function () {
             loadTheme();
             loadSavedCity();
@@ -536,6 +534,7 @@
             setInterval(fetchWeather, 600000);
             console.log('🏠 Главная страница загружена');
             console.log('📊 Всего пар за семестр:', TOTAL_LESSONS);
+            console.log('📅 Текущая неделя:', getCurrentWeekNumber());
         };
 
         // ============================================
@@ -568,17 +567,20 @@
             }
         }
 
-        // ===== ВРЕМЯ =====
+        // ===== ВРЕМЯ (теперь тоже с датой 31 августа) =====
         function updateTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('currentDate').textContent = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-            const start = new Date(2026, 8, 1);
-            const diff = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
-            document.getElementById('weekNumber').textContent = `Неделя ${Math.max(0, diff + 1)}`;
+
+            if (now < SEMESTER_START) {
+                document.getElementById('weekNumber').textContent = `Неделя 1`;
+            } else {
+                const diff = Math.floor((now - SEMESTER_START) / (7 * 24 * 60 * 60 * 1000));
+                document.getElementById('weekNumber').textContent = `Неделя ${(diff % 2 === 0) ? 1 : 2}`;
+            }
         }
         setInterval(updateTime, 1000);
-        updateTime();
 
         // ===== БЭКАП =====
         async function exportData() {
@@ -721,7 +723,7 @@
 
         function sendTestNotifications() {
             try {
-                const notif = new Notification('📢 Тестовое уведомление', {
+                new Notification('📢 Тестовое уведомление', {
                     body: 'Уведомления о парах работают! 🎉',
                     icon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png'
                 });
@@ -800,7 +802,7 @@
         window.updateNotifyStatus = updateNotifyStatus;
         window.initNotifications = initNotifications;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initNotifications();
         });
     </script>
