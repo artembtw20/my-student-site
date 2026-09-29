@@ -317,32 +317,56 @@
         }
 
         async function fetchWeather() {
-            try {
-                const res = await fetch(
-                    `https://api.open-meteo.com/v1/forecast?latitude=${currentCity.lat}&longitude=${currentCity.lon}&current_weather=true&timezone=auto`
-                );
-                const data = await res.json();
-                const temp = Math.round(data.current_weather.temperature);
-                const code = data.current_weather.weathercode;
-                const wind = data.current_weather.windspeed;
+    try {
+        // ⚠️ ВСТАВЬ СВОЙ КЛЮЧ СЮДА
+        const YANDEX_WEATHER_KEY = '744418cd-eb01-4c7a-8596-714f12824dd2';
 
-                const map = {
-                    0: 'Ясно ☀️', 1: 'Малооблачно 🌤️', 2: 'Переменная облачность ⛅',
-                    3: 'Пасмурно ☁️', 45: 'Туман 🌫️', 48: 'Иней 🌫️',
-                    51: 'Морось 🌦️', 53: 'Морось 🌦️', 55: 'Морось 🌧️',
-                    61: 'Дождь 🌧️', 63: 'Дождь 🌧️', 65: 'Дождь 🌧️',
-                    71: 'Снег ❄️', 73: 'Снег ❄️', 75: 'Снег ❄️',
-                    80: 'Ливень 🌧️', 81: 'Ливень 🌧️', 82: 'Ливень 🌧️',
-                    95: 'Гроза ⛈️', 96: 'Гроза с градом ⛈️', 99: 'Гроза с градом ⛈️'
-                };
+        const url = `https://api.weather.yandex.ru/v2/forecast?lat=${currentCity.lat}&lon=${currentCity.lon}&lang=ru_RU&limit=1`;
 
-                document.getElementById('w-temp').textContent = `${temp}°`;
-                document.getElementById('w-desc').textContent = map[code] || 'Неизвестно';
-                document.getElementById('w-details').innerHTML = `📍 ${currentCity.name}<br>💨 Ветер: ${wind} км/ч`;
-            } catch {
-                document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
+        const res = await fetch(url, {
+            headers: {
+                'X-Yandex-Weather-Key': YANDEX_WEATHER_KEY
             }
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status}`);
         }
+
+        const data = await res.json();
+        const fact = data.fact;
+
+        const conditionMap = {
+            'clear': 'Ясно ☀️',
+            'partly-cloudy': 'Малооблачно 🌤️',
+            'cloudy': 'Облачно с прояснениями ⛅',
+            'overcast': 'Пасмурно ☁️',
+            'light-rain': 'Небольшой дождь 🌦️',
+            'rain': 'Дождь 🌧️',
+            'heavy-rain': 'Сильный дождь 🌧️',
+            'showers': 'Ливень 🌧️',
+            'wet-snow': 'Дождь со снегом 🌨️',
+            'light-snow': 'Небольшой снег 🌨️',
+            'snow': 'Снег ❄️',
+            'snow-showers': 'Снегопад ❄️',
+            'hail': 'Град 🌨️',
+            'thunderstorm': 'Гроза ⛈️',
+            'thunderstorm-with-rain': 'Дождь с грозой ⛈️',
+            'thunderstorm-with-hail': 'Гроза с градом ⛈️'
+        };
+
+        const desc = conditionMap[fact.condition] || fact.condition;
+        const temp = fact.temp;
+        const wind = fact.wind_speed;
+
+        document.getElementById('w-temp').textContent = `${temp}°`;
+        document.getElementById('w-desc').textContent = desc;
+        document.getElementById('w-details').innerHTML = `📍 ${currentCity.name}<br>💨 Ветер: ${wind} м/с`;
+    } catch (e) {
+        console.error('Ошибка погоды:', e);
+        document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
+    }
+}
 
         // ============================================
         // 📅 РАСПИСАНИЕ И ОТМЕТКИ
