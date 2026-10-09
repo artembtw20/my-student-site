@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +19,13 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -29,25 +36,25 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">📅 Расписание</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white);"><i data-lucide="calendar" style="vertical-align:-4px;"></i> Расписание</h1>
                     <p class="subtitle" style="font-size: 15px;">2-й семестр · Первая подгруппа</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад</a>
             </div>
 
             <!-- Чипсы -->
             <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
-                <span class="chip">📌 1-я неделя</span>
-                <span class="chip chip-blue">📌 2-я неделя</span>
-                <span class="chip chip-green">✅ Сегодня: 4 пары</span>
+                <span class="chip"><i data-lucide="pin"></i> 1-я неделя</span>
+                <span class="chip chip-blue"><i data-lucide="pin"></i> 2-я неделя</span>
+                <span class="chip chip-green"><i data-lucide="check"></i> Сегодня: 4 пары</span>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
 
             <!-- ===== ПЕРЕКЛЮЧАТЕЛЬ НЕДЕЛЬ ===== -->
             <div class="schedule-tabs animate-on-scroll">
-                <button class="schedule-tab active" data-week="1" onclick="switchWeek(1)">📌 1-я неделя</button>
-                <button class="schedule-tab" data-week="2" onclick="switchWeek(2)">📌 2-я неделя</button>
+                <button class="schedule-tab active" data-week="1" onclick="switchWeek(1)"><i data-lucide="pin"></i> 1-я неделя</button>
+                <button class="schedule-tab" data-week="2" onclick="switchWeek(2)"><i data-lucide="pin"></i> 2-я неделя</button>
             </div>
 
             <!-- ===== КОНТЕЙНЕР ДЛЯ ТАБЛИЦЫ ===== -->
@@ -57,7 +64,7 @@
 
             <!-- ===== ПОДСКАЗКА ===== -->
             <div style="margin-top: 12px; font-size: 13px; color: var(--text-gray); text-align: center;">
-                ✏️ Кликни по ячейке, чтобы изменить название или преподавателя
+                <i data-lucide="pencil" style="width:14px;height:14px;vertical-align:-2px;"></i> Кликни по ячейке, чтобы изменить название или преподавателя
             </div>
 
         </div>
@@ -68,24 +75,30 @@
     </div>
 
     <!-- ===== КНОПКА "НАВЕРХ" ===== -->
-    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()"><i data-lucide="arrow-up"></i></button>
 
     <!-- ===== JAVASCRIPT ===== -->
     <script src="schedule-data.js"></script>
     <script>
+        // ===== ИКОНКИ LUCIDE =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -93,10 +106,11 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
         // ===== РЕНДЕРИНГ ТАБЛИЦЫ =====
@@ -105,7 +119,6 @@
             const weekKey = weekNumber === 1 ? 'week1' : 'week2';
             const weekData = data[weekKey];
 
-            // ⚠️ ДОБАВЛЯЕМ СУББОТУ!
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
             const dayNames = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
             const timeSlots = [
@@ -124,7 +137,7 @@
                         <tr>
                             <th>Время</th>
                             ${dayNames.map(d => `<th>${d}</th>`).join('')}
-                            <th style="width:40px;">🔄</th>
+                            <th style="width:40px;"><i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,14 +149,12 @@
 
                 for (let col = 0; col < days.length; col++) {
                     const day = days[col];
-                    // Защита от undefined
                     const lesson = (weekData[day] && weekData[day][row])
                         ? weekData[day][row]
                         : { time: timeSlots[row], name: '—', teacher: '' };
 
                     const displayName = lesson.name || '—';
                     const displayTeacher = lesson.teacher || '';
-                    // Проверяем и '-' и '—' как пустые
                     const isPlaceholder = displayName === '—' || displayName === '-' || displayName === '';
 
                     html += `
@@ -161,13 +172,12 @@
                 `;
                 }
 
-                // Кнопка "Сбросить строку"
                 html += `
                 <td style="text-align:center;">
                     <button onclick="resetRow('${weekKey}', ${row})"
-                            style="background:none; border:none; color:var(--text-gray); cursor:pointer; font-size:14px;"
+                            style="background:none; border:none; color:var(--text-gray); cursor:pointer; padding:4px;"
                             title="Сбросить строку к стандарту">
-                        🔄
+                        <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i>
                     </button>
                 </td>
             `;
@@ -209,33 +219,40 @@
                     `;
 
             modal.innerHTML = `
-                        <h3 style="color:var(--text-white); margin-bottom:16px;">✏️ Редактировать пару</h3>
+                        <h3 style="color:var(--text-white); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="pencil"></i> Редактировать пару
+                        </h3>
                         <div style="margin-bottom:12px;">
-                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">📚 Название</label>
+                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">
+                                <i data-lucide="book" style="width:14px;height:14px;vertical-align:-2px;"></i> Название
+                            </label>
                             <input id="editName" value="${lesson.name || ''}"
                                    placeholder="Название пары"
-                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; font-family:inherit;">
                         </div>
                         <div style="margin-bottom:16px;">
-                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">👨‍🏫 Преподаватель / аудитория</label>
+                            <label style="color:var(--text-gray); font-size:14px; display:block; margin-bottom:4px;">
+                                <i data-lucide="user" style="width:14px;height:14px;vertical-align:-2px;"></i> Преподаватель / аудитория
+                            </label>
                             <input id="editTeacher" value="${lesson.teacher || ''}"
                                    placeholder="ауд. 123 · Иванов И.И."
-                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                                   style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; font-family:inherit;">
                         </div>
                         <div style="display:flex; gap:10px;">
                             <button onclick="saveCell('${week}','${day}',${row})"
-                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:var(--red-primary); color:white; font-weight:600; cursor:pointer;">
-                                💾 Сохранить
+                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:var(--accent); color:white; font-weight:600; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                                <i data-lucide="save" style="width:16px;height:16px;"></i> Сохранить
                             </button>
                             <button onclick="this.closest('div[style]').remove()"
-                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:#666; color:white; font-weight:600; cursor:pointer;">
-                                ❌ Отмена
+                                    style="flex:1; padding:10px; border:none; border-radius:8px; background:#666; color:white; font-weight:600; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                                <i data-lucide="x" style="width:16px;height:16px;"></i> Отмена
                             </button>
                         </div>
                     `;
 
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
+            refreshIcons();
 
             setTimeout(() => document.getElementById('editName').focus(), 100);
 
@@ -307,7 +324,7 @@
 
         // ===== СБРОС ВСЕГО =====
         function resetAllSchedule() {
-            if (!confirm('⚠️ Сбросить всё расписание (обе недели) к стандартному?')) return;
+            if (!confirm('Сбросить всё расписание (обе недели) к стандартному?')) return;
             resetSchedule();
             const activeWeek = document.querySelector('.schedule-tab.active');
             const weekNum = activeWeek ? parseInt(activeWeek.dataset.week) : 1;
@@ -318,6 +335,7 @@
         function renderCurrentWeek(weekNum) {
             const container = document.getElementById('scheduleContainer');
             container.innerHTML = renderSchedule(weekNum);
+            refreshIcons();
         }
 
         // ===== ПЕРЕКЛЮЧЕНИЕ НЕДЕЛЬ =====
@@ -325,18 +343,14 @@
             document.querySelectorAll('.schedule-tab').forEach(tab => {
                 tab.classList.toggle('active', parseInt(tab.dataset.week) === weekNum);
             });
-
             renderCurrentWeek(weekNum);
         }
 
         // ===== КНОПКА "НАВЕРХ" =====
         window.addEventListener('scroll', function () {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
         });
 
         function scrollToTop() {
@@ -347,15 +361,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
             document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
         });
 
@@ -374,17 +382,18 @@
                 const resetButtons = document.createElement('div');
                 resetButtons.style.cssText = 'display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; justify-content:center;';
                 resetButtons.innerHTML = `
-                            <button onclick="resetWeek(1)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22;">
-                                🔄 Сброс 1-й недели
+                            <button onclick="resetWeek(1)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                                <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Сброс 1-й недели
                             </button>
-                            <button onclick="resetWeek(2)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22;">
-                                🔄 Сброс 2-й недели
+                            <button onclick="resetWeek(2)" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e67e22; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                                <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Сброс 2-й недели
                             </button>
-                            <button onclick="resetAllSchedule()" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e74c3c;">
-                                🔄 Сброс всего
+                            <button onclick="resetAllSchedule()" class="generate-btn" style="width:auto; padding:6px 16px; font-size:13px; background:#e74c3c; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                                <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Сброс всего
                             </button>
                         `;
                 tabsContainer.parentNode.insertBefore(resetButtons, tabsContainer.nextSibling);
+                refreshIcons();
             }
         });
 
@@ -393,7 +402,8 @@
             loadTheme();
             const currentWeek = getCurrentWeekNumber();
             switchWeek(currentWeek);
-            console.log('📅 Расписание с редактором загружено');
+            refreshIcons();
+            console.log('Расписание с редактором загружено');
         };
     </script>
 

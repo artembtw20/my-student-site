@@ -4,35 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Проверка утечек данных</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР ===== -->
     <div class="container">
         <div class="page-card" style="text-align: left; align-items: stretch;">
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🌐 Проверка утечек данных</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="globe"></i> Проверка утечек данных
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Узнай, был ли твой email скомпрометирован</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
@@ -40,8 +49,10 @@
             <!-- ===== ПОИСК ===== -->
             <div class="search-area">
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <input type="email" id="emailInput" placeholder="Введите email (например: example@mail.ru)" style="flex:1; padding:14px 20px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:250px;">
-                    <button class="generate-btn" onclick="checkEmail()" style="width:auto; padding:14px 35px;">🔍 Проверить</button>
+                    <input type="email" id="emailInput" placeholder="Введите email (например: example@mail.ru)" style="flex:1; padding:14px 20px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:250px; font-family:inherit;">
+                    <button class="generate-btn" onclick="checkEmail()" style="width:auto; padding:14px 35px;">
+                        <i data-lucide="search" style="width:16px;height:16px;vertical-align:-3px;"></i> Проверить
+                    </button>
                 </div>
                 <div id="statusMessage" style="margin-top:12px; font-size:14px; color:var(--text-gray);"></div>
             </div>
@@ -49,21 +60,24 @@
             <!-- ===== РЕЗУЛЬТАТ ===== -->
             <div id="resultArea" style="display: none; margin-top: 25px;">
 
-                <div id="resultStatus" style="padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 20px; font-weight: 600; margin-bottom: 20px;">
-                </div>
+                <div id="resultStatus" style="padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 20px; font-weight: 600; margin-bottom: 20px;"></div>
 
                 <div id="breachesContainer" style="display: none;">
-                    <h3 style="color: var(--text-white); margin-bottom: 15px;">📋 Найденные утечки</h3>
+                    <h3 style="color: var(--text-white); margin-bottom: 15px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="clipboard-list" style="width:18px;height:18px;"></i> Найденные утечки
+                    </h3>
                     <div id="breachesList" class="breaches-list"></div>
                 </div>
 
                 <div id="recommendations" style="display: none;">
-                    <h3 style="color: var(--text-white); margin-bottom: 12px;">🛡️ Рекомендации</h3>
+                    <h3 style="color: var(--text-white); margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="shield-check" style="width:18px;height:18px;"></i> Рекомендации
+                    </h3>
                     <ul style="color: var(--text-gray); line-height: 1.8; padding-left: 20px;">
-                        <li>🔑 <strong>Смени пароль</strong> на всех сервисах, где использовался этот email</li>
-                        <li>🔐 <strong>Включи двухфакторную аутентификацию</strong> (2FA)</li>
-                        <li>🔄 <strong>Не используй один пароль</strong> для разных сайтов</li>
-                        <li>🛡️ Используй <strong>менеджер паролей</strong></li>
+                        <li><strong>Смени пароль</strong> на всех сервисах, где использовался этот email</li>
+                        <li><strong>Включи двухфакторную аутентификацию</strong> (2FA)</li>
+                        <li><strong>Не используй один пароль</strong> для разных сайтов</li>
+                        <li>Используй <strong>менеджер паролей</strong></li>
                     </ul>
                 </div>
             </div>
@@ -71,8 +85,10 @@
             <!-- ===== ИСТОРИЯ ===== -->
             <div class="history-area" style="margin-top: 25px;">
                 <div class="history-header">
-                    <span>📋 История проверок</span>
-                    <button class="clear-history-btn" onclick="clearLeakHistory()">🗑️ Очистить</button>
+                    <span><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:-2px;"></i> История проверок</span>
+                    <button class="clear-history-btn" onclick="clearLeakHistory()">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:-2px;"></i> Очистить
+                    </button>
                 </div>
                 <div id="leakHistoryList" class="history-list">
                     <span style="color: var(--text-gray); font-size: 14px;">История пуста</span>
@@ -86,21 +102,24 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -108,13 +127,13 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
-        // ===== ПРОВЕРКА EMAIL =====
         async function checkEmail() {
             const email = document.getElementById('emailInput').value.trim();
             const statusEl = document.getElementById('statusMessage');
@@ -125,23 +144,22 @@
             const recommendations = document.getElementById('recommendations');
 
             if (!email) {
-                statusEl.textContent = '⚠️ Введите email';
+                statusEl.textContent = 'Введите email';
                 statusEl.style.color = '#f39c12';
                 return;
             }
 
             if (!email.includes('@') || !email.includes('.')) {
-                statusEl.textContent = '⚠️ Неверный формат email';
+                statusEl.textContent = 'Неверный формат email';
                 statusEl.style.color = '#e74c3c';
                 return;
             }
 
-            statusEl.textContent = '⏳ Проверка...';
+            statusEl.textContent = 'Проверка...';
             statusEl.style.color = 'var(--text-gray)';
             resultArea.style.display = 'block';
 
             try {
-                // 👇 ЗАПРОС К ТВОЕМУ СЕРВЕРУ
                 const response = await fetch(`http://localhost:3000/api/check/${encodeURIComponent(email)}`);
 
                 const now = new Date();
@@ -157,7 +175,7 @@
                 if (data.count > 0) {
                     resultStatus.style.background = 'rgba(231, 76, 60, 0.2)';
                     resultStatus.style.color = '#e74c3c';
-                    resultStatus.innerHTML = `🔴 <strong>Опасно!</strong> Этот email найден в ${data.count} утечках`;
+                    resultStatus.innerHTML = `<i data-lucide="alert-circle" style="width:24px;height:24px;vertical-align:-4px;"></i> <strong>Опасно!</strong> Этот email найден в ${data.count} утечках`;
 
                     breachesContainer.style.display = 'block';
                     breachesList.innerHTML = data.breaches.map(breach => `
@@ -177,35 +195,39 @@
                 } else {
                     resultStatus.style.background = 'rgba(39, 174, 96, 0.2)';
                     resultStatus.style.color = '#27ae60';
-                    resultStatus.innerHTML = `🟢 <strong>Безопасно!</strong> Этот email не найден в утечках`;
+                    resultStatus.innerHTML = `<i data-lucide="shield-check" style="width:24px;height:24px;vertical-align:-4px;"></i> <strong>Безопасно!</strong> Этот email не найден в утечках`;
                     breachesContainer.style.display = 'none';
                     recommendations.style.display = 'none';
                     addToLeakHistory(email, 0, timeStr);
                 }
 
-                statusEl.textContent = '✅ Проверка завершена';
+                statusEl.textContent = 'Проверка завершена';
                 statusEl.style.color = '#27ae60';
+                refreshIcons();
 
             } catch (error) {
                 console.error('Ошибка:', error);
                 resultStatus.style.background = 'rgba(231, 76, 60, 0.2)';
                 resultStatus.style.color = '#e74c3c';
-                resultStatus.innerHTML = `❌ <strong>Ошибка</strong> ${error.message || 'Не удалось выполнить проверку'}`;
+                resultStatus.innerHTML = `<i data-lucide="x-circle" style="width:24px;height:24px;vertical-align:-4px;"></i> <strong>Ошибка</strong> ${error.message || 'Не удалось выполнить проверку'}`;
                 breachesContainer.style.display = 'none';
                 recommendations.style.display = 'none';
-                statusEl.textContent = '⚠️ Ошибка соединения с сервером. Убедитесь, что сервер запущен (npm start)';
+                statusEl.textContent = 'Ошибка соединения с сервером. Убедитесь, что сервер запущен (npm start)';
                 statusEl.style.color = '#e74c3c';
+                refreshIcons();
             }
         }
 
-        // ===== ИСТОРИЯ =====
         function addToLeakHistory(email, breaches, time) {
             let history = JSON.parse(localStorage.getItem('leakHistory')) || [];
             history.unshift({
-                email: email,
-                breaches: breaches,
-                time: time,
-                status: breaches > 0 ? '🔴' : '🟢'
+                email,
+                breaches,
+                time,
+                status: breaches > 0 ? 'danger' : 'success',
+                statusText: breaches > 0 ? `${breaches} утечек` : 'безопасно',
+                statusColor: breaches > 0 ? '#e74c3c' : '#27ae60',
+                statusIcon: breaches > 0 ? 'alert-circle' : 'check-circle-2'
             });
             if (history.length > 50) history.pop();
             localStorage.setItem('leakHistory', JSON.stringify(history));
@@ -224,11 +246,16 @@
             list.innerHTML = history.map((item, index) => `
                         <div class="history-item">
                             <span style="flex:1; color: var(--text-light); font-size:13px;">${item.email}</span>
-                            <span style="font-size:12px; color:${item.breaches > 0 ? '#e74c3c' : '#27ae60'};">${item.status} ${item.breaches > 0 ? item.breaches + ' утечек' : 'безопасно'}</span>
+                            <span style="font-size:12px; color:${item.statusColor}; display:inline-flex; align-items:center; gap:4px;">
+                                <i data-lucide="${item.statusIcon}" style="width:12px;height:12px;"></i> ${item.statusText}
+                            </span>
                             <span style="font-size:11px; color:var(--text-gray);">${item.time}</span>
-                            <button class="history-delete" onclick="removeLeakHistoryItem(${index})">✕</button>
+                            <button class="history-delete" onclick="removeLeakHistoryItem(${index})" title="Удалить">
+                                <i data-lucide="x" style="width:14px;height:14px;"></i>
+                            </button>
                         </div>
                     `).join('');
+            refreshIcons();
         }
 
         function removeLeakHistoryItem(index) {
@@ -239,7 +266,7 @@
         }
 
         function clearLeakHistory() {
-            if (confirm('🗑️ Удалить всю историю?')) {
+            if (confirm('Удалить всю историю?')) {
                 localStorage.removeItem('leakHistory');
                 renderLeakHistory();
             }
@@ -247,16 +274,15 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('emailInput').addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    checkEmail();
-                }
+                if (e.key === 'Enter') checkEmail();
             });
         });
 
         window.onload = function () {
             loadTheme();
             renderLeakHistory();
-            console.log('🌐 Проверка утечек данных загружена');
+            refreshIcons();
+            console.log('Проверка утечек данных загружена');
         };
     </script>
 

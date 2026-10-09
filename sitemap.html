@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Все разделы</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,12 +19,12 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -27,39 +34,39 @@
         <div class="page-card">
 
             <!-- Заголовок -->
-            <div class="icon">🗺️</div>
+            <div class="icon"><i data-lucide="map" style="width:64px;height:64px;"></i></div>
             <h1>Все разделы</h1>
             <p class="subtitle">Навигация по сайту</p>
 
             <!-- Чипсы -->
             <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:16px;">
-                <span class="chip">📚 4 категории</span>
-                <span class="chip chip-blue">🔗 20+ разделов</span>
-                <span class="chip chip-green">🚀 Быстрый доступ</span>
+                <span class="chip"><i data-lucide="folder" style="width:14px;height:14px;vertical-align:-2px;"></i> 4 категории</span>
+                <span class="chip chip-blue"><i data-lucide="link" style="width:14px;height:14px;vertical-align:-2px;"></i> 20+ разделов</span>
+                <span class="chip chip-green"><i data-lucide="rocket" style="width:14px;height:14px;vertical-align:-2px;"></i> Быстрый доступ</span>
             </div>
 
             <div class="divider"></div>
 
             <!-- ===== КАТЕГОРИЯ: УЧЁБА ===== -->
             <div class="sitemap-category animate-on-scroll">
-                <div class="sitemap-category-title">🎓 Учёба</div>
+                <div class="sitemap-category-title"><i data-lucide="graduation-cap" style="width:18px;height:18px;vertical-align:-3px;"></i> Учёба</div>
                 <div class="sitemap-grid">
                     <a href="schedule.html" class="sitemap-item">
-                        <div class="sitemap-icon">📅</div>
+                        <div class="sitemap-icon"><i data-lucide="calendar" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Расписание</div>
                             <div class="sitemap-desc">Пары и дедлайны</div>
                         </div>
                     </a>
                     <a href="deadlines.html" class="sitemap-item">
-                        <div class="sitemap-icon">⏰</div>
+                        <div class="sitemap-icon"><i data-lucide="alarm-clock" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Дедлайны</div>
                             <div class="sitemap-desc">Сроки сдачи работ</div>
                         </div>
                     </a>
                     <a href="notes.html" class="sitemap-item">
-                        <div class="sitemap-icon">📓</div>
+                        <div class="sitemap-icon"><i data-lucide="notebook-pen" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Конспекты</div>
                             <div class="sitemap-desc">Фото лекций</div>
@@ -70,10 +77,10 @@
 
             <!-- ===== КАТЕГОРИЯ: ИИ-ПОМОЩНИК ===== -->
             <div class="sitemap-category animate-on-scroll">
-                <div class="sitemap-category-title">🤖 ИИ-помощник</div>
+                <div class="sitemap-category-title"><i data-lucide="bot" style="width:18px;height:18px;vertical-align:-3px;"></i> ИИ-помощник</div>
                 <div class="sitemap-grid">
                     <a href="ai-assistant.html" class="sitemap-item">
-                        <div class="sitemap-icon">🤖</div>
+                        <div class="sitemap-icon"><i data-lucide="bot" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">ИИ-помощник</div>
                             <div class="sitemap-desc">Персональные советы от DeepSeek</div>
@@ -84,10 +91,10 @@
 
             <!-- ===== КАТЕГОРИЯ: РЕЗЮМЕ ===== -->
             <div class="sitemap-category animate-on-scroll">
-                <div class="sitemap-category-title">📄 Резюме</div>
+                <div class="sitemap-category-title"><i data-lucide="file-text" style="width:18px;height:18px;vertical-align:-3px;"></i> Резюме</div>
                 <div class="sitemap-grid">
                     <a href="resume.html" class="sitemap-item">
-                        <div class="sitemap-icon">📄</div>
+                        <div class="sitemap-icon"><i data-lucide="file-text" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Моё резюме</div>
                             <div class="sitemap-desc">Портфолио и проекты</div>
@@ -98,87 +105,87 @@
 
             <!-- ===== КАТЕГОРИЯ: ИНФОРМАЦИОННАЯ БЕЗОПАСНОСТЬ ===== -->
             <div class="sitemap-category animate-on-scroll">
-                <div class="sitemap-category-title">🛡️ Информационная безопасность</div>
+                <div class="sitemap-category-title"><i data-lucide="shield" style="width:18px;height:18px;vertical-align:-3px;"></i> Информационная безопасность</div>
                 <div class="sitemap-grid">
                     <a href="password-generator.html" class="sitemap-item">
-                        <div class="sitemap-icon">🔐</div>
+                        <div class="sitemap-icon"><i data-lucide="lock" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Генератор паролей</div>
                             <div class="sitemap-desc">Сложные пароли + проверка стойкости</div>
                         </div>
                     </a>
                     <a href="vault.html" class="sitemap-item">
-                        <div class="sitemap-icon">🔑</div>
+                        <div class="sitemap-icon"><i data-lucide="key-round" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Хранилище паролей</div>
                             <div class="sitemap-desc">Все логины и пароли в одном месте</div>
                         </div>
                     </a>
                     <a href="metadata.html" class="sitemap-item">
-                        <div class="sitemap-icon">🕵️</div>
+                        <div class="sitemap-icon"><i data-lucide="search" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Анализ метаданных</div>
                             <div class="sitemap-desc">Exif-данные: дата, камера, GPS</div>
                         </div>
                     </a>
                     <a href="leak-check.html" class="sitemap-item">
-                        <div class="sitemap-icon">🌐</div>
+                        <div class="sitemap-icon"><i data-lucide="globe" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Проверка утечек</div>
                             <div class="sitemap-desc">Have I Been Pwned — email в утечках</div>
                         </div>
                     </a>
                     <a href="security-checklist.html" class="sitemap-item">
-                        <div class="sitemap-icon">🛡️</div>
+                        <div class="sitemap-icon"><i data-lucide="shield-check" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Чек-лист безопасности</div>
                             <div class="sitemap-desc">Проверь свою цифровую гигиену</div>
                         </div>
                     </a>
                     <a href="port-scanner.html" class="sitemap-item">
-                        <div class="sitemap-icon">🕸️</div>
+                        <div class="sitemap-icon"><i data-lucide="network" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Сканер портов</div>
                             <div class="sitemap-desc">Проверка открытых портов</div>
                         </div>
                     </a>
                     <a href="brute-force-demo.html" class="sitemap-item">
-                        <div class="sitemap-icon">🎯</div>
+                        <div class="sitemap-icon"><i data-lucide="target" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Атака перебором</div>
                             <div class="sitemap-desc">Симуляция подбора пароля</div>
                         </div>
                     </a>
                     <a href="fake-data-generator.html" class="sitemap-item">
-                        <div class="sitemap-icon">🎭</div>
+                        <div class="sitemap-icon"><i data-lucide="venetian-mask" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Фейковые данные</div>
                             <div class="sitemap-desc">Для регистрации на сомнительных сайтах</div>
                         </div>
                     </a>
                     <a href="phishing-trainer.html" class="sitemap-item">
-                        <div class="sitemap-icon">🎣</div>
+                        <div class="sitemap-icon"><i data-lucide="fish" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Тренажёр по фишингу</div>
                             <div class="sitemap-desc">Учись распознавать мошенников</div>
                         </div>
                     </a>
                     <a href="encryption-tool.html" class="sitemap-item">
-                        <div class="sitemap-icon">🧪</div>
+                        <div class="sitemap-icon"><i data-lucide="flask-conical" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Шифрование текста</div>
                             <div class="sitemap-desc">Caesar, Base64, AES</div>
                         </div>
                     </a>
                     <a href="subdomain-scanner.html" class="sitemap-item">
-                        <div class="sitemap-icon">🌐</div>
+                        <div class="sitemap-icon"><i data-lucide="globe-2" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Сканер поддоменов</div>
                             <div class="sitemap-desc">Поиск скрытых поддоменов</div>
                         </div>
                     </a>
                     <a href="password-checker.html" class="sitemap-item">
-                        <div class="sitemap-icon">🔐</div>
+                        <div class="sitemap-icon"><i data-lucide="shield-alert" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Проверка пароля</div>
                             <div class="sitemap-desc">Сложность + утечки (Pwned)</div>
@@ -189,10 +196,10 @@
 
             <!-- ===== КАТЕГОРИЯ: АРХИВ ===== -->
             <div class="sitemap-category animate-on-scroll">
-                <div class="sitemap-category-title">📁 Архив</div>
+                <div class="sitemap-category-title"><i data-lucide="archive" style="width:18px;height:18px;vertical-align:-3px;"></i> Архив</div>
                 <div class="sitemap-grid">
                     <a href="index.html#backup" class="sitemap-item">
-                        <div class="sitemap-icon">💾</div>
+                        <div class="sitemap-icon"><i data-lucide="database" style="width:28px;height:28px;"></i></div>
                         <div class="sitemap-info">
                             <div class="sitemap-name">Резервное копирование</div>
                             <div class="sitemap-desc">Сохранить / восстановить</div>
@@ -209,22 +216,27 @@
     </div>
 
     <!-- ===== КНОПКА "НАВЕРХ" ===== -->
-    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()"><i data-lucide="arrow-up"></i></button>
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -232,45 +244,38 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
         // ===== КНОПКА "НАВЕРХ" =====
         window.addEventListener('scroll', function () {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
         });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ===== АНИМАЦИЯ ПРИ СКРОЛЛЕ =====
+        // ===== АНИМАЦИЯ =====
         document.addEventListener('DOMContentLoaded', function () {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
             document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
         });
 
         window.onload = function () {
             loadTheme();
-            console.log('🗺️ Все разделы загружены');
+            refreshIcons();
+            console.log('Все разделы загружены');
         };
     </script>
 

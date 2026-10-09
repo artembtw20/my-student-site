@@ -4,35 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Чек-лист безопасности</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР ===== -->
     <div class="container">
         <div class="page-card" style="text-align: left; align-items: stretch;">
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🛡️ Чек-лист безопасности</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="shield-check"></i> Чек-лист безопасности
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Проверь, всё ли ты сделал для защиты своих данных</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
@@ -49,15 +58,19 @@
             </div>
 
             <!-- ===== КАТЕГОРИИ ===== -->
-            <div id="checklistContainer">
-                <!-- Заполняется через JavaScript -->
-            </div>
+            <div id="checklistContainer"></div>
 
             <!-- ===== КНОПКИ ===== -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; justify-content: center;">
-                <button class="generate-btn" onclick="resetChecklist()" style="width: auto; padding: 10px 25px; background: #e74c3c;">🔄 Сбросить всё</button>
-                <button class="generate-btn" onclick="exportChecklist()" style="width: auto; padding: 10px 25px; background: #3498db;">📥 Экспорт</button>
-                <button class="generate-btn" onclick="document.getElementById('importInput').click()" style="width: auto; padding: 10px 25px; background: #2ecc71;">📤 Импорт</button>
+                <button class="generate-btn" onclick="resetChecklist()" style="width: auto; padding: 10px 25px; background: #e74c3c; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                    <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Сбросить всё
+                </button>
+                <button class="generate-btn" onclick="exportChecklist()" style="width: auto; padding: 10px 25px; background: #3498db; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                    <i data-lucide="download" style="width:16px;height:16px;"></i> Экспорт
+                </button>
+                <button class="generate-btn" onclick="document.getElementById('importInput').click()" style="width: auto; padding: 10px 25px; background: #2ecc71; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                    <i data-lucide="upload" style="width:16px;height:16px;"></i> Импорт
+                </button>
                 <input type="file" id="importInput" accept=".json" style="display:none" onchange="importChecklist(event)">
             </div>
 
@@ -68,21 +81,24 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -90,16 +106,17 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
-        // ===== ДАННЫЕ ЧЕК-ЛИСТА =====
         const checklistData = [
             {
-                category: '🔑 Пароли',
+                category: 'Пароли',
+                categoryIcon: 'key-round',
                 items: [
                     { id: 'pass1', text: 'Использую уникальные пароли для каждого сервиса' },
                     { id: 'pass2', text: 'Пароли содержат не менее 12 символов (буквы + цифры + символы)' },
@@ -108,7 +125,8 @@
                 ]
             },
             {
-                category: '🔐 Двухфакторная аутентификация',
+                category: 'Двухфакторная аутентификация',
+                categoryIcon: 'shield-check',
                 items: [
                     { id: '2fa1', text: 'Включил 2FA на почте (Gmail, Яндекс, Mail.ru)' },
                     { id: '2fa2', text: 'Включил 2FA на соцсетях (Telegram, VK, Instagram)' },
@@ -117,7 +135,8 @@
                 ]
             },
             {
-                category: '📧 Почта и аккаунты',
+                category: 'Почта и аккаунты',
+                categoryIcon: 'mail',
                 items: [
                     { id: 'email1', text: 'Проверил свои email на утечки (Have I Been Pwned)' },
                     { id: 'email2', text: 'Удалил старые/неиспользуемые аккаунты' },
@@ -125,7 +144,8 @@
                 ]
             },
             {
-                category: '📱 Устройства и приложения',
+                category: 'Устройства и приложения',
+                categoryIcon: 'smartphone',
                 items: [
                     { id: 'dev1', text: 'Включил автоматические обновления на всех устройствах' },
                     { id: 'dev2', text: 'Удалил приложения, которыми не пользуюсь' },
@@ -133,7 +153,8 @@
                 ]
             },
             {
-                category: '🌐 Безопасность в интернете',
+                category: 'Безопасность в интернете',
+                categoryIcon: 'globe',
                 items: [
                     { id: 'web1', text: 'Использую VPN в публичных Wi-Fi сетях' },
                     { id: 'web2', text: 'Не перехожу по подозрительным ссылкам из писем и сообщений' },
@@ -142,7 +163,8 @@
                 ]
             },
             {
-                category: '💾 Резервное копирование',
+                category: 'Резервное копирование',
+                categoryIcon: 'database',
                 items: [
                     { id: 'backup1', text: 'Делаю резервные копии важных файлов (в облако или на диск)' },
                     { id: 'backup2', text: 'Храню копии паролей и документов в надёжном месте' }
@@ -150,7 +172,6 @@
             }
         ];
 
-        // ===== ЗАГРУЗКА / СОХРАНЕНИЕ =====
         function getProgress() {
             const saved = localStorage.getItem('securityChecklist');
             return saved ? JSON.parse(saved) : {};
@@ -160,7 +181,6 @@
             localStorage.setItem('securityChecklist', JSON.stringify(data));
         }
 
-        // ===== РЕНДЕРИНГ =====
         function renderChecklist() {
             const container = document.getElementById('checklistContainer');
             const progress = getProgress();
@@ -176,7 +196,9 @@
 
                     return `
                         <div class="checklist-item ${isChecked ? 'checked' : ''}" onclick="toggleItem('${item.id}')">
-                            <span class="checklist-check">${isChecked ? '✅' : '⬜'}</span>
+                            <span class="checklist-check">
+                                <i data-lucide="${isChecked ? 'check-square' : 'square'}" style="width:18px;height:18px;"></i>
+                            </span>
                             <span class="checklist-text">${item.text}</span>
                         </div>
                     `;
@@ -184,16 +206,19 @@
 
                 return `
                     <div class="checklist-category">
-                        <div class="checklist-category-title">${category.category}</div>
+                        <div class="checklist-category-title">
+                            <i data-lucide="${category.categoryIcon}" style="width:16px;height:16px;vertical-align:-3px;"></i>
+                            ${category.category}
+                        </div>
                         ${itemsHtml}
                     </div>
                 `;
             }).join('');
 
             updateProgress(totalItems, checkedItems);
+            refreshIcons();
         }
 
-        // ===== ПРОГРЕСС =====
         function updateProgress(total, checked) {
             const percent = total === 0 ? 0 : Math.round((checked / total) * 100);
             document.getElementById('progressText').textContent = `${checked} из ${total} выполнено`;
@@ -201,7 +226,6 @@
             document.getElementById('progressFill').style.width = `${percent}%`;
         }
 
-        // ===== ПЕРЕКЛЮЧЕНИЕ ПУНКТА =====
         function toggleItem(id) {
             const progress = getProgress();
             progress[id] = !progress[id];
@@ -209,19 +233,17 @@
             renderChecklist();
         }
 
-        // ===== СБРОС =====
         function resetChecklist() {
-            if (confirm('🗑️ Сбросить все отметки?')) {
+            if (confirm('Сбросить все отметки?')) {
                 localStorage.removeItem('securityChecklist');
                 renderChecklist();
             }
         }
 
-        // ===== ЭКСПОРТ =====
         function exportChecklist() {
             const data = getProgress();
             if (Object.keys(data).length === 0) {
-                alert('⚠️ Нет данных для экспорта');
+                alert('Нет данных для экспорта');
                 return;
             }
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -233,7 +255,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // ===== ИМПОРТ =====
         function importChecklist(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -243,20 +264,20 @@
                     const data = JSON.parse(e.target.result);
                     saveProgress(data);
                     renderChecklist();
-                    alert('✅ Чек-лист восстановлен!');
+                    alert('Чек-лист восстановлен!');
                 } catch {
-                    alert('❌ Ошибка: неверный формат файла');
+                    alert('Ошибка: неверный формат файла');
                 }
             };
             reader.readAsText(file);
             event.target.value = '';
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         window.onload = function() {
             loadTheme();
             renderChecklist();
-            console.log('🛡️ Чек-лист безопасности загружен');
+            refreshIcons();
+            console.log('Чек-лист безопасности загружен');
         };
     </script>
 

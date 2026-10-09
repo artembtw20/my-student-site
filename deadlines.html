@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Дедлайны</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +19,13 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -29,34 +36,44 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">⏰ Дедлайны</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="alarm-clock"></i> Дедлайны
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Все задания и сроки их сдачи</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
 
             <!-- ===== КНОПКА ДОБАВЛЕНИЯ ===== -->
             <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-                <button class="add-deadline-btn" onclick="showAddDeadline()">➕ Добавить дедлайн</button>
+                <button class="add-deadline-btn" onclick="showAddDeadline()">
+                    <i data-lucide="plus" style="width:16px;height:16px;vertical-align:-3px;"></i> Добавить дедлайн
+                </button>
             </div>
 
             <!-- ===== ФОРМА ДОБАВЛЕНИЯ ===== -->
             <div id="addDeadlineForm" style="display: none; margin-bottom: 16px; padding: 16px; background: var(--bg-input); border-radius: var(--radius-medium);">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <input type="text" id="deadlineSubject" placeholder="Предмет" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
-                    <input type="text" id="deadlineTask" placeholder="Что сделать" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
-                    <input type="date" id="deadlineDate" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
-                    <select id="deadlinePriority" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white);">
-                        <option value="high">🔴 Высокий</option>
-                        <option value="medium">🟡 Средний</option>
-                        <option value="low">🟢 Низкий</option>
+                    <input type="text" id="deadlineSubject" placeholder="Предмет" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white); font-family:inherit;">
+                    <input type="text" id="deadlineTask" placeholder="Что сделать" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white); font-family:inherit;">
+                    <input type="date" id="deadlineDate" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white); font-family:inherit;">
+                    <select id="deadlinePriority" style="padding: 10px; border-radius: var(--radius-small); border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-white); font-family:inherit;">
+                        <option value="high">Высокий</option>
+                        <option value="medium">Средний</option>
+                        <option value="low">Низкий</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button class="generate-btn" onclick="addDeadline()" style="width: auto; padding: 10px 25px;">💾 Сохранить</button>
-                    <button class="generate-btn" onclick="document.getElementById('addDeadlineForm').style.display='none'" style="width: auto; padding: 10px 25px; background: #666;">❌ Отмена</button>
+                    <button class="generate-btn" onclick="addDeadline()" style="width: auto; padding: 10px 25px; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="save" style="width:16px;height:16px;"></i> Сохранить
+                    </button>
+                    <button class="generate-btn" onclick="document.getElementById('addDeadlineForm').style.display='none'" style="width: auto; padding: 10px 25px; background: #666; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="x" style="width:16px;height:16px;"></i> Отмена
+                    </button>
                 </div>
             </div>
 
@@ -72,21 +89,30 @@
         </div>
     </div>
 
+    <!-- ===== КНОПКА "НАВЕРХ" ===== -->
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()"><i data-lucide="arrow-up"></i></button>
+
     <!-- ===== JAVASCRIPT ===== -->
     <script>
+        // ===== ИКОНКИ LUCIDE =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -94,10 +120,11 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
         // ============================================
@@ -129,7 +156,7 @@
             const priority = document.getElementById('deadlinePriority').value;
 
             if (!subject || !task || !date) {
-                alert('⚠️ Заполните все поля');
+                alert('Заполните все поля');
                 return;
             }
 
@@ -158,11 +185,11 @@
 
         function getPriorityLabel(priority) {
             const map = {
-                high: '🔴 Высокий',
-                medium: '🟡 Средний',
-                low: '🟢 Низкий'
+                high: { text: 'Высокий', icon: 'alert-circle', color: '#e74c3c' },
+                medium: { text: 'Средний', icon: 'alert-triangle', color: '#f39c12' },
+                low: { text: 'Низкий', icon: 'info', color: '#27ae60' }
             };
-            return map[priority] || '🟡 Средний';
+            return map[priority] || { text: 'Средний', icon: 'alert-triangle', color: '#f39c12' };
         }
 
         function formatDate(dateStr) {
@@ -180,12 +207,21 @@
         }
 
         function getStatusText(daysLeft) {
-            if (daysLeft < 0) return '❌ Просрочено';
-            if (daysLeft === 0) return '⚠️ Сегодня!';
-            if (daysLeft <= 2) return '🔴 Срочно!';
-            if (daysLeft <= 5) return '🟠 Скоро';
-            if (daysLeft <= 14) return '🟡 Не забыть';
-            return '🟢 Есть время';
+            if (daysLeft < 0) return 'Просрочено';
+            if (daysLeft === 0) return 'Сегодня!';
+            if (daysLeft <= 2) return 'Срочно!';
+            if (daysLeft <= 5) return 'Скоро';
+            if (daysLeft <= 14) return 'Не забыть';
+            return 'Есть время';
+        }
+
+        function getStatusIcon(daysLeft) {
+            if (daysLeft < 0) return 'x-circle';
+            if (daysLeft === 0) return 'alert-circle';
+            if (daysLeft <= 2) return 'alert-circle';
+            if (daysLeft <= 5) return 'alert-triangle';
+            if (daysLeft <= 14) return 'clock';
+            return 'check-circle-2';
         }
 
         function getStatusColor(daysLeft) {
@@ -203,10 +239,12 @@
 
             if (deadlines.length === 0) {
                 container.innerHTML = `
-                        <div style="text-align:center; color: var(--text-gray); padding: 30px 0; font-size: 15px;">
-                            Нет дедлайнов. Добавьте первый!
+                        <div style="text-align:center; color: var(--text-gray); padding: 40px 20px; font-size: 15px;">
+                            <i data-lucide="inbox" style="width:48px;height:48px;opacity:0.4;margin-bottom:12px;"></i>
+                            <div>Нет дедлайнов. Добавьте первый!</div>
                         </div>
                     `;
+                refreshIcons();
                 return;
             }
 
@@ -216,34 +254,51 @@
             container.innerHTML = deadlines.map(d => {
                 const daysLeft = getDaysLeft(d.date);
                 const statusText = getStatusText(daysLeft);
+                const statusIcon = getStatusIcon(daysLeft);
                 const statusColor = getStatusColor(daysLeft);
                 const formattedDate = formatDate(d.date);
+                const priority = getPriorityLabel(d.priority);
 
                 return `
                         <div class="deadline-card" style="border-left: 4px solid ${statusColor};">
                             <div class="deadline-card-content">
                                 <div class="deadline-card-header">
                                     <span class="deadline-card-subject">${d.subject}</span>
-                                    <span class="deadline-card-status" style="color: ${statusColor}; background: ${statusColor}22; padding: 2px 12px; border-radius: 12px; font-size: 13px; font-weight: 600;">
+                                    <span class="deadline-card-status" style="color: ${statusColor}; background: ${statusColor}22; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; display:inline-flex; align-items:center; gap:5px;">
+                                        <i data-lucide="${statusIcon}" style="width:14px;height:14px;"></i>
                                         ${statusText}
                                     </span>
                                 </div>
-                                <div class="deadline-card-task">📋 ${d.task}</div>
+                                <div class="deadline-card-task">
+                                    <i data-lucide="clipboard-list" style="width:15px;height:15px;vertical-align:-3px;color:var(--text-gray);"></i>
+                                    ${d.task}
+                                </div>
                                 <div class="deadline-card-meta">
-                                    <span class="deadline-card-date">📅 ${formattedDate}</span>
-                                    <span class="deadline-card-priority">${getPriorityLabel(d.priority)}</span>
-                                    <button class="deadline-card-delete" onclick="deleteDeadline(${d.id})">🗑️</button>
+                                    <span class="deadline-card-date">
+                                        <i data-lucide="calendar" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                                        ${formattedDate}
+                                    </span>
+                                    <span class="deadline-card-priority" style="color:${priority.color};">
+                                        <i data-lucide="${priority.icon}" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                                        ${priority.text}
+                                    </span>
+                                    <button class="deadline-card-delete" onclick="deleteDeadline(${d.id})" title="Удалить">
+                                        <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     `;
             }).join('');
+
+            refreshIcons();
         }
 
         window.onload = function () {
             loadTheme();
             renderDeadlines();
-            console.log('⏰ Дедлайны загружены');
+            refreshIcons();
+            console.log('Дедлайны загружены');
         };
     </script>
 

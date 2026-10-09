@@ -4,35 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сканер портов</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР ===== -->
     <div class="container">
         <div class="page-card" style="text-align: left; align-items: stretch;">
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🕸️ Сканер открытых портов</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="network"></i> Сканер открытых портов
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Проверяет, какие порты открыты на вашем компьютере</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
@@ -41,20 +50,28 @@
             <div class="scanner-settings">
                 <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
                     <div style="flex: 1; min-width: 150px;">
-                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">IP-адрес</label>
-                        <input type="text" id="targetIp" value="127.0.0.1" style="width:100%; padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">
+                            <i data-lucide="server" style="width:14px;height:14px;vertical-align:-2px;"></i> IP-адрес
+                        </label>
+                        <input type="text" id="targetIp" value="127.0.0.1" style="width:100%; padding:10px 14px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; font-family:inherit;">
                     </div>
                     <div style="flex: 1; min-width: 150px;">
-                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">Диапазон портов</label>
+                        <label style="color: var(--text-gray); font-size: 14px; display: block; margin-bottom: 4px;">
+                            <i data-lucide="git-commit-horizontal" style="width:14px;height:14px;vertical-align:-2px;"></i> Диапазон портов
+                        </label>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="number" id="portStart" value="1" style="width:80px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                            <input type="number" id="portStart" value="1" style="width:80px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; font-family:inherit;">
                             <span style="color:var(--text-gray);">—</span>
-                            <input type="number" id="portEnd" value="1024" style="width:100px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px;">
+                            <input type="number" id="portEnd" value="1024" style="width:100px; padding:10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:15px; font-family:inherit;">
                         </div>
                     </div>
                     <div style="display: flex; gap: 8px; margin-top: 18px;">
-                        <button class="generate-btn" onclick="startScan()" style="width:auto; padding:10px 30px;">🔍 Сканировать</button>
-                        <button class="generate-btn" onclick="stopScan()" style="width:auto; padding:10px 25px; background:#666;" id="stopBtn" disabled>⏹️ Стоп</button>
+                        <button class="generate-btn" onclick="startScan()" style="width:auto; padding:10px 30px;">
+                            <i data-lucide="search" style="width:16px;height:16px;vertical-align:-3px;"></i> Сканировать
+                        </button>
+                        <button class="generate-btn" onclick="stopScan()" style="width:auto; padding:10px 25px; background:#666;" id="stopBtn" disabled>
+                            <i data-lucide="square" style="width:16px;height:16px;vertical-align:-3px;"></i> Стоп
+                        </button>
                     </div>
                 </div>
                 <div id="scanStatus" style="margin-top:12px; font-size:14px; color:var(--text-gray);"></div>
@@ -63,32 +80,45 @@
             <!-- ===== РЕЗУЛЬТАТЫ ===== -->
             <div id="resultArea" style="margin-top: 20px;">
 
-                <!-- Открытые порты -->
                 <div id="openPortsSection">
-                    <h3 style="color: var(--text-white); margin-bottom: 12px;">🟢 Открытые порты</h3>
+                    <h3 style="color: var(--text-white); margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="unlock" style="width:18px;height:18px;color:#27ae60;"></i> Открытые порты
+                    </h3>
                     <div id="openPortsList" class="ports-list">
                         <span style="color: var(--text-gray); font-size: 14px;">Нажмите «Сканировать» для проверки</span>
                     </div>
                 </div>
 
-                <!-- Закрытые порты (сворачиваемые) -->
                 <div style="margin-top: 16px;">
-                    <button class="generate-btn" onclick="toggleClosedPorts()" style="width: auto; padding: 8px 20px; font-size: 14px; background: #666;">
-                        📋 Показать закрытые порты
+                    <button class="generate-btn" onclick="toggleClosedPorts()" style="width: auto; padding: 8px 20px; font-size: 14px; background: #666; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="list" style="width:16px;height:16px;"></i> Показать закрытые порты
                     </button>
                     <div id="closedPortsSection" style="display: none; margin-top: 12px;">
-                        <h3 style="color: var(--text-gray); margin-bottom: 8px; font-size: 16px;">🔴 Закрытые порты</h3>
+                        <h3 style="color: var(--text-gray); margin-bottom: 8px; font-size: 16px; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="lock" style="width:16px;height:16px;color:#e74c3c;"></i> Закрытые порты
+                        </h3>
                         <div id="closedPortsList" class="ports-list closed"></div>
                     </div>
                 </div>
 
-                <!-- Статистика -->
                 <div id="scanStats" style="margin-top: 16px; display: none;">
                     <div style="display: flex; gap: 20px; flex-wrap: wrap; padding: 12px; background: var(--bg-input); border-radius: var(--radius-small);">
-                        <span style="color: var(--text-gray);">📊 Всего: <strong id="statTotal" style="color: var(--text-white);">0</strong></span>
-                        <span style="color: #27ae60;">✅ Открыто: <strong id="statOpen" style="color: #27ae60;">0</strong></span>
-                        <span style="color: #e74c3c;">❌ Закрыто: <strong id="statClosed" style="color: #e74c3c;">0</strong></span>
-                        <span style="color: var(--text-gray);">⏱️ Время: <strong id="statTime" style="color: var(--text-white);">0с</strong></span>
+                        <span style="color: var(--text-gray); display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="bar-chart-3" style="width:14px;height:14px;"></i>
+                            Всего: <strong id="statTotal" style="color: var(--text-white);">0</strong>
+                        </span>
+                        <span style="color: #27ae60; display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="unlock" style="width:14px;height:14px;"></i>
+                            Открыто: <strong id="statOpen" style="color: #27ae60;">0</strong>
+                        </span>
+                        <span style="color: #e74c3c; display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="lock" style="width:14px;height:14px;"></i>
+                            Закрыто: <strong id="statClosed" style="color: #e74c3c;">0</strong>
+                        </span>
+                        <span style="color: var(--text-gray); display:inline-flex; align-items:center; gap:6px;">
+                            <i data-lucide="clock" style="width:14px;height:14px;"></i>
+                            Время: <strong id="statTime" style="color: var(--text-white);">0с</strong>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -96,8 +126,10 @@
             <!-- ===== ИСТОРИЯ ===== -->
             <div class="history-area" style="margin-top: 25px;">
                 <div class="history-header">
-                    <span>📋 История сканирований</span>
-                    <button class="clear-history-btn" onclick="clearScanHistory()">🗑️ Очистить</button>
+                    <span><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:-2px;"></i> История сканирований</span>
+                    <button class="clear-history-btn" onclick="clearScanHistory()">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:-2px;"></i> Очистить
+                    </button>
                 </div>
                 <div id="scanHistoryList" class="history-list">
                     <span style="color: var(--text-gray); font-size: 14px;">История пуста</span>
@@ -111,7 +143,6 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
         let isScanning = false;
         let abortController = null;
@@ -119,19 +150,23 @@
         let closedPorts = [];
         let scanStartTime = 0;
 
-        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -139,78 +174,54 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
-        // ===== ПОЛУЧЕНИЕ ИНФОРМАЦИИ О ПОРТЕ =====
         function getPortInfo(port) {
             const commonPorts = {
-                20: 'FTP (данные)',
-                21: 'FTP (управление)',
-                22: 'SSH (удалённый доступ)',
-                23: 'Telnet (устаревший)',
-                25: 'SMTP (почта)',
-                53: 'DNS (домены)',
-                80: 'HTTP (веб)',
-                110: 'POP3 (почта)',
-                111: 'RPC',
-                135: 'RPC (Windows)',
-                139: 'NetBIOS (Windows)',
-                143: 'IMAP (почта)',
-                443: 'HTTPS (безопасный веб)',
-                445: 'SMB (Windows)',
-                465: 'SMTPS (почта SSL)',
-                587: 'SMTP (почта)',
-                993: 'IMAPS (почта SSL)',
-                995: 'POP3S (почта SSL)',
-                1433: 'MS SQL (базы данных)',
-                1521: 'Oracle (базы данных)',
-                3306: 'MySQL (базы данных)',
-                3389: 'RDP (удалённый рабочий стол)',
-                5432: 'PostgreSQL (базы данных)',
-                6379: 'Redis (базы данных)',
-                8080: 'HTTP-прокси',
-                8443: 'HTTPS-прокси',
+                20: 'FTP (данные)', 21: 'FTP (управление)', 22: 'SSH (удалённый доступ)',
+                23: 'Telnet (устаревший)', 25: 'SMTP (почта)', 53: 'DNS (домены)',
+                80: 'HTTP (веб)', 110: 'POP3 (почта)', 111: 'RPC',
+                135: 'RPC (Windows)', 139: 'NetBIOS (Windows)', 143: 'IMAP (почта)',
+                443: 'HTTPS (безопасный веб)', 445: 'SMB (Windows)', 465: 'SMTPS (почта SSL)',
+                587: 'SMTP (почта)', 993: 'IMAPS (почта SSL)', 995: 'POP3S (почта SSL)',
+                1433: 'MS SQL (базы данных)', 1521: 'Oracle (базы данных)', 3306: 'MySQL (базы данных)',
+                3389: 'RDP (удалённый рабочий стол)', 5432: 'PostgreSQL (базы данных)',
+                6379: 'Redis (базы данных)', 8080: 'HTTP-прокси', 8443: 'HTTPS-прокси',
                 27017: 'MongoDB (базы данных)'
             };
             return commonPorts[port] || '—';
         }
 
-        // ===== СКАНИРОВАНИЕ =====
         async function startScan() {
             const ip = document.getElementById('targetIp').value.trim();
             const start = parseInt(document.getElementById('portStart').value);
             const end = parseInt(document.getElementById('portEnd').value);
 
-            if (!ip) {
-                alert('⚠️ Введите IP-адрес');
-                return;
-            }
+            if (!ip) { alert('Введите IP-адрес'); return; }
             if (isNaN(start) || isNaN(end) || start < 1 || end > 65535 || start > end) {
-                alert('⚠️ Введите корректный диапазон портов (1-65535)');
+                alert('Введите корректный диапазон портов (1-65535)');
                 return;
             }
 
-            // Проверка на локальный IP
             if (!ip.startsWith('127.') && !ip.startsWith('192.168.') && !ip.startsWith('10.') && !ip.startsWith('172.')) {
-                if (!confirm(`⚠️ Вы сканируете внешний IP: ${ip}\nЭто может быть незаконно без разрешения владельца.\nПродолжить?`)) {
-                    return;
-                }
+                if (!confirm(`Вы сканируете внешний IP: ${ip}\nЭто может быть незаконно без разрешения владельца.\nПродолжить?`)) return;
             }
 
             isScanning = true;
             abortController = new AbortController();
             document.querySelector('[onclick="startScan()"]').disabled = true;
             document.getElementById('stopBtn').disabled = false;
-            document.getElementById('scanStatus').textContent = '⏳ Сканирование...';
+            document.getElementById('scanStatus').textContent = 'Сканирование...';
             document.getElementById('scanStatus').style.color = 'var(--text-gray)';
 
             openPorts = [];
             closedPorts = [];
-            document.getElementById('openPortsList').innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">⏳ Сканирование... (пожалуйста, подождите)</span>';
+            document.getElementById('openPortsList').innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">Сканирование... (пожалуйста, подождите)</span>';
             document.getElementById('closedPortsSection').style.display = 'none';
             document.getElementById('scanStats').style.display = 'none';
 
@@ -226,31 +237,26 @@
                 const results = await Promise.allSettled(promises);
                 results.forEach(result => {
                     if (result.status === 'fulfilled' && result.value) {
-                        if (result.value.open) {
-                            openPorts.push(result.value);
-                        } else {
-                            closedPorts.push(result.value);
-                        }
+                        if (result.value.open) openPorts.push(result.value);
+                        else closedPorts.push(result.value);
                     }
                 });
 
                 displayResults();
-
             } catch (error) {
-                document.getElementById('scanStatus').textContent = '❌ Ошибка: ' + error.message;
+                document.getElementById('scanStatus').textContent = 'Ошибка: ' + error.message;
                 document.getElementById('scanStatus').style.color = '#e74c3c';
             } finally {
                 isScanning = false;
                 document.querySelector('[onclick="startScan()"]').disabled = false;
                 document.getElementById('stopBtn').disabled = true;
-                if (document.getElementById('scanStatus').textContent === '⏳ Сканирование...') {
-                    document.getElementById('scanStatus').textContent = '✅ Сканирование завершено';
+                if (document.getElementById('scanStatus').textContent === 'Сканирование...') {
+                    document.getElementById('scanStatus').textContent = 'Сканирование завершено';
                     document.getElementById('scanStatus').style.color = '#27ae60';
                 }
             }
         }
 
-        // ===== ПРОВЕРКА ПОРТА =====
         function checkPort(ip, port) {
             return new Promise((resolve) => {
                 const timeout = 2000;
@@ -265,10 +271,7 @@
 
                 try {
                     const url = `http://${ip}:${port}`;
-                    fetch(url, {
-                        mode: 'no-cors',
-                        signal: abortController.signal
-                    })
+                    fetch(url, { mode: 'no-cors', signal: abortController.signal })
                         .then(() => {
                             if (!resolved) {
                                 resolved = true;
@@ -293,31 +296,30 @@
             });
         }
 
-        // ===== ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ =====
         function displayResults() {
             const openList = document.getElementById('openPortsList');
             const closedList = document.getElementById('closedPortsList');
 
             if (openPorts.length === 0) {
-                openList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">🟢 Открытых портов не найдено</span>';
+                openList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">Открытых портов не найдено</span>';
             } else {
                 openList.innerHTML = openPorts.map(p => `
                         <div class="port-item open">
                             <span class="port-number">${p.port}</span>
                             <span class="port-service">${getPortInfo(p.port)}</span>
-                            <span class="port-status">✅ Открыт</span>
+                            <span class="port-status"><i data-lucide="unlock" style="width:14px;height:14px;vertical-align:-2px;"></i> Открыт</span>
                         </div>
                     `).join('');
             }
 
             if (closedPorts.length === 0) {
-                closedList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">🔴 Закрытых портов не найдено</span>';
+                closedList.innerHTML = '<span style="color: var(--text-gray); font-size: 14px;">Закрытых портов не найдено</span>';
             } else {
                 closedList.innerHTML = closedPorts.slice(0, 100).map(p => `
                         <div class="port-item closed">
                             <span class="port-number">${p.port}</span>
                             <span class="port-service">${getPortInfo(p.port)}</span>
-                            <span class="port-status">❌ Закрыт</span>
+                            <span class="port-status"><i data-lucide="lock" style="width:14px;height:14px;vertical-align:-2px;"></i> Закрыт</span>
                         </div>
                     `).join('');
                 if (closedPorts.length > 100) {
@@ -325,7 +327,6 @@
                 }
             }
 
-            // Статистика
             const elapsed = ((Date.now() - scanStartTime) / 1000).toFixed(1);
             document.getElementById('statTotal').textContent = openPorts.length + closedPorts.length;
             document.getElementById('statOpen').textContent = openPorts.length;
@@ -333,47 +334,37 @@
             document.getElementById('statTime').textContent = elapsed + 'с';
             document.getElementById('scanStats').style.display = 'block';
 
-            // Сохраняем в историю
             addToScanHistory(openPorts.length, closedPorts.length, elapsed);
 
-            document.getElementById('scanStatus').textContent = `✅ Сканирование завершено (${openPorts.length} открытых, ${closedPorts.length} закрытых)`;
+            document.getElementById('scanStatus').textContent = `Сканирование завершено (${openPorts.length} открытых, ${closedPorts.length} закрытых)`;
             document.getElementById('scanStatus').style.color = '#27ae60';
+            refreshIcons();
         }
 
-        // ===== ОСТАНОВКА СКАНИРОВАНИЯ =====
         function stopScan() {
             if (abortController) {
                 abortController.abort();
                 isScanning = false;
-                document.getElementById('scanStatus').textContent = '⏹️ Сканирование остановлено';
+                document.getElementById('scanStatus').textContent = 'Сканирование остановлено';
                 document.getElementById('scanStatus').style.color = '#f39c12';
                 document.querySelector('[onclick="startScan()"]').disabled = false;
                 document.getElementById('stopBtn').disabled = true;
             }
         }
 
-        // ===== Toggle закрытых портов =====
         function toggleClosedPorts() {
             const section = document.getElementById('closedPortsSection');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            refreshIcons();
         }
 
-        // ===== ИСТОРИЯ =====
         function addToScanHistory(open, closed, time) {
             let history = JSON.parse(localStorage.getItem('scanHistory')) || [];
             const now = new Date();
             const timeStr = now.toLocaleDateString('ru-RU') + ' ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
             const ip = document.getElementById('targetIp').value;
 
-            history.unshift({
-                ip: ip,
-                open: open,
-                closed: closed,
-                total: open + closed,
-                time: time,
-                date: timeStr
-            });
-
+            history.unshift({ ip, open, closed, total: open + closed, time, date: timeStr });
             if (history.length > 50) history.pop();
             localStorage.setItem('scanHistory', JSON.stringify(history));
             renderScanHistory();
@@ -395,9 +386,12 @@
                         <span style="color:#e74c3c;">${item.closed} закрытых</span>
                         <span style="font-size:11px; color:var(--text-gray);">${item.time}с</span>
                         <span style="font-size:11px; color:var(--text-gray);">${item.date}</span>
-                        <button class="history-delete" onclick="removeScanHistoryItem(${index})">✕</button>
+                        <button class="history-delete" onclick="removeScanHistoryItem(${index})" title="Удалить">
+                            <i data-lucide="x" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
                 `).join('');
+            refreshIcons();
         }
 
         function removeScanHistoryItem(index) {
@@ -408,17 +402,17 @@
         }
 
         function clearScanHistory() {
-            if (confirm('🗑️ Удалить всю историю?')) {
+            if (confirm('Удалить всю историю?')) {
                 localStorage.removeItem('scanHistory');
                 renderScanHistory();
             }
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         window.onload = function () {
             loadTheme();
             renderScanHistory();
-            console.log('🕸️ Сканер портов загружен');
+            refreshIcons();
+            console.log('Сканер портов загружен');
         };
     </script>
 

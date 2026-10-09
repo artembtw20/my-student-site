@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мой студенческий сайт</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,12 +19,15 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <div class="header-name-wrap">
+                <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
+                <input type="text" id="headerNameInput" class="header-name-input" maxlength="40" style="display: none;" placeholder="Введи имя">
+            </div>
         </div>
         <div class="nav">
-            <a href="index.html" class="active">🏠 Главная</a>
+            <a href="index.html" class="active"><i data-lucide="home"></i> Главная</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -28,28 +38,61 @@
         <!-- ===== ВЕРХНИЕ КАРТОЧКИ ===== -->
         <div class="top-grid animate-on-scroll">
 
-            <!-- Погода -->
-            <div class="info-card weather-card">
-                <div class="card-header">☀️ ПОГОДА</div>
-                <div class="weather-temp" id="w-temp">--°</div>
-                <div class="weather-desc" id="w-desc">Загрузка...</div>
-                <div class="weather-details" id="w-details">📍 <span id="cityName">Благовещенск</span></div>
-                <div class="weather-source" id="w-source">Данные: Open-Meteo</div>
+            <!-- FACEIT -->
+            <div class="info-card faceit-card">
+                <!-- ELO -->
+                <div class="faceit-block">
+                    <div class="faceit-label">ELO</div>
+                    <div class="faceit-elo-row">
+                        <span class="faceit-elo-value">1 635</span>
+                    </div>
+                </div>
 
-                <!-- ===== ВЫБОР ГОРОДА ===== -->
-                <div style="margin-top: 10px;">
-                    <select id="citySelect" onchange="changeCity(this.value)" style="width:100%; padding:6px 10px; border-radius:var(--radius-small); border:1px solid var(--border-color); background:var(--bg-input); color:var(--text-light); font-size:13px; cursor:pointer;">
-                        <option value="50.2907,127.5272,Благовещенск">📍 Благовещенск</option>
-                        <option value="55.7558,37.6173,Москва">📍 Москва</option>
-                        <option value="59.9343,30.3351,Санкт-Петербург">📍 Санкт-Петербург</option>
-                    </select>
+                <div class="faceit-divider"></div>
+
+                <!-- SKILL LEVEL -->
+                <div class="faceit-block">
+                    <div class="faceit-label">Skill Level</div>
+                    <div class="faceit-skill">
+                        <div class="faceit-skill-badge" style="--level-color: #FF6309;">8</div>
+                        <div class="faceit-skill-track">
+                            <div class="faceit-skill-fill" style="width: 42%;"></div>
+                        </div>
+                        <div class="faceit-skill-badge inactive" style="--level-color: #FF3B30;">9</div>
+                    </div>
+                    <div class="faceit-skill-range">
+                        <span>↗ 1 531</span>
+                        <span>1 751 ↗</span>
+                    </div>
+                </div>
+
+                <div class="faceit-divider"></div>
+
+                <!-- Rank EU -->
+                <div class="faceit-block">
+                    <div class="faceit-label">
+                        Rank EU
+                        <span class="faceit-flag">🇪🇺</span>
+                    </div>
+                    <div class="faceit-rank">450 490</div>
+                </div>
+
+                <div class="faceit-divider"></div>
+
+                <!-- Rank RU -->
+                <div class="faceit-block">
+                    <div class="faceit-label">
+                        Rank RU
+                        <span class="faceit-flag">🇷🇺</span>
+                    </div>
+                    <div class="faceit-rank">127 906</div>
                 </div>
             </div>
 
             <!-- Посещаемость -->
             <div class="info-card attendance-card">
-                <div class="card-header">📊 ПОСЕЩАЕМОСТЬ</div>
-                <div class="attendance-semester">📚 Весь семестр</div>
+                <div class="card-header"><i data-lucide="bar-chart-3"></i> ПОСЕЩАЕМОСТЬ</div>
+                <div class="attendance-semester"><i data-lucide="book-open"></i> Весь семестр</div>
                 <div class="attendance-stats">
                     <span class="attendance-number" id="attendedCount">0</span>
                     <span class="attendance-total">из <span id="totalCount">0</span></span>
@@ -60,62 +103,62 @@
                 <div class="attendance-percent" id="attendancePercent">0%</div>
                 <div class="attendance-sub" id="attendanceSub">Посещено 0 из 0 пар</div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="attendance-btn" onclick="markAttendance()">➕ Отметить пару</button>
-                    <button class="attendance-btn" onclick="markMiss()" style="background:#e67e22;">❌ Пропустил</button>
-                    <button class="attendance-btn" onclick="resetAttendance()" style="background:#666;">🔄 Сброс</button>
+                    <button class="attendance-btn" onclick="markAttendance()"><i data-lucide="plus"></i> Отметить пару</button>
+                    <button class="attendance-btn" onclick="markMiss()" style="background:#e67e22;"><i data-lucide="x"></i> Пропустил</button>
+                    <button class="attendance-btn" onclick="resetAttendance()" style="background:#666;"><i data-lucide="rotate-ccw"></i> Сброс</button>
                 </div>
                 <div style="font-size:11px; color:var(--text-gray); margin-top:8px; opacity:0.7;">
-                    💡 Отмечай пары в блоке «Мои пары» ниже
+                    <i data-lucide="lightbulb"></i> Отмечай пары в блоке «Мои пары» ниже
                 </div>
             </div>
 
             <!-- Время -->
             <div class="info-card time-card">
-                <div class="card-header">⏰ СЕЙЧАС</div>
+                <div class="card-header"><i data-lucide="clock"></i> СЕЙЧАС</div>
                 <div class="time-display" id="currentTime">00:00</div>
                 <div class="time-date" id="currentDate">13 июля 2026</div>
                 <div style="margin-top: 12px; font-size: 14px; color: var(--text-gray);">
-                    📅 <span id="weekNumber">Неделя 0</span>
+                    <i data-lucide="calendar"></i> <span id="weekNumber">Неделя 0</span>
                 </div>
             </div>
         </div>
 
         <!-- ===== БЫСТРЫЙ ДОСТУП ===== -->
         <div class="quick-access animate-on-scroll">
-            <div class="quick-title">📋 БЫСТРЫЙ ДОСТУП</div>
+            <div class="quick-title"><i data-lucide="layout-grid"></i> БЫСТРЫЙ ДОСТУП</div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-                <span class="chip">📚 1-й семестр</span>
-                <span class="chip chip-blue">✅ 8 посещений</span>
-                <span class="chip chip-green">⏰ 3 дедлайна</span>
+                <span class="chip"><i data-lucide="book"></i> 1-й семестр</span>
+                <span class="chip chip-blue"><i data-lucide="check"></i> 8 посещений</span>
+                <span class="chip chip-green"><i data-lucide="alarm-clock"></i> 3 дедлайна</span>
             </div>
             <div class="quick-grid">
                 <a href="schedule.html" class="quick-item animate-on-scroll">
-                    <span class="quick-icon">📅</span>
+                    <span class="quick-icon"><i data-lucide="calendar"></i></span>
                     <span>Расписание</span>
                 </a>
                 <a href="deadlines.html" class="quick-item animate-on-scroll">
-                    <span class="quick-icon">⏰</span>
+                    <span class="quick-icon"><i data-lucide="alarm-clock"></i></span>
                     <span>Дедлайны</span>
                 </a>
                 <a href="notes.html" class="quick-item animate-on-scroll">
-                    <span class="quick-icon">📓</span>
+                    <span class="quick-icon"><i data-lucide="notebook-pen"></i></span>
                     <span>Конспекты</span>
                 </a>
                 <a href="sitemap.html" class="quick-item animate-on-scroll">
-                    <span class="quick-icon">🗺️</span>
+                    <span class="quick-icon"><i data-lucide="map"></i></span>
                     <span>Все разделы</span>
                 </a>
             </div>
 
             <!-- Уведомления -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; padding: 10px 0; border-top: 1px solid var(--border-color); margin-top: 8px;">
-                <span style="color: var(--text-gray); font-size: 13px;">🔔 Уведомления в 20:00</span>
+                <span style="color: var(--text-gray); font-size: 13px;"><i data-lucide="bell"></i> Уведомления в 20:00</span>
                 <label style="display: flex; align-items: center; gap: 8px; color: var(--text-light); cursor: pointer; font-size: 14px;">
-                    <input type="checkbox" id="notifyToggle" onchange="toggleNotifications(this.checked)" style="width: 18px; height: 18px; accent-color: var(--red-primary);">
-                    <span id="notifyStatus">🔔 Включены</span>
+                    <input type="checkbox" id="notifyToggle" onchange="toggleNotifications(this.checked)" style="width: 18px; height: 18px; accent-color: var(--accent);">
+                    <span id="notifyStatus"><i data-lucide="bell"></i> Включены</span>
                 </label>
                 <button onclick="testNotification()" style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-light); padding: 4px 14px; border-radius: var(--radius-small); cursor: pointer; font-size: 13px; transition: all 0.3s ease;">
-                    📢 Тест
+                    <i data-lucide="megaphone"></i> Тест
                 </button>
             </div>
         </div>
@@ -124,41 +167,40 @@
         <div class="two-columns animate-on-scroll">
             <div class="column-left">
                 <div class="schedule-today">
-                    <div class="schedule-title" id="todayTitle">📅 МОИ ПАРЫ</div>
+                    <div class="schedule-title" id="todayTitle"><i data-lucide="calendar"></i> МОИ ПАРЫ</div>
                     <div id="todaySchedule" class="schedule-list">
                         <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
                         <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
                         <div class="skeleton" style="height:60px; margin-bottom:8px;"></div>
                     </div>
                     <div style="font-size: 13px; color: var(--text-gray); margin-top: 8px;">
-                        ✅ Нажми на пару, чтобы отметить посещение
+                        <i data-lucide="check"></i> Нажми на пару, чтобы отметить посещение
                     </div>
                 </div>
             </div>
 
             <div class="column-right">
                 <div class="deadlines-today">
-                    <div class="schedule-title">⏰ СРОЧНЫЕ ДЕДЛАЙНЫ</div>
-                    <div id="urgentDeadlinesList" class="deadlines-compact-list">
-                    </div>
+                    <div class="schedule-title"><i data-lucide="alarm-clock"></i> СРОЧНЫЕ ДЕДЛАЙНЫ</div>
+                    <div id="urgentDeadlinesList" class="deadlines-compact-list"></div>
                 </div>
             </div>
         </div>
 
         <!-- ===== ФАКТ ДНЯ ===== -->
         <div class="fact-card animate-on-scroll">
-            <div class="fact-label">💡 Факт дня</div>
+            <div class="fact-label"><i data-lucide="lightbulb"></i> Факт дня</div>
             <div class="fact-category" id="factCategory">Физика</div>
             <div class="fact-text" id="factText">Загрузка факта...</div>
-            <button class="fact-btn" onclick="showRandomFact()">🔀 Другой факт</button>
+            <button class="fact-btn" onclick="showRandomFact()"><i data-lucide="shuffle"></i> Другой факт</button>
         </div>
 
         <!-- ===== РЕЗЕРВНОЕ КОПИРОВАНИЕ ===== -->
         <div class="backup-section animate-on-scroll">
-            <div class="backup-title">💾 РЕЗЕРВНОЕ КОПИРОВАНИЕ</div>
+            <div class="backup-title"><i data-lucide="database"></i> РЕЗЕРВНОЕ КОПИРОВАНИЕ</div>
             <div class="backup-buttons">
-                <button class="backup-btn export-btn" onclick="exportData()">📥 Скачать бэкап</button>
-                <button class="backup-btn import-btn" onclick="document.getElementById('importInput').click()">📤 Загрузить бэкап</button>
+                <button class="backup-btn export-btn" onclick="exportData()"><i data-lucide="download"></i> Скачать бэкап</button>
+                <button class="backup-btn import-btn" onclick="document.getElementById('importInput').click()"><i data-lucide="upload"></i> Загрузить бэкап</button>
                 <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)">
             </div>
             <div class="backup-hint">Сохраняет все данные: конспекты, посещаемость, расписание, тему</div>
@@ -172,7 +214,7 @@
     </div>
 
     <!-- ===== КНОПКА "НАВЕРХ" ===== -->
-    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()"><i data-lucide="arrow-up"></i></button>
 
     <!-- ===== ПОДКЛЮЧЕНИЕ СКРИПТОВ ===== -->
     <script src="db.js"></script>
@@ -186,10 +228,17 @@
         // ⚙️ НАСТРОЙКИ СЕМЕСТРА
         // ============================================
         const WEEKS_IN_SEMESTER = 18;
-        const SEMESTER_START = new Date(2026, 7, 31); // 31 августа 2026 (понедельник)
+        const SEMESTER_START = new Date(2026, 7, 31);
 
         // ============================================
-        // 📅 ОПРЕДЕЛЕНИЕ НЕДЕЛИ (1 / 2)
+        // 🎨 ИКОНКИ LUCIDE
+        // ============================================
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // ============================================
+        // 📅 ОПРЕДЕЛЕНИЕ НЕДЕЛИ
         // ============================================
         function getCurrentWeekNumber() {
             const now = new Date();
@@ -208,7 +257,6 @@
             ['week1', 'week2'].forEach(weekKey => {
                 const week = data[weekKey];
                 if (!week) return;
-
                 Object.keys(week).forEach(day => {
                     const lessons = week[day] || [];
                     lessons.forEach(lesson => {
@@ -265,9 +313,9 @@
                 overall.attended++;
                 saveOverallAttendance(overall);
                 updateAttendanceDisplay();
-                alert(`✅ Отмечено! Посещено ${overall.attended} из ${overall.total} пар (${Math.round((overall.attended / overall.total) * 100)}%)`);
+                alert(`Отмечено! Посещено ${overall.attended} из ${overall.total} пар`);
             } else {
-                alert('🎉 Вы посетили все пары в семестре!');
+                alert('Вы посетили все пары в семестре!');
             }
         }
 
@@ -277,96 +325,21 @@
                 overall.attended--;
                 saveOverallAttendance(overall);
                 updateAttendanceDisplay();
-                alert(`❌ Отмечено как пропуск. Посещено ${overall.attended} из ${overall.total} пар`);
+                alert(`Отмечено как пропуск. Посещено ${overall.attended} из ${overall.total} пар`);
             } else {
-                alert('⚠️ Вы не можете иметь отрицательное количество посещений!');
+                alert('Вы не можете иметь отрицательное количество посещений!');
             }
         }
 
         function resetAttendance() {
-            if (confirm('🔄 Сбросить все данные посещаемости?')) {
+            if (confirm('Сбросить все данные посещаемости?')) {
                 localStorage.removeItem('attendance');
                 localStorage.removeItem('todayAttendance');
                 updateAttendanceDisplay();
                 renderTodaySchedule();
-                alert('✅ Сброшено!');
+                alert('Сброшено!');
             }
         }
-
-        // ============================================
-        // 🌤️ ПОГОДА
-        // ============================================
-        let currentCity = { lat: 50.2907, lon: 127.5272, name: 'Благовещенск' };
-
-        function changeCity(value) {
-            const [lat, lon, name] = value.split(',');
-            currentCity = { lat: parseFloat(lat), lon: parseFloat(lon), name: name };
-            document.getElementById('cityName').textContent = name;
-            localStorage.setItem('selectedCity', value);
-            fetchWeather();
-        }
-
-        function loadSavedCity() {
-            const saved = localStorage.getItem('selectedCity');
-            if (saved) {
-                const [lat, lon, name] = saved.split(',');
-                currentCity = { lat: parseFloat(lat), lon: parseFloat(lon), name: name };
-                document.getElementById('cityName').textContent = name;
-                document.getElementById('citySelect').value = saved;
-            }
-        }
-
-        async function fetchWeather() {
-    try {
-        // ⚠️ ВСТАВЬ СВОЙ КЛЮЧ СЮДА
-        const YANDEX_WEATHER_KEY = '744418cd-eb01-4c7a-8596-714f12824dd2';
-
-        const url = `https://api.weather.yandex.ru/v2/forecast?lat=${currentCity.lat}&lon=${currentCity.lon}&lang=ru_RU&limit=1`;
-
-        const res = await fetch(url, {
-            headers: {
-                'X-Yandex-Weather-Key': YANDEX_WEATHER_KEY
-            }
-        });
-
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        const fact = data.fact;
-
-        const conditionMap = {
-            'clear': 'Ясно ☀️',
-            'partly-cloudy': 'Малооблачно 🌤️',
-            'cloudy': 'Облачно с прояснениями ⛅',
-            'overcast': 'Пасмурно ☁️',
-            'light-rain': 'Небольшой дождь 🌦️',
-            'rain': 'Дождь 🌧️',
-            'heavy-rain': 'Сильный дождь 🌧️',
-            'showers': 'Ливень 🌧️',
-            'wet-snow': 'Дождь со снегом 🌨️',
-            'light-snow': 'Небольшой снег 🌨️',
-            'snow': 'Снег ❄️',
-            'snow-showers': 'Снегопад ❄️',
-            'hail': 'Град 🌨️',
-            'thunderstorm': 'Гроза ⛈️',
-            'thunderstorm-with-rain': 'Дождь с грозой ⛈️',
-            'thunderstorm-with-hail': 'Гроза с градом ⛈️'
-        };
-
-        const desc = conditionMap[fact.condition] || fact.condition;
-        const temp = fact.temp;
-        const wind = fact.wind_speed;
-
-        document.getElementById('w-temp').textContent = `${temp}°`;
-        document.getElementById('w-desc').textContent = desc;
-        document.getElementById('w-details').innerHTML = `📍 ${currentCity.name}<br>💨 Ветер: ${wind} м/с`;
-    } catch (e) {
-        console.error('Ошибка погоды:', e);
-        document.getElementById('w-desc').textContent = '⚠️ Ошибка загрузки';
-    }
-}
 
         // ============================================
         // 📅 РАСПИСАНИЕ И ОТМЕТКИ
@@ -393,7 +366,6 @@
             localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(data));
         }
 
-        // ===== КЛЮЧ С ДАТОЙ (чтобы отметки не "переезжали") =====
         function getTodayKey() {
             const now = new Date();
             const year = now.getFullYear();
@@ -416,17 +388,11 @@
             saveTodayAttendance(att);
 
             const overall = getOverallAttendance();
-
-            if (!wasAttended) {
-                overall.attended++;
-            } else {
-                overall.attended--;
-            }
-
+            if (!wasAttended) overall.attended++;
+            else overall.attended--;
             if (overall.attended < 0) overall.attended = 0;
 
             saveOverallAttendance(overall);
-
             renderTodaySchedule();
             updateAttendanceDisplay();
         }
@@ -438,36 +404,35 @@
             const todayName = getTodayDay();
 
             const dayNames = {
-                monday: 'Понедельник',
-                tuesday: 'Вторник',
-                wednesday: 'Среда',
-                thursday: 'Четверг',
-                friday: 'Пятница',
-                saturday: 'Суббота',
-                sunday: 'Воскресенье'
+                monday: 'Понедельник', tuesday: 'Вторник', wednesday: 'Среда',
+                thursday: 'Четверг', friday: 'Пятница', saturday: 'Суббота', sunday: 'Воскресенье'
             };
 
             const validLessons = lessons.filter(l => l.name && l.name !== '—' && l.name !== '-' && l.name !== '');
 
             if (validLessons.length === 0) {
-                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px;">🎉 Сегодня пар нет! Отдыхай.</div>`;
+                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px;">Сегодня пар нет! Отдыхай.</div>`;
+                refreshIcons();
                 return;
             }
 
-            title.textContent = `📅 ${dayNames[todayName] || 'Сегодня'} (${getCurrentWeekNumber()}-я неделя)`;
+            title.innerHTML = `<i data-lucide="calendar"></i> ${dayNames[todayName] || 'Сегодня'} (${getCurrentWeekNumber()}-я неделя)`;
 
             container.innerHTML = validLessons.map((lesson, index) => {
                 const attended = isAttended(index);
                 const teacher = lesson.teacher || '';
+                const statusIcon = attended ? 'check' : 'clock';
+                const statusText = attended ? 'Присутствовал' : 'Отметить';
                 return `
                     <div class="schedule-item ${attended ? 'present' : 'upcoming'}" onclick="toggleAttendance(${index})" style="cursor:pointer;">
                         <span class="schedule-time">${lesson.time || ''}</span>
                         <span class="schedule-name">${lesson.name}</span>
                         ${teacher ? `<span class="schedule-teacher">${teacher}</span>` : ''}
-                        <span class="schedule-status">${attended ? '✅ Присутствовал' : '⏳ Отметить'}</span>
+                        <span class="schedule-status"><i data-lucide="${statusIcon}"></i> ${statusText}</span>
                     </div>
                 `;
             }).join('');
+            refreshIcons();
         }
 
         // ============================================
@@ -503,26 +468,29 @@
             urgent.sort((a, b) => getDaysLeft(a.date) - getDaysLeft(b.date));
 
             if (urgent.length === 0) {
-                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px 0;font-size:14px;">🎉 Нет срочных дедлайнов</div>`;
+                container.innerHTML = `<div style="text-align:center;color:var(--text-gray);padding:20px 0;font-size:14px;">Нет срочных дедлайнов</div>`;
+                refreshIcons();
                 return;
             }
 
             container.innerHTML = urgent.map(d => {
                 const daysLeft = getDaysLeft(d.date);
                 const color = daysLeft <= 0 || daysLeft <= 2 ? '#e74c3c' : daysLeft <= 5 ? '#f39c12' : daysLeft <= 14 ? '#f1c40f' : '#27ae60';
-                const priorityLabel = { high: '🔴', medium: '🟡', low: '🟢' }[d.priority] || '🟡';
-                const status = daysLeft < 0 ? '❌ Просрочено' : daysLeft === 0 ? '⚠️ Сегодня!' : daysLeft <= 2 ? '🔴 Срочно!' : daysLeft <= 5 ? '🟠 Скоро' : daysLeft <= 14 ? '🟡 Не забыть' : '🟢 Есть время';
+                const priorityIcon = { high: 'alert-circle', medium: 'alert-triangle', low: 'info' }[d.priority] || 'alert-triangle';
+                const priorityColor = { high: '#e74c3c', medium: '#f39c12', low: '#27ae60' }[d.priority] || '#f39c12';
+                const status = daysLeft < 0 ? 'Просрочено' : daysLeft === 0 ? 'Сегодня!' : daysLeft <= 2 ? 'Срочно!' : daysLeft <= 5 ? 'Скоро' : daysLeft <= 14 ? 'Не забыть' : 'Есть время';
                 return `
                     <div class="deadline-item" style="border-left-color:${color};">
                         <div class="deadline-info">
-                            <span class="deadline-subject">${priorityLabel} ${d.subject}</span>
+                            <span class="deadline-subject"><i data-lucide="${priorityIcon}" style="color:${priorityColor};"></i> ${d.subject}</span>
                             <span class="deadline-task">${d.task}</span>
                         </div>
                         <span class="deadline-status" style="color:${color};">${status}</span>
-                        <span class="deadline-date">📅 ${d.date}</span>
+                        <span class="deadline-date"><i data-lucide="calendar"></i> ${d.date}</span>
                     </div>
                 `;
             }).join('');
+            refreshIcons();
         }
 
         // ============================================
@@ -531,15 +499,9 @@
         document.addEventListener('DOMContentLoaded', function () {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
-
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
             document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
         });
 
@@ -548,17 +510,15 @@
         // ============================================
         window.onload = function () {
             loadTheme();
-            loadSavedCity();
-            fetchWeather();
             showRandomFact();
             updateTime();
             renderTodaySchedule();
             updateAttendanceDisplay();
             renderUrgentDeadlines();
-            setInterval(fetchWeather, 600000);
-            console.log('🏠 Главная страница загружена');
-            console.log('📊 Всего пар за семестр:', TOTAL_LESSONS);
-            console.log('📅 Текущая неделя:', getCurrentWeekNumber());
+            refreshIcons();
+            console.log('Главная страница загружена');
+            console.log('Всего пар за семестр:', TOTAL_LESSONS);
+            console.log('Текущая неделя:', getCurrentWeekNumber());
         };
 
         // ============================================
@@ -571,13 +531,14 @@
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -585,13 +546,14 @@
             const icon = document.getElementById('themeIcon');
             if (saved === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                if (icon) icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                if (icon) icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
-        // ===== ВРЕМЯ (теперь тоже с датой 31 августа) =====
+        // ===== ВРЕМЯ =====
         function updateTime() {
             const now = new Date();
             document.getElementById('currentTime').textContent = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -610,7 +572,7 @@
         async function exportData() {
             try {
                 const data = await exportAllNotes();
-                if (data.length === 0) { alert('⚠️ Нет данных'); return; }
+                if (data.length === 0) { alert('Нет данных'); return; }
                 const scheduleData = getSchedule();
                 const exportData = {
                     notes: data,
@@ -629,9 +591,9 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                alert(`✅ Бэкап сохранен (${data.length} конспектов)`);
+                alert(`Бэкап сохранен (${data.length} конспектов)`);
             } catch (e) {
-                alert('❌ Ошибка: ' + e.message);
+                alert('Ошибка: ' + e.message);
             }
         }
 
@@ -642,16 +604,16 @@
             reader.onload = async function (e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (!data.notes || !Array.isArray(data.notes)) { alert('⚠️ Неверный формат'); return; }
+                    if (!data.notes || !Array.isArray(data.notes)) { alert('Неверный формат'); return; }
                     await importAllNotes(data.notes);
                     if (data.attendance) localStorage.setItem('attendance', JSON.stringify(data.attendance));
                     if (data.lessons) localStorage.setItem('lessons', JSON.stringify(data.lessons));
                     if (data.theme) localStorage.setItem('theme', data.theme);
                     if (data.schedule) localStorage.setItem('scheduleData', JSON.stringify(data.schedule));
-                    alert(`✅ Восстановлено ${data.notes.length} конспектов`);
+                    alert(`Восстановлено ${data.notes.length} конспектов`);
                     location.reload();
                 } catch (err) {
-                    alert('❌ Ошибка: ' + err.message);
+                    alert('Ошибка: ' + err.message);
                 }
             };
             reader.readAsText(file);
@@ -703,29 +665,86 @@
         // ===== КНОПКА "НАВЕРХ" =====
         window.addEventListener('scroll', function () {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
         });
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // ============================================
+        // ИМЯ ПОЛЬЗОВАТЕЛЯ (редактируемое)
+        // ============================================
+        const NAME_STORAGE_KEY = 'userName';
+        const DEFAULT_NAME = 'Студент';
+
+        function getUserName() {
+            return localStorage.getItem(NAME_STORAGE_KEY) || DEFAULT_NAME;
+        }
+
+        function setUserName(name) {
+            const clean = (name || '').trim();
+            if (clean) localStorage.setItem(NAME_STORAGE_KEY, clean);
+            else localStorage.removeItem(NAME_STORAGE_KEY);
+            renderUserName();
+        }
+
+        function renderUserName() {
+            const nameEl = document.getElementById('headerName');
+            if (nameEl) nameEl.textContent = getUserName();
+        }
+
+        function initEditableName() {
+            const nameEl = document.getElementById('headerName');
+            const inputEl = document.getElementById('headerNameInput');
+            if (!nameEl || !inputEl) return;
+
+            renderUserName();
+
+            nameEl.addEventListener('click', () => {
+                inputEl.value = getUserName();
+                nameEl.style.display = 'none';
+                inputEl.style.display = 'inline-block';
+                inputEl.focus();
+                inputEl.select();
+            });
+
+            inputEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setUserName(inputEl.value);
+                    closeNameEditor();
+                } else if (e.key === 'Escape') {
+                    closeNameEditor();
+                }
+            });
+
+            inputEl.addEventListener('blur', () => {
+                setUserName(inputEl.value);
+                closeNameEditor();
+            });
+
+            function closeNameEditor() {
+                inputEl.style.display = 'none';
+                nameEl.style.display = 'inline';
+                renderUserName();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initEditableName);
     </script>
 
     <!-- ===== УВЕДОМЛЕНИЯ ===== -->
     <script>
-        // ============================================
-        // 🔔 УВЕДОМЛЕНИЯ
-        // ============================================
-
         function updateNotifyStatus(enabled) {
             const status = document.getElementById('notifyStatus');
             if (status) {
-                status.textContent = enabled ? '🔔 Включены' : '🔕 Отключены';
+                status.innerHTML = enabled
+                    ? '<i data-lucide="bell"></i> Включены'
+                    : '<i data-lucide="bell-off"></i> Отключены';
                 status.style.color = enabled ? '#27ae60' : '#e74c3c';
+                refreshIcons();
             }
         }
 
@@ -747,69 +766,50 @@
 
         function sendTestNotifications() {
             try {
-                new Notification('📢 Тестовое уведомление', {
-                    body: 'Уведомления о парах работают! 🎉',
-                    icon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png'
+                new Notification('Тестовое уведомление', {
+                    body: 'Уведомления о парах работают!'
                 });
-                console.log('✅ Тестовое уведомление отправлено');
+                console.log('Тестовое уведомление отправлено');
 
                 setTimeout(() => {
-                    console.log('⏳ Отправка уведомления о завтрашних парах...');
                     if (typeof showTomorrowNotification === 'function') {
                         showTomorrowNotification();
                     } else {
-                        new Notification('📅 Завтрашние пары', {
-                            body: 'Функция showTomorrowNotification не загружена. Проверьте schedule-notify.js',
-                            icon: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4da.png'
+                        new Notification('Завтрашние пары', {
+                            body: 'Функция showTomorrowNotification не загружена.'
                         });
                     }
                 }, 1500);
-
             } catch (e) {
-                console.error('❌ Ошибка:', e);
-                alert('❌ Ошибка при отправке уведомления: ' + e.message);
+                console.error('Ошибка:', e);
+                alert('Ошибка при отправке уведомления: ' + e.message);
             }
         }
 
         function testNotification() {
-            console.log('🔔 Тест уведомлений запущен...');
-
             if (!('Notification' in window)) {
-                alert('❌ Ваш браузер не поддерживает уведомления');
+                alert('Ваш браузер не поддерживает уведомления');
                 return;
             }
-
             if (Notification.permission === 'denied') {
-                alert('⚠️ Уведомления заблокированы в настройках браузера.\n\nРазрешите их и обновите страницу.');
+                alert('Уведомления заблокированы в настройках браузера.\n\nРазрешите их и обновите страницу.');
                 return;
             }
-
             if (Notification.permission === 'default') {
                 Notification.requestPermission().then(permission => {
-                    console.log('📢 Разрешение:', permission);
-                    if (permission === 'granted') {
-                        sendTestNotifications();
-                    } else {
-                        alert('⚠️ Разрешение на уведомления не получено.');
-                    }
+                    if (permission === 'granted') sendTestNotifications();
+                    else alert('Разрешение на уведомления не получено.');
                 });
                 return;
             }
-
-            if (Notification.permission === 'granted') {
-                sendTestNotifications();
-            }
+            if (Notification.permission === 'granted') sendTestNotifications();
         }
 
         function initNotifications() {
             try {
                 if (typeof startNotificationScheduler === 'function') {
                     startNotificationScheduler();
-                    console.log('🔔 Планировщик уведомлений запущен');
-                } else {
-                    console.warn('⚠️ startNotificationScheduler не найдена');
                 }
-
                 const toggle = document.getElementById('notifyToggle');
                 if (toggle) {
                     const enabled = localStorage.getItem('scheduleNotifyEnabled') !== 'false';
@@ -817,7 +817,7 @@
                     updateNotifyStatus(enabled);
                 }
             } catch (e) {
-                console.error('❌ Ошибка инициализации уведомлений:', e);
+                console.error('Ошибка инициализации уведомлений:', e);
             }
         }
 
@@ -828,6 +828,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             initNotifications();
+            refreshIcons();
         });
     </script>
 

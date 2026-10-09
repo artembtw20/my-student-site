@@ -4,50 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор фейковых данных</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР ===== -->
     <div class="container">
         <div class="page-card" style="text-align: left; align-items: stretch;">
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🎭 Генератор фейковых данных</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="venetian-mask"></i> Генератор фейковых данных
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Создаёт вымышленные, но реалистичные данные для защиты приватности</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
 
             <!-- ===== КНОПКИ ===== -->
             <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
-                <button class="generate-btn" onclick="generateAll()" style="width:auto; padding:12px 30px;">🎲 Сгенерировать всё</button>
-                <button class="generate-btn" onclick="copyAll()" style="width:auto; padding:12px 30px; background:#3498db;">📋 Копировать всё</button>
-                <button class="generate-btn" onclick="copyAsJSON()" style="width:auto; padding:12px 30px; background:#2ecc71;">📄 Копировать JSON</button>
+                <button class="generate-btn" onclick="generateAll()" style="width:auto; padding:12px 30px;">
+                    <i data-lucide="dice-5" style="width:16px;height:16px;vertical-align:-3px;"></i> Сгенерировать всё
+                </button>
+                <button class="generate-btn" onclick="copyAll()" style="width:auto; padding:12px 30px; background:#3498db;">
+                    <i data-lucide="copy" style="width:16px;height:16px;vertical-align:-3px;"></i> Копировать всё
+                </button>
+                <button class="generate-btn" onclick="copyAsJSON()" style="width:auto; padding:12px 30px; background:#2ecc71;">
+                    <i data-lucide="braces" style="width:16px;height:16px;vertical-align:-3px;"></i> Копировать JSON
+                </button>
             </div>
 
             <!-- ===== ДАННЫЕ ===== -->
-            <div id="dataContainer" class="fake-data-grid">
-                <!-- Заполняется через JavaScript -->
-            </div>
+            <div id="dataContainer" class="fake-data-grid"></div>
 
         </div>
 
@@ -56,21 +69,24 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -78,13 +94,13 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
-        // ===== ДАННЫЕ =====
         const maleFirstNames = ['Александр', 'Дмитрий', 'Максим', 'Сергей', 'Андрей', 'Алексей', 'Иван', 'Евгений', 'Михаил', 'Роман', 'Артём', 'Владимир', 'Николай', 'Павел', 'Константин', 'Вадим', 'Вячеслав', 'Станислав', 'Олег', 'Григорий'];
         const femaleFirstNames = ['Анастасия', 'Екатерина', 'Мария', 'Елена', 'Анна', 'Дарья', 'Ольга', 'Татьяна', 'Светлана', 'Ирина', 'Наталья', 'Виктория', 'Юлия', 'Алиса', 'София', 'Алина', 'Полина', 'Вероника', 'Александра', 'Евгения'];
         const lastNames = ['Иванов', 'Петров', 'Сидоров', 'Кузнецов', 'Смирнов', 'Попов', 'Васильев', 'Новиков', 'Морозов', 'Лебедев', 'Козлов', 'Волков', 'Соколов', 'Михайлов', 'Фёдоров', 'Тарасов', 'Белов', 'Комаров', 'Орлов', 'Карпов', 'Макарова', 'Андреева', 'Ковалёва', 'Ильина', 'Гусева', 'Титова', 'Мухина', 'Белова', 'Крылова', 'Соловьёва'];
@@ -92,91 +108,25 @@
         const cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань', 'Нижний Новгород', 'Челябинск', 'Самара', 'Омск', 'Ростов-на-Дону', 'Уфа', 'Красноярск', 'Пермь', 'Воронеж', 'Волгоград', 'Краснодар', 'Саратов', 'Тюмень', 'Ижевск', 'Барнаул', 'Благовещенск', 'Хабаровск', 'Владивосток'];
         const positions = ['Менеджер', 'Разработчик', 'Аналитик', 'Дизайнер', 'Тестировщик', 'Администратор', 'Специалист', 'Инженер', 'Архитектор', 'Консультант', 'Руководитель', 'Ассистент', 'Координатор'];
         const domains = ['gmail.com', 'mail.ru', 'yandex.ru', 'inbox.ru', 'outlook.com', 'list.ru', 'bk.ru'];
-        const carriers = ['МТС', 'Билайн', 'Мегафон', 'Tele2', 'Yota'];
 
-        // ===== КОМПАНИИ (реальные российские) =====
         const companies = [
-            'ПАО "Сбербанк"',
-            'ПАО "Газпром"',
-            'ПАО "Лукойл"',
-            'ПАО "Роснефть"',
-            'ПАО "Норникель"',
-            'ПАО "Сургутнефтегаз"',
-            'ПАО "Магнит"',
-            'ПАО "МТС"',
-            'ПАО "Вымпел-Коммуникации" (Билайн)',
-            'ПАО "Мегафон"',
-            'ПАО "Ростелеком"',
-            'ПАО "Аэрофлот"',
-            'ПАО "РЖД"',
-            'ПАО "АЛРОСА"',
-            'ПАО "Северсталь"',
-            'ПАО "НЛМК"',
-            'ПАО "ММК"',
-            'ПАО "Татнефть"',
-            'ПАО "Башнефть"',
-            'ПАО "Интер РАО"',
-            'ПАО "РусГидро"',
-            'ПАО "ФосАгро"',
-            'ПАО "Акрон"',
-            'ПАО "Уралкалий"',
-            'ПАО "Камаз"',
-            'ПАО "АвтоВАЗ"',
-            'ПАО "ГК "ПИК"',
-            'ПАО "Эталон"',
-            'ПАО "ЛСР"',
-            'ПАО "Мостотрест"',
-            'ПАО "ВТБ"',
-            'ПАО "Банк "ФК Открытие"',
-            'ПАО "Промсвязьбанк"',
-            'ПАО "Росбанк"',
-            'ПАО "Московский кредитный банк"',
-            'АО "Райффайзенбанк"',
-            'АО "ЮниКредит Банк"',
-            'ООО "Лента"',
-            'АО "Дикси"',
-            'ООО "Глобус"',
-            'ООО "Ашан"',
-            'ООО "Перекрёсток"',
-            'ООО "Пятёрочка"',
-            'ООО "Яндекс"',
-            'ООО "Mail.ru Group"',
-            'АО "Касперский"',
-            'ООО "1С"',
-            'АО "Лаборатория Касперского"',
-            'ООО "Нетрика"',
-            'АО "Первый канал"',
-            'АО "НТВ"',
-            'ООО "СТС Медиа"',
-            'АО "Газпром-Медиа"',
-            'ПАО "Транснефть"',
-            'АО "Зарубежнефть"',
-            'ПАО "ОГК-2"',
-            'ПАО "Энел Россия"',
-            'АО "Объединённая авиастроительная корпорация"',
-            'АО "Объединённая судостроительная корпорация"',
-            'ГК "Роскосмос"',
-            'ГК "Росатом"',
-            'ООО "Самолет"',
-            'ООО "Яндекс.Такси"',
-            'ООО "Delivery Club"',
-            'ООО "СберМаркет"',
-            'ООО "Ozon"',
-            'ООО "Wildberries"',
-            'ООО "AliExpress Россия"',
-            'ГК "ПИК"',
-            'ООО "СУ-155"',
-            'АО "Моспромстрой"'
+            'ПАО "Сбербанк"', 'ПАО "Газпром"', 'ПАО "Лукойл"', 'ПАО "Роснефть"', 'ПАО "Норникель"',
+            'ПАО "Сургутнефтегаз"', 'ПАО "Магнит"', 'ПАО "МТС"', 'ПАО "Вымпел-Коммуникации" (Билайн)',
+            'ПАО "Мегафон"', 'ПАО "Ростелеком"', 'ПАО "Аэрофлот"', 'ПАО "РЖД"', 'ПАО "АЛРОСА"',
+            'ПАО "Северсталь"', 'ПАО "НЛМК"', 'ПАО "ММК"', 'ПАО "Татнефть"', 'ПАО "Башнефть"',
+            'ПАО "Интер РАО"', 'ПАО "РусГидро"', 'ПАО "ФосАгро"', 'ПАО "Акрон"', 'ПАО "Уралкалий"',
+            'ПАО "Камаз"', 'ПАО "АвтоВАЗ"', 'ПАО "ВТБ"', 'ПАО "Промсвязьбанк"', 'ПАО "Росбанк"',
+            'АО "Райффайзенбанк"', 'ООО "Лента"', 'АО "Дикси"', 'ООО "Пятёрочка"', 'ООО "Яндекс"',
+            'ООО "Mail.ru Group"', 'АО "Касперский"', 'ООО "1С"', 'ГК "Роскосмос"', 'ГК "Росатом"',
+            'ООО "Ozon"', 'ООО "Wildberries"', 'ООО "Самолет"', 'ООО "Яндекс.Такси"'
         ];
 
-        // ===== ОТЧЕСТВА (по полу) =====
         const malePatronymics = ['Александрович', 'Дмитриевич', 'Максимович', 'Сергеевич', 'Андреевич', 'Алексеевич', 'Иванович', 'Евгеньевич', 'Михайлович', 'Романович', 'Артёмович', 'Владимирович', 'Николаевич', 'Павлович', 'Константинович', 'Вадимович', 'Вячеславович', 'Станиславович', 'Олегович', 'Григорьевич'];
         const femalePatronymics = ['Александровна', 'Дмитриевна', 'Максимовна', 'Сергеевна', 'Андреевна', 'Алексеевна', 'Ивановна', 'Евгеньевна', 'Михайловна', 'Романовна', 'Артёмовна', 'Владимировна', 'Николаевна', 'Павловна', 'Константиновна', 'Вадимовна', 'Вячеславовна', 'Станиславовна', 'Олеговна', 'Григорьевна'];
 
         function randomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
         function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-        // ===== ТРАНСЛИТЕРАЦИЯ =====
         function transliterate(name) {
             const map = {
                 'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e',
@@ -214,9 +164,7 @@
         }
 
         function randomPassport() {
-            const series = randomInt(1000, 9999);
-            const number = randomInt(100000, 999999);
-            return `${series} ${number}`;
+            return `${randomInt(1000, 9999)} ${randomInt(100000, 999999)}`;
         }
 
         function randomBankCard() {
@@ -232,16 +180,11 @@
             const street = randomItem(streets);
             const house = randomInt(1, 150);
             const apartment = randomInt(1, 200);
-            return { city, street, house, apartment, full: `${city}, ул. ${street}, д. ${house}, кв. ${apartment}` };
+            return { city, full: `${city}, ул. ${street}, д. ${house}, кв. ${apartment}` };
         }
 
-        function randomINN() {
-            return String(randomInt(1000000000, 9999999999)).padStart(10, '0');
-        }
-
-        function randomSNILS() {
-            return `${String(randomInt(100, 999))}-${String(randomInt(100, 999))}-${String(randomInt(100, 999))} ${String(randomInt(10, 99))}`;
-        }
+        function randomINN() { return String(randomInt(1000000000, 9999999999)).padStart(10, '0'); }
+        function randomSNILS() { return `${String(randomInt(100, 999))}-${String(randomInt(100, 999))}-${String(randomInt(100, 999))} ${String(randomInt(10, 99))}`; }
 
         function randomCarNumber() {
             const region = randomInt(1, 199);
@@ -252,13 +195,10 @@
 
         function getPatronymic(firstName, gender) {
             const idx = maleFirstNames.indexOf(firstName);
-            if (idx === -1) {
-                return gender === 'male' ? randomItem(malePatronymics) : randomItem(femalePatronymics);
-            }
+            if (idx === -1) return gender === 'male' ? randomItem(malePatronymics) : randomItem(femalePatronymics);
             return gender === 'male' ? malePatronymics[idx] : femalePatronymics[idx];
         }
 
-        // ===== ГЕНЕРАЦИЯ =====
         function generateAll() {
             const gender = randomItem(['male', 'female']);
             const firstName = gender === 'male' ? randomItem(maleFirstNames) : randomItem(femaleFirstNames);
@@ -277,56 +217,59 @@
             const position = randomItem(positions);
             const fullName = `${lastName} ${firstName} ${patronymic}`;
 
-            const data = {
-                '👤 ФИО': fullName,
-                '📅 Дата рождения': birthDate,
-                '📱 Телефон': phone,
-                '📧 Email': email,
-                '📍 Адрес': address.full,
-                '🏙️ Город': address.city,
-                '📜 Паспорт': `серия ${passport.split(' ')[0]} № ${passport.split(' ')[1]}`,
-                '💳 Карта банка': `**** **** **** ${card.number.slice(-4)}`,
-                '📅 Срок карты': card.expiry,
-                '🔢 CVV': card.cvv,
-                '🏢 ИНН': inn,
-                '🪪 СНИЛС': snils,
-                '🚗 Номер авто': carNumber,
-                '🏢 Компания': company,
-                '💼 Должность': position,
-                '🌐 Домен почты': email.split('@')[1],
-                '📅 Полных лет': randomInt(18, 65)
-            };
+            const data = [
+                { icon: 'user', label: 'ФИО', value: fullName },
+                { icon: 'calendar', label: 'Дата рождения', value: birthDate },
+                { icon: 'smartphone', label: 'Телефон', value: phone },
+                { icon: 'mail', label: 'Email', value: email },
+                { icon: 'map-pin', label: 'Адрес', value: address.full },
+                { icon: 'building-2', label: 'Город', value: address.city },
+                { icon: 'file-badge', label: 'Паспорт', value: `серия ${passport.split(' ')[0]} № ${passport.split(' ')[1]}` },
+                { icon: 'credit-card', label: 'Карта банка', value: `**** **** **** ${card.number.slice(-4)}` },
+                { icon: 'calendar-clock', label: 'Срок карты', value: card.expiry },
+                { icon: 'shield', label: 'CVV', value: card.cvv },
+                { icon: 'hash', label: 'ИНН', value: inn },
+                { icon: 'id-card', label: 'СНИЛС', value: snils },
+                { icon: 'car', label: 'Номер авто', value: carNumber },
+                { icon: 'briefcase', label: 'Компания', value: company },
+                { icon: 'briefcase', label: 'Должность', value: position },
+                { icon: 'globe', label: 'Домен почты', value: email.split('@')[1] },
+                { icon: 'cake', label: 'Полных лет', value: randomInt(18, 65) }
+            ];
 
             const container = document.getElementById('dataContainer');
-            container.innerHTML = Object.entries(data).map(([label, value]) => `
+            container.innerHTML = data.map(item => `
                         <div class="fake-item">
-                            <span class="fake-label">${label}</span>
-                            <span class="fake-value">${value}</span>
+                            <span class="fake-label"><i data-lucide="${item.icon}" style="width:14px;height:14px;vertical-align:-2px;"></i> ${item.label}</span>
+                            <span class="fake-value">${item.value}</span>
                         </div>
                     `).join('');
 
             window._lastData = data;
+            refreshIcons();
         }
 
-        // ===== КОПИРОВАНИЕ =====
         function copyAll() {
             const data = window._lastData;
-            if (!data) { alert('⚠️ Сначала сгенерируйте данные!'); return; }
-            const text = Object.entries(data).map(([label, value]) => `${label}: ${value}`).join('\n');
-            navigator.clipboard.writeText(text).then(() => alert('✅ Данные скопированы!'));
+            if (!data) { alert('Сначала сгенерируйте данные!'); return; }
+            const text = data.map(item => `${item.label}: ${item.value}`).join('\n');
+            navigator.clipboard.writeText(text).then(() => alert('Данные скопированы!'));
         }
 
         function copyAsJSON() {
             const data = window._lastData;
-            if (!data) { alert('⚠️ Сначала сгенерируйте данные!'); return; }
-            const json = JSON.stringify(data, null, 2);
-            navigator.clipboard.writeText(json).then(() => alert('✅ JSON скопирован!'));
+            if (!data) { alert('Сначала сгенерируйте данные!'); return; }
+            const obj = {};
+            data.forEach(item => obj[item.label] = item.value);
+            const json = JSON.stringify(obj, null, 2);
+            navigator.clipboard.writeText(json).then(() => alert('JSON скопирован!'));
         }
 
         window.onload = function () {
             loadTheme();
             generateAll();
-            console.log('🎭 Генератор фейковых данных загружен');
+            refreshIcons();
+            console.log('Генератор фейковых данных загружен');
         };
     </script>
 

@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Резюме — Редактор</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +19,13 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -30,45 +37,58 @@
             <!-- ===== ЛЕВАЯ КОЛОНКА ===== -->
             <div class="resume-left">
 
-                <!-- ===== ФОТО (редактируемое) ===== -->
+                <!-- ===== ФОТО ===== -->
                 <div class="resume-photo-wrapper">
                     <div class="resume-photo" id="photoDisplay" onclick="editPhoto()">
                         <img id="photoImg" src="site_ava.jpg" alt="Фото">
                         <div class="photo-overlay">
-                            <span>📷 Изменить</span>
+                            <i data-lucide="camera" style="width:18px;height:18px;"></i>
+                            <span>Изменить</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ===== ИМЯ И ТАЙТЛ (редактируемые) ===== -->
+                <!-- ===== ИМЯ И ТАЙТЛ ===== -->
                 <div style="text-align:center; margin-top:8px;">
                     <h1 class="resume-name" id="nameDisplay" style="cursor:pointer;" onclick="editName()">Введите имя</h1>
-                    <p class="resume-title" id="titleDisplay" style="cursor:pointer;" onclick="editTitle()">💻 Будущий специалист по ...</p>
+                    <p class="resume-title" id="titleDisplay" style="cursor:pointer;" onclick="editTitle()">
+                        <i data-lucide="laptop" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                        Будущий специалист по ...
+                    </p>
                 </div>
 
                 <div class="resume-divider"></div>
 
-                <!-- ===== КОНТАКТЫ (редактируемые) ===== -->
+                <!-- ===== КОНТАКТЫ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">📬 Контакты</h3>
-                        <button class="edit-btn-small" onclick="editContacts()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="mail" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Контакты
+                        </h3>
+                        <button class="edit-btn-small" onclick="editContacts()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
                     <div id="contactsDisplay" class="resume-contact">
-                        <div class="resume-contact-item">📧 введите почту</div>
-                        <div class="resume-contact-item">📱 введите номер</div>
-                        <div class="resume-contact-item">📍 введите адрес</div>
-                        <div class="resume-contact-item">🐙 <a href="https://github.com/art0ka" target="_blank">ваша ссылка на гитхаб</a></div>
+                        <div class="resume-contact-item"><i data-lucide="mail" style="width:13px;height:13px;vertical-align:-2px;"></i> введите почту</div>
+                        <div class="resume-contact-item"><i data-lucide="smartphone" style="width:13px;height:13px;vertical-align:-2px;"></i> введите номер</div>
+                        <div class="resume-contact-item"><i data-lucide="map-pin" style="width:13px;height:13px;vertical-align:-2px;"></i> введите адрес</div>
                     </div>
                 </div>
 
                 <div class="resume-divider"></div>
 
-                <!-- ===== НАВЫКИ (редактируемые) ===== -->
+                <!-- ===== НАВЫКИ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">🛠️ Навыки</h3>
-                        <button class="edit-btn-small" onclick="editSkills()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="wrench" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Навыки
+                        </h3>
+                        <button class="edit-btn-small" onclick="editSkills()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
                     <div id="skillsDisplay" class="resume-skills">
                         <div class="resume-skill">
@@ -100,11 +120,16 @@
 
                 <div class="resume-divider"></div>
 
-                <!-- ===== ЯЗЫКИ (редактируемые) ===== -->
+                <!-- ===== ЯЗЫКИ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">🌍 Языки</h3>
-                        <button class="edit-btn-small" onclick="editLanguages()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="globe-2" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Языки
+                        </h3>
+                        <button class="edit-btn-small" onclick="editLanguages()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
                     <div id="languagesDisplay" class="resume-languages">
                         <div class="resume-language">
@@ -123,95 +148,72 @@
             <!-- ===== ПРАВАЯ КОЛОНКА ===== -->
             <div class="resume-right">
 
-                <!-- ===== ЦЕЛЬ (редактируемая) ===== -->
+                <!-- ===== ЦЕЛЬ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">🎯 Цель</h3>
-                        <button class="edit-btn-small" onclick="editGoal()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="target" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Цель
+                        </h3>
+                        <button class="edit-btn-small" onclick="editGoal()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
-                    <p id="goalDisplay" class="resume-text">
-                        Ваша цель
-                    </p>
+                    <p id="goalDisplay" class="resume-text">Ваша цель</p>
                 </div>
 
-                <!-- ===== О СЕБЕ (редактируемое) ===== -->
+                <!-- ===== О СЕБЕ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">👤 О себе</h3>
-                        <button class="edit-btn-small" onclick="editAbout()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="user" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            О себе
+                        </h3>
+                        <button class="edit-btn-small" onclick="editAbout()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
-                    <p id="aboutDisplay" class="resume-text">
-                        Напишите о себе
-                    </p>
+                    <p id="aboutDisplay" class="resume-text">Напишите о себе</p>
                 </div>
 
-                <!-- ===== ПРОЕКТЫ (редактируемые) ===== -->
+                <!-- ===== ПРОЕКТЫ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">🚀 Проекты</h3>
-                        <button class="edit-btn-small" onclick="editProjects()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="rocket" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Проекты
+                        </h3>
+                        <button class="edit-btn-small" onclick="editProjects()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
-                    <div id="projectsDisplay">
-                        <div class="resume-project">
-                            <div class="resume-project-header">
-                                <span class="resume-project-name">🛡️ Сайт-помощник для студентов</span>
-                                <span class="resume-project-date">2026</span>
-                            </div>
-                            <p class="resume-project-desc">Веб-приложение с инструментами для учёбы и ИБ.</p>
-                            <a href="#" class="resume-project-link">🔗 GitHub</a>
-                        </div>
-                        <div class="resume-project">
-                            <div class="resume-project-header">
-                                <span class="resume-project-name">🔐 Генератор паролей + Vault</span>
-                                <span class="resume-project-date">2026</span>
-                            </div>
-                            <p class="resume-project-desc">Генерация сложных паролей и их безопасное хранение.</p>
-                            <a href="#" class="resume-project-link">🔗 GitHub</a>
-                        </div>
-                        <div class="resume-project">
-                            <div class="resume-project-header">
-                                <span class="resume-project-name">🕵️ Анализатор метаданных Exif</span>
-                                <span class="resume-project-date">2026</span>
-                            </div>
-                            <p class="resume-project-desc">Просмотр скрытой информации в фотографиях.</p>
-                            <a href="#" class="resume-project-link">🔗 GitHub</a>
-                        </div>
-                        <div class="resume-project">
-                            <div class="resume-project-header">
-                                <span class="resume-project-name">🎣 Тренажёр по фишингу</span>
-                                <span class="resume-project-date">2026</span>
-                            </div>
-                            <p class="resume-project-desc">Распознавание фишинговых писем. 30+ примеров.</p>
-                            <a href="#" class="resume-project-link">🔗 GitHub</a>
-                        </div>
-                        <div class="resume-project">
-                            <div class="resume-project-header">
-                                <span class="resume-project-name">🌐 Сканер поддоменов</span>
-                                <span class="resume-project-date">2026</span>
-                            </div>
-                            <p class="resume-project-desc">Поиск поддоменов через DNS-запросы.</p>
-                            <a href="#" class="resume-project-link">🔗 GitHub</a>
-                        </div>
-                    </div>
+                    <div id="projectsDisplay"></div>
                 </div>
 
-                <!-- ===== ОБРАЗОВАНИЕ (редактируемое) ===== -->
+                <!-- ===== ОБРАЗОВАНИЕ ===== -->
                 <div class="resume-section">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                        <h3 class="resume-section-title" style="margin-bottom:0;">🎓 Образование</h3>
-                        <button class="edit-btn-small" onclick="editEducation()">✏️</button>
+                        <h3 class="resume-section-title" style="margin-bottom:0;">
+                            <i data-lucide="graduation-cap" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                            Образование
+                        </h3>
+                        <button class="edit-btn-small" onclick="editEducation()" title="Редактировать">
+                            <i data-lucide="pencil" style="width:14px;height:14px;"></i>
+                        </button>
                     </div>
-                    <div id="educationDisplay" class="resume-education">
-                        <span class="resume-education-name">Ваше образование</span>
-                        <span class="resume-education-date">202X-20XX</span>
-                        <p style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">X-й курс. ????</p>
-                    </div>
+                    <div id="educationDisplay" class="resume-education"></div>
                 </div>
 
                 <!-- Кнопки -->
                 <div class="resume-actions animate-on-scroll">
-                    <button class="resume-btn" onclick="window.print()">📄 Сохранить / Распечатать</button>
-                    <button class="resume-btn" onclick="resetResume()" style="background:#666;">🔄 Сбросить</button>
+                    <button class="resume-btn" onclick="window.print()">
+                        <i data-lucide="printer" style="width:16px;height:16px;vertical-align:-3px;"></i>
+                        Сохранить / Распечатать
+                    </button>
+                    <button class="resume-btn" onclick="resetResume()" style="background:#666;">
+                        <i data-lucide="rotate-ccw" style="width:16px;height:16px;vertical-align:-3px;"></i>
+                        Сбросить
+                    </button>
                 </div>
 
             </div>
@@ -224,85 +226,83 @@
     </div>
 
     <!-- ===== КНОПКА "НАВЕРХ" ===== -->
-    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">⬆</button>
+    <button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()"><i data-lucide="arrow-up"></i></button>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ===== -->
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
     <div id="editModal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Редактировать</h2>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <h2 id="modalTitle" style="display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="pencil"></i> Редактировать
+                </h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i data-lucide="x" style="width:24px;height:24px;"></i>
+                </button>
             </div>
-            <div id="modalBody">
-                <!-- Заполняется через JavaScript -->
-            </div>
+            <div id="modalBody"></div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal()">Отмена</button>
-                <button class="btn btn-primary" onclick="saveModal()">💾 Сохранить</button>
+                <button class="btn btn-primary" onclick="saveModal()">
+                    <i data-lucide="save" style="width:14px;height:14px;vertical-align:-2px;"></i>
+                    Сохранить
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- ===== СКРЫТЫЙ INPUT ДЛЯ ЗАГРУЗКИ ФОТО ===== -->
     <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
 
     <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ============================================
-        // БАЗОВЫЕ ДАННЫЕ (для сброса)
-        // ============================================
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
 
         const defaultData = {
-            photo: ',',
+            photo: '',
             name: 'Введите имя',
-            title: '💻 Введите вашу специальность',
+            title: 'Будущий специалист по ...',
             contacts: [
-                '📧 Ваша почта',
-                '📱 Ваш номер',
-                '📍 Ваш адрес',
-                '🐙 <a href="Ваша ссылка на гитхаб" target="_blank">Ваша ссылка на гитхаб</a>'
+                'почта@example.com',
+                '+7 (900) 000-00-00',
+                'г. Благовещенск'
             ],
             skills: [
-                { name: 'HTML / CSS', level: 0 },
-                { name: 'JavaScript', level: 0 },
-                { name: 'Git / GitHub', level: 0 },
-                { name: 'Python (основы)', level: 0 },
-                { name: 'C++', level: 0 },
-                { name: 'Информационная безопасность', level: 0 }
+                { name: 'HTML / CSS', level: 70 },
+                { name: 'JavaScript', level: 60 },
+                { name: 'Git / GitHub', level: 65 },
+                { name: 'Python (основы)', level: 50 },
+                { name: 'C++', level: 40 },
+                { name: 'Информационная безопасность', level: 55 }
             ],
             languages: [
                 { name: 'Русский', level: 'Родной' },
-                { name: 'Английский', level: 'B1 — Средний' },
+                { name: 'Английский', level: 'B1 — Средний' }
             ],
             goal: 'Ваша цель',
             about: 'Напишите о себе',
             projects: [
-                { name: '🛡️ Сайт-помощник для студентов', date: '2026', desc: 'Веб-приложение с инструментами для учёбы и ИБ.', link: '#' },
-                { name: '🔐 Генератор паролей + Vault', date: '2026', desc: 'Генерация сложных паролей и их безопасное хранение.', link: '#' },
-                { name: '🕵️ Анализатор метаданных Exif', date: '2026', desc: 'Просмотр скрытой информации в фотографиях.', link: '#' },
-                { name: '🎣 Тренажёр по фишингу', date: '2026', desc: 'Распознавание фишинговых писем. 30+ примеров.', link: '#' },
-                { name: '🌐 Сканер поддоменов', date: '2026', desc: 'Поиск поддоменов через DNS-запросы.', link: '#' }
+                { name: 'Сайт-помощник для студентов', date: '2026', desc: 'Веб-приложение с инструментами для учёбы и ИБ.', link: '#' },
+                { name: 'Генератор паролей + Vault', date: '2026', desc: 'Генерация сложных паролей и их безопасное хранение.', link: '#' },
+                { name: 'Анализатор метаданных Exif', date: '2026', desc: 'Просмотр скрытой информации в фотографиях.', link: '#' },
+                { name: 'Тренажёр по фишингу', date: '2026', desc: 'Распознавание фишинговых писем. 30+ примеров.', link: '#' },
+                { name: 'Сканер поддоменов', date: '2026', desc: 'Поиск поддоменов через DNS-запросы.', link: '#' }
             ],
             education: {
-                name: 'Ваш вуз и специальность',
-                date: 'Годы обучения',
-                desc: 'курс и что то еще'
+                name: 'АмГУ, Институт компьютерных и инженерных наук',
+                date: '2024-2028',
+                desc: 'Направление: Информационная безопасность'
             }
         };
 
         let currentEditType = '';
-        let currentEditData = {};
-
-        // ============================================
-        // ЗАГРУЗКА / СОХРАНЕНИЕ ДАННЫХ
-        // ============================================
 
         function loadResumeData() {
             const saved = localStorage.getItem('resumeData');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
-                    return mergeDeep(defaultData, data);
+                    return mergeDeep(JSON.parse(JSON.stringify(defaultData)), data);
                 } catch {
                     return JSON.parse(JSON.stringify(defaultData));
                 }
@@ -326,28 +326,19 @@
             return result;
         }
 
-        // ============================================
-        // ОТОБРАЖЕНИЕ РЕЗЮМЕ
-        // ============================================
-
         function renderResume() {
             const data = loadResumeData();
 
-            // Фото
-            document.getElementById('photoImg').src = data.photo;
-
-            // Имя
+            if (data.photo) document.getElementById('photoImg').src = data.photo;
             document.getElementById('nameDisplay').textContent = data.name;
+            document.getElementById('titleDisplay').innerHTML = `<i data-lucide="laptop" style="width:14px;height:14px;vertical-align:-2px;"></i> ${data.title}`;
 
-            // Тайтл
-            document.getElementById('titleDisplay').textContent = data.title;
+            document.getElementById('contactsDisplay').innerHTML = data.contacts.map((c, i) => {
+                const icons = ['mail', 'smartphone', 'map-pin', 'github'];
+                const icon = icons[i] || 'circle-dot';
+                return `<div class="resume-contact-item"><i data-lucide="${icon}" style="width:13px;height:13px;vertical-align:-2px;"></i> ${c}</div>`;
+            }).join('');
 
-            // Контакты
-            document.getElementById('contactsDisplay').innerHTML = data.contacts.map(c => `
-                        <div class="resume-contact-item">${c}</div>
-                    `).join('');
-
-            // Навыки
             document.getElementById('skillsDisplay').innerHTML = data.skills.map(s => `
                         <div class="resume-skill">
                             <span>${s.name}</span>
@@ -357,7 +348,6 @@
                         </div>
                     `).join('');
 
-            // Языки
             document.getElementById('languagesDisplay').innerHTML = data.languages.map(l => `
                         <div class="resume-language">
                             <span>${l.name}</span>
@@ -365,13 +355,9 @@
                         </div>
                     `).join('');
 
-            // Цель
             document.getElementById('goalDisplay').textContent = data.goal;
-
-            // О себе
             document.getElementById('aboutDisplay').textContent = data.about;
 
-            // Проекты
             document.getElementById('projectsDisplay').innerHTML = data.projects.map(p => `
                         <div class="resume-project">
                             <div class="resume-project-header">
@@ -379,18 +365,19 @@
                                 <span class="resume-project-date">${p.date}</span>
                             </div>
                             <p class="resume-project-desc">${p.desc}</p>
-                            <a href="${p.link}" class="resume-project-link">🔗 GitHub</a>
+                            <a href="${p.link}" class="resume-project-link">
+                                <i data-lucide="link" style="width:13px;height:13px;vertical-align:-2px;"></i>
+                                GitHub
+                            </a>
                         </div>
                     `).join('');
 
-            // Образование
             document.getElementById('educationDisplay').innerHTML = `
                         <span class="resume-education-name">${data.education.name}</span>
                         <span class="resume-education-date">${data.education.date}</span>
                         <p style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">${data.education.desc}</p>
                     `;
 
-            // Анимация прогресс-баров
             setTimeout(() => {
                 document.querySelectorAll('.resume-skill-fill').forEach((fill, index) => {
                     const targetWidth = fill.getAttribute('data-width') || '0%';
@@ -399,16 +386,15 @@
                     }, 300 + index * 150);
                 });
             }, 100);
+
+            refreshIcons();
         }
 
-        // ============================================
-        // РЕДАКТИРОВАНИЕ
-        // ============================================
-
         function openModal(title, content) {
-            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalTitle').innerHTML = `<i data-lucide="pencil"></i> ${title}`;
             document.getElementById('modalBody').innerHTML = content;
             document.getElementById('editModal').style.display = 'flex';
+            refreshIcons();
         }
 
         function closeModal() {
@@ -435,9 +421,7 @@
                     skillItems.forEach(item => {
                         const name = item.querySelector('.skill-name-input').value;
                         const level = parseInt(item.querySelector('.skill-level-input').value);
-                        if (name && !isNaN(level)) {
-                            data.skills.push({ name, level });
-                        }
+                        if (name && !isNaN(level)) data.skills.push({ name, level });
                     });
                     break;
                 case 'languages':
@@ -446,9 +430,7 @@
                     langItems.forEach(item => {
                         const name = item.querySelector('.lang-name-input').value;
                         const level = item.querySelector('.lang-level-input').value;
-                        if (name && level) {
-                            data.languages.push({ name, level });
-                        }
+                        if (name && level) data.languages.push({ name, level });
                     });
                     break;
                 case 'goal':
@@ -465,9 +447,7 @@
                         const date = item.querySelector('.project-date-input').value;
                         const desc = item.querySelector('.project-desc-input').value;
                         const link = item.querySelector('.project-link-input').value;
-                        if (name && desc) {
-                            data.projects.push({ name, date, desc, link });
-                        }
+                        if (name && desc) data.projects.push({ name, date, desc, link });
                     });
                     break;
                 case 'education':
@@ -482,11 +462,6 @@
             closeModal();
         }
 
-        // ============================================
-        // РЕДАКТОРЫ
-        // ============================================
-
-        // --- ФОТО ---
         function editPhoto() {
             document.getElementById('photoInput').click();
         }
@@ -494,73 +469,66 @@
         function handlePhotoUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function (e) {
                 const data = loadResumeData();
                 data.photo = e.target.result;
                 saveResumeData(data);
                 renderResume();
-                alert('✅ Фото обновлено!');
+                alert('Фото обновлено!');
             };
             reader.readAsDataURL(file);
             event.target.value = '';
         }
 
-        // --- ИМЯ ---
         function editName() {
             const data = loadResumeData();
             currentEditType = 'name';
-            const content = `
+            openModal('Редактировать имя', `
                         <label style="color:var(--text-light);display:block;margin-bottom:8px;">Имя и фамилия:</label>
-                        <input id="editNameInput" value="${data.name}" style="width:100%;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:16px;">
-                    `;
-            openModal('✏️ Редактировать имя', content);
+                        <input id="editNameInput" value="${data.name}" style="width:100%;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:16px;font-family:inherit;">
+                    `);
         }
 
-        // --- ТАЙТЛ ---
         function editTitle() {
             const data = loadResumeData();
             currentEditType = 'title';
-            const content = `
+            openModal('Редактировать заголовок', `
                         <label style="color:var(--text-light);display:block;margin-bottom:8px;">Заголовок / Должность:</label>
-                        <input id="editTitleInput" value="${data.title}" style="width:100%;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:16px;">
-                    `;
-            openModal('✏️ Редактировать заголовок', content);
+                        <input id="editTitleInput" value="${data.title}" style="width:100%;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:16px;font-family:inherit;">
+                    `);
         }
 
-        // --- КОНТАКТЫ ---
         function editContacts() {
             const data = loadResumeData();
             currentEditType = 'contacts';
-            const content = `
+            openModal('Редактировать контакты', `
                         <label style="color:var(--text-light);display:block;margin-bottom:8px;">Каждый контакт с новой строки:</label>
-                        <textarea id="editContactsInput" style="width:100%;min-height:120px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;">${data.contacts.join('\n')}</textarea>
-                        <div style="font-size:12px;color:var(--text-gray);margin-top:4px;">Пример: 📧 email@mail.com</div>
-                    `;
-            openModal('✏️ Редактировать контакты', content);
+                        <textarea id="editContactsInput" style="width:100%;min-height:120px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;font-family:inherit;">${data.contacts.join('\n')}</textarea>
+                        <div style="font-size:12px;color:var(--text-gray);margin-top:4px;">Пример: email@mail.com</div>
+                    `);
         }
 
-        // --- НАВЫКИ ---
         function editSkills() {
             const data = loadResumeData();
             currentEditType = 'skills';
-            let itemsHtml = data.skills.map((s, i) => `
+            let itemsHtml = data.skills.map(s => `
                         <div class="skill-edit-item" style="display:flex;gap:10px;margin-bottom:8px;align-items:center;">
-                            <input class="skill-name-input" value="${s.name}" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                            <input class="skill-level-input" type="number" value="${s.level}" min="0" max="100" style="width:60px;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
+                            <input class="skill-name-input" value="${s.name}" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                            <input class="skill-level-input" type="number" value="${s.level}" min="0" max="100" style="width:60px;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
                             <span style="color:var(--text-gray);font-size:13px;">%</span>
-                            <button onclick="removeSkillItem(this)" style="background:none;border:none;color:#e74c3c;font-size:18px;cursor:pointer;">✕</button>
+                            <button onclick="removeSkillItem(this)" style="background:none;border:none;color:#e74c3c;cursor:pointer;padding:4px;">
+                                <i data-lucide="x" style="width:16px;height:16px;"></i>
+                            </button>
                         </div>
                     `).join('');
 
-            const content = `
-                        <div id="editSkillsContainer">
-                            ${itemsHtml}
-                        </div>
-                        <button onclick="addSkillItem()" class="btn btn-secondary" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;">➕ Добавить навык</button>
-                    `;
-            openModal('✏️ Редактировать навыки', content);
+            openModal('Редактировать навыки', `
+                        <div id="editSkillsContainer">${itemsHtml}</div>
+                        <button onclick="addSkillItem()" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;font-family:inherit;">
+                            <i data-lucide="plus" style="width:14px;height:14px;vertical-align:-2px;"></i> Добавить навык
+                        </button>
+                    `);
         }
 
         function addSkillItem() {
@@ -569,37 +537,40 @@
             div.className = 'skill-edit-item';
             div.style.cssText = 'display:flex;gap:10px;margin-bottom:8px;align-items:center;';
             div.innerHTML = `
-                        <input class="skill-name-input" placeholder="Название навыка" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                        <input class="skill-level-input" type="number" value="50" min="0" max="100" style="width:60px;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
+                        <input class="skill-name-input" placeholder="Название" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                        <input class="skill-level-input" type="number" value="50" min="0" max="100" style="width:60px;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
                         <span style="color:var(--text-gray);font-size:13px;">%</span>
-                        <button onclick="removeSkillItem(this)" style="background:none;border:none;color:#e74c3c;font-size:18px;cursor:pointer;">✕</button>
+                        <button onclick="removeSkillItem(this)" style="background:none;border:none;color:#e74c3c;cursor:pointer;padding:4px;">
+                            <i data-lucide="x" style="width:16px;height:16px;"></i>
+                        </button>
                     `;
             container.appendChild(div);
+            refreshIcons();
         }
 
         function removeSkillItem(btn) {
             btn.parentElement.remove();
         }
 
-        // --- ЯЗЫКИ ---
         function editLanguages() {
             const data = loadResumeData();
             currentEditType = 'languages';
-            let itemsHtml = data.languages.map((l, i) => `
+            let itemsHtml = data.languages.map(l => `
                         <div class="lang-edit-item" style="display:flex;gap:10px;margin-bottom:8px;align-items:center;">
-                            <input class="lang-name-input" value="${l.name}" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                            <input class="lang-level-input" value="${l.level}" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                            <button onclick="removeLangItem(this)" style="background:none;border:none;color:#e74c3c;font-size:18px;cursor:pointer;">✕</button>
+                            <input class="lang-name-input" value="${l.name}" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                            <input class="lang-level-input" value="${l.level}" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                            <button onclick="removeLangItem(this)" style="background:none;border:none;color:#e74c3c;cursor:pointer;padding:4px;">
+                                <i data-lucide="x" style="width:16px;height:16px;"></i>
+                            </button>
                         </div>
                     `).join('');
 
-            const content = `
-                        <div id="editLanguagesContainer">
-                            ${itemsHtml}
-                        </div>
-                        <button onclick="addLangItem()" class="btn btn-secondary" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;">➕ Добавить язык</button>
-                    `;
-            openModal('✏️ Редактировать языки', content);
+            openModal('Редактировать языки', `
+                        <div id="editLanguagesContainer">${itemsHtml}</div>
+                        <button onclick="addLangItem()" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;font-family:inherit;">
+                            <i data-lucide="plus" style="width:14px;height:14px;vertical-align:-2px;"></i> Добавить язык
+                        </button>
+                    `);
         }
 
         function addLangItem() {
@@ -608,62 +579,61 @@
             div.className = 'lang-edit-item';
             div.style.cssText = 'display:flex;gap:10px;margin-bottom:8px;align-items:center;';
             div.innerHTML = `
-                        <input class="lang-name-input" placeholder="Язык" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                        <input class="lang-level-input" placeholder="Уровень" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);">
-                        <button onclick="removeLangItem(this)" style="background:none;border:none;color:#e74c3c;font-size:18px;cursor:pointer;">✕</button>
+                        <input class="lang-name-input" placeholder="Язык" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                        <input class="lang-level-input" placeholder="Уровень" style="flex:1;padding:6px 10px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                        <button onclick="removeLangItem(this)" style="background:none;border:none;color:#e74c3c;cursor:pointer;padding:4px;">
+                            <i data-lucide="x" style="width:16px;height:16px;"></i>
+                        </button>
                     `;
             container.appendChild(div);
+            refreshIcons();
         }
 
         function removeLangItem(btn) {
             btn.parentElement.remove();
         }
 
-        // --- ЦЕЛЬ ---
         function editGoal() {
             const data = loadResumeData();
             currentEditType = 'goal';
-            const content = `
+            openModal('Редактировать цель', `
                         <label style="color:var(--text-light);display:block;margin-bottom:8px;">Цель:</label>
-                        <textarea id="editGoalInput" style="width:100%;min-height:80px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;">${data.goal}</textarea>
-                    `;
-            openModal('✏️ Редактировать цель', content);
+                        <textarea id="editGoalInput" style="width:100%;min-height:80px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;font-family:inherit;">${data.goal}</textarea>
+                    `);
         }
 
-        // --- О СЕБЕ ---
         function editAbout() {
             const data = loadResumeData();
             currentEditType = 'about';
-            const content = `
+            openModal('Редактировать "О себе"', `
                         <label style="color:var(--text-light);display:block;margin-bottom:8px;">О себе:</label>
-                        <textarea id="editAboutInput" style="width:100%;min-height:100px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;">${data.about}</textarea>
-                    `;
-            openModal('✏️ Редактировать "О себе"', content);
+                        <textarea id="editAboutInput" style="width:100%;min-height:100px;padding:10px;border-radius:8px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);font-size:14px;resize:vertical;font-family:inherit;">${data.about}</textarea>
+                    `);
         }
 
-        // --- ПРОЕКТЫ ---
         function editProjects() {
             const data = loadResumeData();
             currentEditType = 'projects';
-            let itemsHtml = data.projects.map((p, i) => `
+            let itemsHtml = data.projects.map(p => `
                         <div class="project-edit-item" style="background:var(--bg-input);padding:12px;border-radius:8px;margin-bottom:10px;">
                             <div style="display:flex;gap:10px;margin-bottom:6px;">
-                                <input class="project-name-input" value="${p.name}" placeholder="Название проекта" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
-                                <input class="project-date-input" value="${p.date}" placeholder="Год" style="width:80px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
+                                <input class="project-name-input" value="${p.name}" placeholder="Название" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                                <input class="project-date-input" value="${p.date}" placeholder="Год" style="width:80px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
                             </div>
-                            <textarea class="project-desc-input" placeholder="Описание проекта" style="width:100%;min-height:40px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:6px;resize:vertical;">${p.desc}</textarea>
-                            <input class="project-link-input" value="${p.link}" placeholder="Ссылка на GitHub" style="width:100%;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
-                            <button onclick="removeProjectItem(this)" style="margin-top:6px;background:none;border:none;color:#e74c3c;font-size:14px;cursor:pointer;">🗑️ Удалить проект</button>
+                            <textarea class="project-desc-input" placeholder="Описание" style="width:100%;min-height:40px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:6px;resize:vertical;font-family:inherit;">${p.desc}</textarea>
+                            <input class="project-link-input" value="${p.link}" placeholder="Ссылка" style="width:100%;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                            <button onclick="removeProjectItem(this)" style="margin-top:6px;background:none;border:none;color:#e74c3c;font-size:14px;cursor:pointer;font-family:inherit;">
+                                <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:-2px;"></i> Удалить
+                            </button>
                         </div>
                     `).join('');
 
-            const content = `
-                        <div id="editProjectsContainer">
-                            ${itemsHtml}
-                        </div>
-                        <button onclick="addProjectItem()" class="btn btn-secondary" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;">➕ Добавить проект</button>
-                    `;
-            openModal('✏️ Редактировать проекты', content);
+            openModal('Редактировать проекты', `
+                        <div id="editProjectsContainer">${itemsHtml}</div>
+                        <button onclick="addProjectItem()" style="margin-top:8px;width:100%;padding:8px;border-radius:6px;border:1px dashed var(--border-color);background:transparent;color:var(--text-gray);cursor:pointer;font-family:inherit;">
+                            <i data-lucide="plus" style="width:14px;height:14px;vertical-align:-2px;"></i> Добавить проект
+                        </button>
+                    `);
         }
 
         function addProjectItem() {
@@ -673,63 +643,57 @@
             div.style.cssText = 'background:var(--bg-input);padding:12px;border-radius:8px;margin-bottom:10px;';
             div.innerHTML = `
                         <div style="display:flex;gap:10px;margin-bottom:6px;">
-                            <input class="project-name-input" placeholder="Название проекта" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
-                            <input class="project-date-input" placeholder="Год" style="width:80px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
+                            <input class="project-name-input" placeholder="Название" style="flex:2;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                            <input class="project-date-input" placeholder="Год" style="width:80px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
                         </div>
-                        <textarea class="project-desc-input" placeholder="Описание проекта" style="width:100%;min-height:40px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:6px;resize:vertical;"></textarea>
-                        <input class="project-link-input" placeholder="Ссылка на GitHub" style="width:100%;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);">
-                        <button onclick="removeProjectItem(this)" style="margin-top:6px;background:none;border:none;color:#e74c3c;font-size:14px;cursor:pointer;">🗑️ Удалить проект</button>
+                        <textarea class="project-desc-input" placeholder="Описание" style="width:100%;min-height:40px;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:6px;resize:vertical;font-family:inherit;"></textarea>
+                        <input class="project-link-input" placeholder="Ссылка" style="width:100%;padding:6px 10px;border-radius:6px;background:var(--bg-card);color:var(--text-white);border:1px solid var(--border-color);font-family:inherit;">
+                        <button onclick="removeProjectItem(this)" style="margin-top:6px;background:none;border:none;color:#e74c3c;font-size:14px;cursor:pointer;font-family:inherit;">
+                            <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:-2px;"></i> Удалить
+                        </button>
                     `;
             container.appendChild(div);
+            refreshIcons();
         }
 
         function removeProjectItem(btn) {
             btn.parentElement.remove();
         }
 
-        // --- ОБРАЗОВАНИЕ ---
         function editEducation() {
             const data = loadResumeData();
             currentEditType = 'education';
-            const content = `
+            openModal('Редактировать образование', `
                         <label style="color:var(--text-light);display:block;margin-bottom:4px;">Название:</label>
-                        <input id="editEduName" value="${data.education.name}" style="width:100%;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:10px;">
+                        <input id="editEduName" value="${data.education.name}" style="width:100%;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:10px;font-family:inherit;">
                         <label style="color:var(--text-light);display:block;margin-bottom:4px;">Годы:</label>
-                        <input id="editEduDate" value="${data.education.date}" style="width:100%;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:10px;">
+                        <input id="editEduDate" value="${data.education.date}" style="width:100%;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);margin-bottom:10px;font-family:inherit;">
                         <label style="color:var(--text-light);display:block;margin-bottom:4px;">Описание:</label>
-                        <textarea id="editEduDesc" style="width:100%;min-height:60px;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);resize:vertical;">${data.education.desc}</textarea>
-                    `;
-            openModal('✏️ Редактировать образование', content);
+                        <textarea id="editEduDesc" style="width:100%;min-height:60px;padding:8px 12px;border-radius:6px;background:var(--bg-input);color:var(--text-white);border:1px solid var(--border-color);resize:vertical;font-family:inherit;">${data.education.desc}</textarea>
+                    `);
         }
-
-        // ============================================
-        // СБРОС
-        // ============================================
 
         function resetResume() {
-            if (confirm('⚠️ Сбросить все данные резюме к стандартным?')) {
+            if (confirm('Сбросить все данные резюме к стандартным?')) {
                 localStorage.removeItem('resumeData');
                 renderResume();
-                alert('✅ Данные сброшены!');
+                alert('Данные сброшены!');
             }
         }
-
-        // ============================================
-        // ТЕМА, КНОПКА "НАВЕРХ", АНИМАЦИИ
-        // ============================================
 
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -737,19 +701,17 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
         window.addEventListener('scroll', function () {
             const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            if (window.scrollY > 300) btn.classList.add('visible');
+            else btn.classList.remove('visible');
         });
 
         function scrollToTop() {
@@ -759,31 +721,22 @@
         document.addEventListener('DOMContentLoaded', function () {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
                 });
-            }, {
-                threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
-            });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
             document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
         });
-
-        // ============================================
-        // ЗАПУСК
-        // ============================================
 
         window.onload = function () {
             loadTheme();
             renderResume();
-            console.log('📄 Резюме с редактором загружено');
+            refreshIcons();
+            console.log('Резюме с редактором загружено');
         };
     </script>
 
     <!-- ===== СТИЛИ ДЛЯ МОДАЛЬНОГО ОКНА И ФОТО ===== -->
     <style>
-        /* Фото с оверлеем */
         .resume-photo-wrapper {
             position: relative;
             width: 120px;
@@ -797,16 +750,16 @@
             height: 100%;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid var(--red-primary);
-            box-shadow: 0 8px 30px var(--red-glow);
+            border: 3px solid var(--accent);
+            box-shadow: 0 8px 30px var(--accent-glow);
             position: relative;
         }
 
-            .resume-photo img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
+        .resume-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
         .photo-overlay {
             position: absolute;
@@ -816,13 +769,15 @@
             height: 100%;
             background: rgba(0,0,0,0.6);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 4px;
             opacity: 0;
             transition: all 0.3s ease;
             border-radius: 50%;
             color: white;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -830,7 +785,6 @@
             opacity: 1;
         }
 
-        /* Модальное окно */
         .modal {
             position: fixed;
             top: 0;
@@ -864,28 +818,33 @@
             align-items: center;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 2px solid var(--red-primary);
+            border-bottom: 2px solid var(--accent);
         }
 
-            .modal-header h2 {
-                color: var(--text-white);
-                font-size: 20px;
-            }
+        .modal-header h2 {
+            color: var(--text-white);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
         .modal-close {
             background: none;
             border: none;
             color: var(--text-gray);
-            font-size: 28px;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 0 4px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-            .modal-close:hover {
-                color: var(--red-primary);
-                transform: rotate(90deg);
-            }
+        .modal-close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
 
         .modal-footer {
             display: flex;
@@ -896,51 +855,57 @@
             border-top: 1px solid var(--border-color);
         }
 
-            .modal-footer .btn {
-                padding: 10px 24px;
-                border: none;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-            .modal-footer .btn-primary {
-                background: var(--red-primary);
-                color: white;
-            }
-
-                .modal-footer .btn-primary:hover {
-                    background: var(--red-hover);
-                    transform: translateY(-2px);
-                }
-
-            .modal-footer .btn-secondary {
-                background: var(--bg-input);
-                color: var(--text-light);
-            }
-
-                .modal-footer .btn-secondary:hover {
-                    background: var(--bg-card-hover);
-                }
-
-        .edit-btn-small {
-            background: rgba(232,0,32,0.1);
-            border: 1px solid rgba(232,0,32,0.2);
-            color: var(--red-primary);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+        .modal-footer .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-            .edit-btn-small:hover {
-                background: var(--red-primary);
-                color: white;
-                transform: scale(1.05);
-            }
+        .modal-footer .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .modal-footer .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-light);
+        }
+
+        .modal-footer .btn-secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .edit-btn-small {
+            background: rgba(0,168,138,0.1);
+            border: 1px solid rgba(0,168,138,0.2);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-btn-small:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
 
         .modal-content::-webkit-scrollbar {
             width: 6px;

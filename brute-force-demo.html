@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Имитация атаки перебором</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,13 +19,13 @@
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
@@ -29,21 +36,32 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🎯 Атака перебором (Brute Force)</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="target"></i> Атака перебором (Brute Force)
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Демонстрация того, как быстро можно подобрать пароль</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
 
             <!-- ===== ПАРОЛЬ ===== -->
             <div class="bf-section">
-                <h3 style="color: var(--text-white); margin-bottom: 10px;">🔑 Введите пароль для проверки</h3>
+                <h3 style="color: var(--text-white); margin-bottom: 10px; display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="key-round" style="width:18px;height:18px;"></i>
+                    Введите пароль для проверки
+                </h3>
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <input type="text" id="passwordInput" placeholder="Введите пароль..." value="qwerty123" style="flex:1; padding:12px 18px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:200px;">
-                    <button class="generate-btn" onclick="startBruteForce()" style="width:auto; padding:12px 30px;">⚡ Начать атаку</button>
-                    <button class="generate-btn" onclick="resetDemo()" style="width:auto; padding:12px 25px; background:#666;">🔄 Сброс</button>
+                    <input type="text" id="passwordInput" placeholder="Введите пароль..." value="qwerty123" style="flex:1; padding:12px 18px; border-radius:var(--radius-small); border:2px solid var(--border-color); background:var(--bg-input); color:var(--text-white); font-size:16px; min-width:200px; font-family:inherit;">
+                    <button class="generate-btn" onclick="startBruteForce()" style="width:auto; padding:12px 30px; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="zap" style="width:16px;height:16px;"></i> Начать атаку
+                    </button>
+                    <button class="generate-btn" onclick="resetDemo()" style="width:auto; padding:12px 25px; background:#666; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Сброс
+                    </button>
                 </div>
                 <div id="passwordStrength" style="margin-top: 8px; font-size: 14px; color: var(--text-gray);"></div>
             </div>
@@ -51,19 +69,31 @@
             <!-- ===== СТАТИСТИКА ===== -->
             <div class="bf-stats" id="statsArea">
                 <div class="bf-stat-item">
-                    <span class="bf-stat-label">⏱️ Время атаки</span>
+                    <span class="bf-stat-label">
+                        <i data-lucide="clock" style="width:13px;height:13px;vertical-align:-2px;"></i>
+                        Время атаки
+                    </span>
                     <span class="bf-stat-value" id="attackTime">0с</span>
                 </div>
                 <div class="bf-stat-item">
-                    <span class="bf-stat-label">🔢 Попыток</span>
+                    <span class="bf-stat-label">
+                        <i data-lucide="hash" style="width:13px;height:13px;vertical-align:-2px;"></i>
+                        Попыток
+                    </span>
                     <span class="bf-stat-value" id="attemptsCount">0</span>
                 </div>
                 <div class="bf-stat-item">
-                    <span class="bf-stat-label">⚡ Скорость</span>
+                    <span class="bf-stat-label">
+                        <i data-lucide="zap" style="width:13px;height:13px;vertical-align:-2px;"></i>
+                        Скорость
+                    </span>
                     <span class="bf-stat-value" id="speedCount">0/с</span>
                 </div>
                 <div class="bf-stat-item">
-                    <span class="bf-stat-label">📊 Прогресс</span>
+                    <span class="bf-stat-label">
+                        <i data-lucide="bar-chart-3" style="width:13px;height:13px;vertical-align:-2px;"></i>
+                        Прогресс
+                    </span>
                     <span class="bf-stat-value" id="progressPercent">0%</span>
                 </div>
             </div>
@@ -76,13 +106,13 @@
             <!-- ===== ЛОГ АТАКИ ===== -->
             <div class="bf-log" id="attackLog">
                 <div style="color: var(--text-gray); text-align: center; padding: 20px;">
-                    ⚡ Нажмите «Начать атаку» для запуска симуляции
+                    <i data-lucide="zap" style="width:24px;height:24px;opacity:0.5;margin-bottom:8px;"></i>
+                    <div>Нажмите «Начать атаку» для запуска симуляции</div>
                 </div>
             </div>
 
             <!-- ===== РЕЗУЛЬТАТ ===== -->
-            <div id="bfResult" style="display: none; margin-top: 20px; padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 18px; font-weight: 600;">
-            </div>
+            <div id="bfResult" style="display: none; margin-top: 20px; padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 18px; font-weight: 600;"></div>
 
         </div>
 
@@ -97,7 +127,12 @@
         let animationId = null;
         let startTime = 0;
         let attempts = 0;
-        const speed = 1000; // попыток в секунду
+        const speed = 1000;
+
+        // ===== ИКОНКИ LUCIDE =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
 
         // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
         function toggleTheme() {
@@ -105,13 +140,14 @@
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -119,10 +155,11 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
         // ===== РАСЧЁТ СЛОЖНОСТИ =====
@@ -155,13 +192,13 @@
         }
 
         function getStrength(seconds) {
-            if (seconds < 1) return { label: 'Мгновенно', color: '#e74c3c', level: 1 };
-            if (seconds < 60) return { label: 'Секунды', color: '#e67e22', level: 2 };
-            if (seconds < 3600) return { label: 'Минуты', color: '#f39c12', level: 3 };
-            if (seconds < 86400) return { label: 'Часы', color: '#f1c40f', level: 4 };
-            if (seconds < 31536000) return { label: 'Дни', color: '#2ecc71', level: 5 };
-            if (seconds < 315360000) return { label: 'Годы', color: '#27ae60', level: 6 };
-            return { label: 'Вечность 💪', color: '#1abc9c', level: 7 };
+            if (seconds < 1) return { label: 'Мгновенно', icon: 'zap', color: '#e74c3c', level: 1 };
+            if (seconds < 60) return { label: 'Секунды', icon: 'timer', color: '#e67e22', level: 2 };
+            if (seconds < 3600) return { label: 'Минуты', icon: 'clock', color: '#f39c12', level: 3 };
+            if (seconds < 86400) return { label: 'Часы', icon: 'clock', color: '#f1c40f', level: 4 };
+            if (seconds < 31536000) return { label: 'Дни', icon: 'calendar', color: '#2ecc71', level: 5 };
+            if (seconds < 315360000) return { label: 'Годы', icon: 'calendar-days', color: '#27ae60', level: 6 };
+            return { label: 'Вечность', icon: 'shield-check', color: '#1abc9c', level: 7 };
         }
 
         function formatTime(seconds) {
@@ -180,24 +217,22 @@
 
             const password = document.getElementById('passwordInput').value.trim();
             if (!password) {
-                alert('⚠️ Введите пароль для проверки');
+                alert('Введите пароль для проверки');
                 return;
             }
 
             const complexity = getPasswordComplexity(password);
             const strengthEl = document.getElementById('passwordStrength');
 
-            // Показываем сложность
             strengthEl.innerHTML = `
-                    <span>🔢 Длина: <strong>${complexity.length}</strong> · </span>
-                    <span>🎯 Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
-                    <span>⏱️ Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
+                    <span><i data-lucide="hash" style="width:13px;height:13px;vertical-align:-2px;"></i> Длина: <strong>${complexity.length}</strong> · </span>
+                    <span><i data-lucide="target" style="width:13px;height:13px;vertical-align:-2px;"></i> Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
+                    <span><i data-lucide="clock" style="width:13px;height:13px;vertical-align:-2px;"></i> Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
                 `;
 
-            // Сброс
             resetDemo();
+            refreshIcons();
 
-            // Настройка
             isRunning = true;
             startTime = Date.now();
             attempts = 0;
@@ -206,7 +241,6 @@
             document.getElementById('attackLog').innerHTML = '';
             document.getElementById('bfResult').style.display = 'none';
 
-            // Анимируем
             animateAttack(totalAttempts, complexity);
         }
 
@@ -218,9 +252,6 @@
             const attemptsEl = document.getElementById('attemptsCount');
             const speedEl = document.getElementById('speedCount');
             const progressEl = document.getElementById('progressPercent');
-
-            let lastUpdate = Date.now();
-            let speedCount = 0;
 
             function update() {
                 if (!isRunning) return;
@@ -234,14 +265,12 @@
 
                 const progress = (attempts / total) * 100;
 
-                // Обновляем статистику
                 timeEl.textContent = elapsed.toFixed(1) + 'с';
                 attemptsEl.textContent = Math.round(attempts).toLocaleString();
                 speedEl.textContent = attemptsPerSecond.toLocaleString() + '/с';
                 progressEl.textContent = Math.min(progress, 100).toFixed(1) + '%';
                 progressBar.style.width = Math.min(progress, 100) + '%';
 
-                // Добавляем записи в лог
                 if (log.children.length < 50 && attempts % 10 < 1) {
                     const entry = document.createElement('div');
                     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -250,12 +279,11 @@
                         guess += chars[Math.floor(Math.random() * chars.length)];
                     }
                     entry.className = 'bf-log-entry';
-                    entry.textContent = `🔍 ${guess}... (${Math.round(attempts).toLocaleString()} попыток)`;
+                    entry.textContent = `${guess}... (${Math.round(attempts).toLocaleString()} попыток)`;
                     log.appendChild(entry);
                     log.scrollTop = log.scrollHeight;
                 }
 
-                // Проверяем завершение
                 if (attempts >= total || progress >= 100) {
                     finishAttack(complexity, elapsed);
                     return;
@@ -284,35 +312,44 @@
                 result.style.background = 'rgba(39, 174, 96, 0.2)';
                 result.style.color = '#27ae60';
                 result.innerHTML = `
-                        🛡️ <strong>Пароль надёжный!</strong><br>
+                        <div style="display:flex; justify-content:center; margin-bottom:10px;">
+                            <i data-lucide="shield-check" style="width:32px;height:32px;"></i>
+                        </div>
+                        <strong>Пароль надёжный!</strong><br>
                         <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Это слишком долго для реальной атаки.</span>
                     `;
             } else if (strength.level >= 3) {
                 result.style.background = 'rgba(243, 156, 18, 0.2)';
                 result.style.color = '#f39c12';
                 result.innerHTML = `
-                        ⚠️ <strong>Пароль средний</strong><br>
+                        <div style="display:flex; justify-content:center; margin-bottom:10px;">
+                            <i data-lucide="alert-triangle" style="width:32px;height:32px;"></i>
+                        </div>
+                        <strong>Пароль средний</strong><br>
                         <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Рекомендуется сделать пароль длиннее и сложнее.</span>
                     `;
             } else {
                 result.style.background = 'rgba(231, 76, 60, 0.2)';
                 result.style.color = '#e74c3c';
                 result.innerHTML = `
-                        ❌ <strong>Пароль слабый!</strong><br>
+                        <div style="display:flex; justify-content:center; margin-bottom:10px;">
+                            <i data-lucide="x-circle" style="width:32px;height:32px;"></i>
+                        </div>
+                        <strong>Пароль слабый!</strong><br>
                         <span style="font-size: 14px; font-weight: 400;">Перебор займёт ${complexity.displayTime}. Пароль будет подобран мгновенно!</span>
                     `;
             }
 
-            // Добавляем финальную запись в лог
             const log = document.getElementById('attackLog');
             const entry = document.createElement('div');
             entry.className = 'bf-log-entry final';
-            entry.textContent = `🎯 ПАРОЛЬ ПОДОБРАН! (${Math.round(attempts).toLocaleString()} попыток, ${elapsed.toFixed(1)}с)`;
+            entry.innerHTML = `<i data-lucide="target" style="width:14px;height:14px;vertical-align:-2px;"></i> ПАРОЛЬ ПОДОБРАН! (${Math.round(attempts).toLocaleString()} попыток, ${elapsed.toFixed(1)}с)`;
             log.appendChild(entry);
             log.scrollTop = log.scrollHeight;
 
             document.getElementById('bfProgressBar').style.width = '100%';
             document.getElementById('progressPercent').textContent = '100%';
+            refreshIcons();
         }
 
         // ===== СБРОС =====
@@ -332,23 +369,25 @@
 
             document.getElementById('attackLog').innerHTML = `
                     <div style="color: var(--text-gray); text-align: center; padding: 20px;">
-                        ⚡ Нажмите «Начать атаку» для запуска симуляции
+                        <i data-lucide="zap" style="width:24px;height:24px;opacity:0.5;margin-bottom:8px;"></i>
+                        <div>Нажмите «Начать атаку» для запуска симуляции</div>
                     </div>
                 `;
+            refreshIcons();
         }
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
         window.onload = function () {
             loadTheme();
-            // Показываем сложность для пароля по умолчанию
             const defaultPassword = document.getElementById('passwordInput').value;
             const complexity = getPasswordComplexity(defaultPassword);
             document.getElementById('passwordStrength').innerHTML = `
-                    <span>🔢 Длина: <strong>${complexity.length}</strong> · </span>
-                    <span>🎯 Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
-                    <span>⏱️ Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
+                    <span><i data-lucide="hash" style="width:13px;height:13px;vertical-align:-2px;"></i> Длина: <strong>${complexity.length}</strong> · </span>
+                    <span><i data-lucide="target" style="width:13px;height:13px;vertical-align:-2px;"></i> Набор символов: <strong>${complexity.charsetSize}</strong> · </span>
+                    <span><i data-lucide="clock" style="width:13px;height:13px;vertical-align:-2px;"></i> Время перебора: <strong style="color:${complexity.strength.color}">${complexity.displayTime}</strong></span>
                 `;
-            console.log('🎯 Brute Force Demo загружена');
+            refreshIcons();
+            console.log('Brute Force Demo загружена');
         };
     </script>
 

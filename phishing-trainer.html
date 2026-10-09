@@ -4,35 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тренажёр по фишингу</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <div class="header">
         <div class="logo">
             <img src="10837270.png" alt="Логотип">
-            <span id="headerName">Беккер Артём</span>
+            <span id="headerName" class="header-name" title="Нажми, чтобы изменить имя">Студент</span>
         </div>
         <div class="nav">
-            <a href="index.html">🏠 Главная</a>
-            <a href="sitemap.html">🗺️ Все разделы</a>
+            <a href="index.html"><i data-lucide="home"></i> Главная</a>
+            <a href="sitemap.html"><i data-lucide="map"></i> Все разделы</a>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" title="Переключить тему">
-                <span id="themeIcon">🌙</span>
+                <i data-lucide="moon" id="themeIcon"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== КОНТЕЙНЕР ===== -->
     <div class="container">
         <div class="page-card" style="text-align: left; align-items: stretch;">
 
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
                 <div>
-                    <h1 style="font-size: 28px; color: var(--text-white);">🎣 Тренажёр по фишингу</h1>
+                    <h1 style="font-size: 28px; color: var(--text-white); display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="fish"></i> Тренажёр по фишингу
+                    </h1>
                     <p class="subtitle" style="font-size: 15px;">Научись распознавать мошеннические письма</p>
                 </div>
-                <a href="sitemap.html" class="back-link" style="font-size: 14px;">← Назад</a>
+                <a href="sitemap.html" class="back-link" style="font-size: 14px;">
+                    <i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Назад
+                </a>
             </div>
 
             <div class="divider" style="margin: 0 0 20px 0; width: 60px;"></div>
@@ -40,34 +49,31 @@
             <!-- ===== СТАТИСТИКА ===== -->
             <div class="phishing-stats">
                 <div class="phishing-stat">
-                    <span class="phishing-stat-label">📊 Вопросов</span>
+                    <span class="phishing-stat-label"><i data-lucide="list" style="width:13px;height:13px;vertical-align:-2px;"></i> Вопросов</span>
                     <span class="phishing-stat-value" id="totalQuestions">0</span>
                 </div>
                 <div class="phishing-stat">
-                    <span class="phishing-stat-label">✅ Правильно</span>
-                    <span class="phishing-stat-value" id="correctAnswers">0</span>
+                    <span class="phishing-stat-label"><i data-lucide="check-circle-2" style="width:13px;height:13px;vertical-align:-2px;"></i> Правильно</span>
+                    <span class="phishing-stat-value" id="correctAnswers" style="color:#27ae60;">0</span>
                 </div>
                 <div class="phishing-stat">
-                    <span class="phishing-stat-label">❌ Неправильно</span>
-                    <span class="phishing-stat-value" id="wrongAnswers">0</span>
+                    <span class="phishing-stat-label"><i data-lucide="x-circle" style="width:13px;height:13px;vertical-align:-2px;"></i> Неправильно</span>
+                    <span class="phishing-stat-value" id="wrongAnswers" style="color:#e74c3c;">0</span>
                 </div>
                 <div class="phishing-stat">
-                    <span class="phishing-stat-label">🏆 Результат</span>
+                    <span class="phishing-stat-label"><i data-lucide="trophy" style="width:13px;height:13px;vertical-align:-2px;"></i> Результат</span>
                     <span class="phishing-stat-value" id="resultPercent">0%</span>
                 </div>
             </div>
 
-            <!-- ===== ВОПРОС ===== -->
-            <div id="questionArea" style="margin-top: 20px;">
-                <!-- Заполняется через JavaScript -->
-            </div>
+            <div id="questionArea" style="margin-top: 20px;"></div>
 
-            <!-- ===== РЕЗУЛЬТАТ ===== -->
             <div id="resultArea" style="display: none; margin-top: 20px;">
-                <div id="resultMessage" style="padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 18px; font-weight: 600;">
-                </div>
+                <div id="resultMessage" style="padding: 20px; border-radius: var(--radius-medium); text-align: center; font-size: 18px; font-weight: 600;"></div>
                 <div style="text-align: center; margin-top: 16px;">
-                    <button class="generate-btn" onclick="resetQuiz()" style="width: auto; padding: 12px 30px;">🔄 Начать заново</button>
+                    <button class="generate-btn" onclick="resetQuiz()" style="width: auto; padding: 12px 30px; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                        <i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Начать заново
+                    </button>
                 </div>
             </div>
 
@@ -78,26 +84,29 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
     <script>
         let currentQuestionIndex = 0;
         let correctCount = 0;
         let wrongCount = 0;
         let answered = false;
 
-        // ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ =====
+        function refreshIcons() {
+            if (window.lucide) lucide.createIcons();
+        }
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
             if (body.getAttribute('data-theme') === 'light') {
                 body.removeAttribute('data-theme');
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
                 localStorage.setItem('theme', 'light');
             }
+            refreshIcons();
         }
 
         function loadTheme() {
@@ -105,85 +114,78 @@
             const icon = document.getElementById('themeIcon');
             if (savedTheme === 'light') {
                 document.body.setAttribute('data-theme', 'light');
-                icon.textContent = '☀️';
+                icon.setAttribute('data-lucide', 'sun');
             } else {
-                icon.textContent = '🌙';
+                icon.setAttribute('data-lucide', 'moon');
             }
+            refreshIcons();
         }
 
+        // ============================================
+        // ВОПРОСЫ
+        // ============================================
         const questions = [
-            // ===== 1. ВКонтакте =====
             {
-                id: 1,
-                title: '📧 Письмо от "Службы безопасности ВКонтакте"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Службы безопасности ВКонтакте"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">security@vk-security.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🔒 Подозрительный вход в аккаунт</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Подозрительный вход в аккаунт</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Зафиксирован вход в ваш аккаунт с необычного устройства (iPhone 15, г. Москва).<br>
                         Если это были не вы, срочно перейдите по ссылке для подтверждения:<br>
-                        <span style="color: var(--red-primary);">https://vk-security.ru/confirm</span><br><br>
+                        <span style="color: #e74c3c;">https://vk-security.ru/confirm</span><br><br>
                         В противном случае ваш аккаунт будет заблокирован через 24 часа.<br><br>
                         С уважением,<br>
                         Команда безопасности ВКонтакте
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Проверьте домен отправителя.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Проверьте домен отправителя.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от ВКонтакте', isCorrect: false },
-                    { text: '❌ Это фишинг — подделка под ВКонтакте', isCorrect: true },
-                    { text: '🔍 Нужно проверить через официальное приложение', isCorrect: false }
+                    { text: 'Это безопасное письмо от ВКонтакте', isCorrect: false },
+                    { text: 'Это фишинг — подделка под ВКонтакте', isCorrect: true },
+                    { text: 'Нужно проверить через официальное приложение', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "vk-security.ru" не имеет отношения к официальному ВКонтакте (vk.com). Плюс угроза блокировки и срочность — классические признаки фишинга.'
             },
-
-            // ===== 2. Роскомнадзор =====
             {
-                id: 2,
-                title: '📧 Письмо от "Роскомнадзора"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Роскомнадзора"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@rkn-check.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">⚠️ Ваш сайт заблокируют</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Ваш сайт заблокируют</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый владелец сайта!<br><br>
                         Ваш сайт внесён в реестр нарушителей. Для уточнения информации и снятия блокировки перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://rkn-check.ru/verify</span><br><br>
+                        <span style="color: #e74c3c;">https://rkn-check.ru/verify</span><br><br>
                         Срок: 3 дня.<br><br>
                         С уважением,<br>
                         Роскомнадзор
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Роскомнадзора — rkn.gov.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Роскомнадзора — rkn.gov.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Роскомнадзора', isCorrect: false },
-                    { text: '❌ Это фишинг — подделка под госорган', isCorrect: true },
-                    { text: '🔍 Нужно проверить через сайт госуслуг', isCorrect: false }
+                    { text: 'Это официальное письмо от Роскомнадзора', isCorrect: false },
+                    { text: 'Это фишинг — подделка под госорган', isCorrect: true },
+                    { text: 'Нужно проверить через сайт госуслуг', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Официальный домен Роскомнадзора — rkn.gov.ru. Письмо с "rkn-check.ru" — подделка. Государственные органы не присылают ссылки в письмах.'
             },
-
-            // ===== 3. Яндекс.Почта (безопасное) =====
             {
-                id: 3,
-                title: '📧 Письмо от "Яндекс.Почты"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Яндекс.Почты" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">support@yandex-team.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📬 Обновление почтового ящика</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Обновление почтового ящика</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый пользователь!<br><br>
@@ -193,182 +195,158 @@
                         Команда Яндекс.Почты
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Письмо не требует перехода по ссылке.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Письмо не требует перехода по ссылке.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Яндекса', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это безопасное письмо от Яндекса', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
                 explanation: 'Это безопасное письмо. Домен отправителя (yandex-team.ru) совпадает с официальным, нет ссылок, только рекомендация зайти через официальное приложение.'
             },
-
-            // ===== 4. Telegram =====
             {
-                id: 4,
-                title: '📧 Письмо от "Telegram"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Telegram"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">noreply@telegram-secure.com</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🛡️ Верификация аккаунта</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Верификация аккаунта</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Ваш аккаунт Telegram был отмечен как подозрительный.<br>
                         Для подтверждения личности перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://telegram-secure.com/verify</span><br><br>
+                        <span style="color: #e74c3c;">https://telegram-secure.com/verify</span><br><br>
                         Если вы не подтвердите аккаунт, он будет удалён через 48 часов.<br><br>
                         С уважением,<br>
                         Команда Telegram
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный сайт Telegram — telegram.org
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный сайт Telegram — telegram.org</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Telegram', isCorrect: false },
-                    { text: '❌ Это фишинг — подделка', isCorrect: true },
-                    { text: '🔍 Нужно проверить через настройки приложения', isCorrect: false }
+                    { text: 'Это официальное письмо от Telegram', isCorrect: false },
+                    { text: 'Это фишинг — подделка', isCorrect: true },
+                    { text: 'Нужно проверить через настройки приложения', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "telegram-secure.com" — подделка. Официальный сайт Telegram — telegram.org. Плюс угроза удаления аккаунта и ссылка.'
+                explanation: 'Это фишинг. Домен "telegram-secure.com" — подделка. Официальный сайт Telegram — telegram.org.'
             },
-
-            // ===== 5. Сбербанк =====
             {
-                id: 5,
-                title: '📧 Письмо от "Сбера"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Сбера"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@sberbank-online.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">💳 Подозрительная операция</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Подозрительная операция</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый клиент!<br><br>
                         С вашей карты была списана сумма 15 000 ₽. Если вы не совершали эту операцию, подтвердите отказ по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://sberbank-online.ru/cancel</span><br><br>
+                        <span style="color: #e74c3c;">https://sberbank-online.ru/cancel</span><br><br>
                         В случае не подтверждения, деньги будут списаны.<br><br>
                         С уважением,<br>
                         Сбербанк
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный сайт Сбербанка — sberbank.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный сайт Сбербанка — sberbank.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Сбербанка', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно позвонить в банк', isCorrect: false }
+                    { text: 'Это официальное письмо от Сбербанка', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно позвонить в банк', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "sberbank-online.ru" не является официальным (официальный — sberbank.ru). Плюс ссылка и угроза списания.'
+                explanation: 'Это фишинг. Домен "sberbank-online.ru" не является официальным (официальный — sberbank.ru).'
             },
-
-            // ===== 6. BEC-атака =====
             {
-                id: 6,
-                title: '📧 Письмо от "Коллеги" с просьбой',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Коллеги" с просьбой',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">ivanov@company-accounting.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📄 Срочно! Договор</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Срочно! Договор</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Привет!<br><br>
                         Нужно срочно подписать договор. Файл в облаке:<br>
-                        <span style="color: var(--red-primary);">https://cloud-docs.ru/file/345345</span><br><br>
+                        <span style="color: #e74c3c;">https://cloud-docs.ru/file/345345</span><br><br>
                         Пароль к файлу: 1234<br><br>
                         Жду подтверждения.<br>
                         Иван
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Проверьте домен отправителя.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Проверьте домен отправителя.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это настоящее письмо от коллеги', isCorrect: false },
-                    { text: '❌ Это фишинг (BEC-атака)', isCorrect: true },
-                    { text: '🔍 Нужно позвонить Ивану', isCorrect: false }
+                    { text: 'Это настоящее письмо от коллеги', isCorrect: false },
+                    { text: 'Это фишинг (BEC-атака)', isCorrect: true },
+                    { text: 'Нужно позвонить Ивану', isCorrect: false }
                 ],
-                explanation: 'Это фишинг (BEC — Business Email Compromise). Неизвестный домен "company-accounting.ru", ссылка на подозрительное облако, пароль в письме — признаки атаки на бизнес-почту.'
+                explanation: 'Это фишинг (BEC — Business Email Compromise). Неизвестный домен, ссылка на подозрительное облако, пароль в письме.'
             },
-
-            // ===== 7. Озон =====
             {
-                id: 7,
-                title: '📧 Письмо от "Озона"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Озона"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">shop@ozon-promo.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🎁 Вам подарок!</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Вам подарок!</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый покупатель!<br><br>
                         Вы получили промокод на 5000 ₽. Активируйте его по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://ozon-promo.ru/activate</span><br><br>
+                        <span style="color: #e74c3c;">https://ozon-promo.ru/activate</span><br><br>
                         Срок действия: 1 день.<br><br>
                         С уважением,<br>
                         Команда Озон
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Озона — ozon.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Озона — ozon.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Озона', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении Озона', isCorrect: false }
+                    { text: 'Это официальное письмо от Озона', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении Озона', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "ozon-promo.ru" — подделка. Официальный домен Озона — ozon.ru. Плюс срочность — классический признак фишинга.'
+                explanation: 'Это фишинг. Домен "ozon-promo.ru" — подделка. Официальный домен Озона — ozon.ru.'
             },
-
-            // ===== 8. Авито =====
             {
-                id: 8,
-                title: '📧 Письмо от "Авито"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Авито"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">support@avito-help.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📦 Ваш товар заблокирован</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Ваш товар заблокирован</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Ваше объявление заблокировано за нарушение правил. Для разблокировки перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://avito-help.ru/unblock</span><br><br>
+                        <span style="color: #e74c3c;">https://avito-help.ru/unblock</span><br><br>
                         С уважением,<br>
                         Команда Авито
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Авито — avito.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Авито — avito.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Авито', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить объявление в приложении', isCorrect: false }
+                    { text: 'Это официальное письмо от Авито', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить объявление в приложении', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "avito-help.ru" — подделка. Официальный домен Авито — avito.ru.'
             },
-
-            // ===== 9. Google (безопасное) =====
             {
-                id: 9,
-                title: '📧 Письмо от "Google"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Google" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">google-alerts@google.com</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🔐 Новый вход в аккаунт</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Новый вход в аккаунт</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Был обнаружен вход в ваш аккаунт Google с нового устройства.<br>
@@ -378,239 +356,207 @@
                         Команда Google
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Домен @google.com — официальный.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Домен @google.com — официальный.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Google', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить через приложение', isCorrect: false }
+                    { text: 'Это безопасное письмо от Google', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить через приложение', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @google.com — официальный. Нет ссылок, только рекомендация проверить настройки самостоятельно.'
+                explanation: 'Это безопасное письмо. Домен @google.com — официальный. Нет ссылок.'
             },
-
-            // ===== 10. Налоговая =====
             {
-                id: 10,
-                title: '📧 Письмо от "Налоговой"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Налоговой"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@nalog-check.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📋 Задолженность по налогам</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Задолженность по налогам</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый налогоплательщик!<br><br>
                         У вас имеется задолженность по налогам в размере 12 500 ₽.<br>
                         Для погашения задолженности перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://nalog-check.ru/pay</span><br><br>
+                        <span style="color: #e74c3c;">https://nalog-check.ru/pay</span><br><br>
                         С уважением,<br>
                         ФНС России
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный сайт ФНС — nalog.gov.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный сайт ФНС — nalog.gov.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от ФНС', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить через личный кабинет', isCorrect: false }
+                    { text: 'Это официальное письмо от ФНС', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить через личный кабинет', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "nalog-check.ru" — подделка. Официальный сайт ФНС — nalog.gov.ru. Налоговая не присылает ссылки для оплаты в письмах.'
+                explanation: 'Это фишинг. Домен "nalog-check.ru" — подделка. Официальный сайт ФНС — nalog.gov.ru.'
             },
-
-            // ===== 11. Wildberries =====
             {
-                id: 11,
-                title: '📧 Письмо от "Wildberries"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Wildberries"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@wildberries-delivery.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📦 Посылка ожидает подтверждения</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Посылка ожидает подтверждения</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Ваша посылка готова к отправке. Для завершения оформления необходимо подтвердить данные по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://wildberries-delivery.ru/confirm</span><br><br>
+                        <span style="color: #e74c3c;">https://wildberries-delivery.ru/confirm</span><br><br>
                         С уважением,<br>
                         Команда Wildberries
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Wildberries — wildberries.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Wildberries — wildberries.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Wildberries', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это официальное письмо от Wildberries', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "wildberries-delivery.ru" — подделка. Официальный домен — wildberries.ru.'
             },
-
-            // ===== 12. Мегафон (безопасное) =====
             {
-                id: 12,
-                title: '📧 Письмо от "Мегафона"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Мегафона" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@megafon.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📱 Уведомление о списании</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Уведомление о списании</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый абонент!<br><br>
                         С вашего счёта списана абонентская плата в размере 450 ₽.<br>
-                        Для просмотра детализации войдите в <span style="color: var(--red-primary);">личный кабинет</span> на официальном сайте или в приложении.<br><br>
+                        Для просмотра детализации войдите в личный кабинет на официальном сайте или в приложении.<br><br>
                         С уважением,<br>
                         Команда Мегафон
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Нет ссылок, только рекомендация войти через официальное приложение.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Нет ссылок, только официальное приложение.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Мегафона', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это безопасное письмо от Мегафона', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @megafon.ru — официальный. Нет ссылок, только рекомендация войти через официальное приложение или сайт.'
+                explanation: 'Это безопасное письмо. Домен @megafon.ru — официальный. Нет ссылок.'
             },
-
-            // ===== 13. AliExpress =====
             {
-                id: 13,
-                title: '📧 Письмо от "AliExpress"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "AliExpress"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">support@aliexpress-delivery.com</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📬 Посылка задержана</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Посылка задержана</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый покупатель!<br><br>
                         Ваша посылка задержана на таможне. Для ускорения процедуры необходимо оплатить пошлину:<br>
-                        <span style="color: var(--red-primary);">https://aliexpress-delivery.com/pay</span><br><br>
+                        <span style="color: #e74c3c;">https://aliexpress-delivery.com/pay</span><br><br>
                         С уважением,<br>
                         Команда AliExpress
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен AliExpress — aliexpress.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен AliExpress — aliexpress.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от AliExpress', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это официальное письмо от AliExpress', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "aliexpress-delivery.com" — подделка. Официальный домен в России — aliexpress.ru.'
             },
-
-            // ===== 14. МТС =====
             {
-                id: 14,
-                title: '📧 Письмо от "МТС"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "МТС"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">bonus@mts-promo.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🎁 Бонусы МТС</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Бонусы МТС</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый абонент!<br><br>
                         Вам начислены бонусы в размере 500 ₽. Активируйте их по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://mts-promo.ru/activate</span><br><br>
+                        <span style="color: #e74c3c;">https://mts-promo.ru/activate</span><br><br>
                         С уважением,<br>
                         Команда МТС
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен МТС — mts.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен МТС — mts.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от МТС', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении МТС', isCorrect: false }
+                    { text: 'Это официальное письмо от МТС', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении МТС', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "mts-promo.ru" — подделка. Официальный домен — mts.ru. МТС не рассылает ссылки для активации бонусов.'
+                explanation: 'Это фишинг. Домен "mts-promo.ru" — подделка. Официальный домен — mts.ru.'
             },
-
-            // ===== 15. Яндекс.Документы (безопасное) =====
             {
-                id: 15,
-                title: '📧 Письмо от "Яндекс.Документов"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Яндекс.Документов" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">docs@yandex-team.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📄 Доступ к документу</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Доступ к документу</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Вам открыли доступ к документу в Яндекс.Документах.<br>
-                        Перейдите в <span style="color: var(--red-primary);">Яндекс.Документы</span> через официальное приложение или сайт, чтобы просмотреть файл.<br><br>
+                        Перейдите в Яндекс.Документы через официальное приложение или сайт, чтобы просмотреть файл.<br><br>
                         С уважением,<br>
                         Команда Яндекс
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Нет ссылок, только рекомендация войти через официальное приложение.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Нет ссылок, только официальное приложение.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Яндекса', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить в документах', isCorrect: false }
+                    { text: 'Это безопасное письмо от Яндекса', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить в документах', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @yandex-team.ru — официальный. Нет ссылок, только рекомендация войти через официальный сервис.'
+                explanation: 'Это безопасное письмо. Домен @yandex-team.ru — официальный. Нет ссылок.'
             },
-
-            // ===== 16. Россельхозбанк =====
             {
-                id: 16,
-                title: '📧 Письмо от "Россельхозбанка"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Россельхозбанка"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">security@rshb-verify.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🔐 Подтверждение личности</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Подтверждение личности</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый клиент!<br><br>
                         Для подтверждения личности перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://rshb-verify.ru/confirm</span><br><br>
+                        <span style="color: #e74c3c;">https://rshb-verify.ru/confirm</span><br><br>
                         В противном случае доступ к счетам будет ограничен.<br><br>
                         С уважением,<br>
                         Россельхозбанк
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Россельхозбанка — rshb.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Россельхозбанка — rshb.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Россельхозбанка', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно позвонить в банк', isCorrect: false }
+                    { text: 'Это официальное письмо от Россельхозбанка', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно позвонить в банк', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "rshb-verify.ru" — подделка. Официальный домен — rshb.ru.'
             },
-
-            // ===== 17. Безопасное письмо от коллеги =====
             {
-                id: 17,
-                title: '📧 Письмо от "Коллеги" (безопасное)',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Коллеги" (безопасное)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">petrov@company.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📊 Отчёт</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Отчёт</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Привет!<br><br>
@@ -620,259 +566,229 @@
                         Пётр
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Письмо от коллеги, ссылок нет.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Письмо от коллеги, ссылок нет.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от коллеги', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно уточнить у Петра', isCorrect: false }
+                    { text: 'Это безопасное письмо от коллеги', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно уточнить у Петра', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Отправлено с корпоративного домена, нет ссылок, нет просьб о личных данных.'
+                explanation: 'Это безопасное письмо. Отправлено с корпоративного домена, нет ссылок.'
             },
-
-            // ===== 18. Кинопоиск =====
             {
-                id: 18,
-                title: '📧 Письмо от "Кинопоиска"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Кинопоиска"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@kinopoisk-premium.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🎬 Бесплатный месяц подписки</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Бесплатный месяц подписки</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Вы получили бесплатный месяц подписки Кинопоиск HD. Активируйте по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://kinopoisk-premium.ru/activate</span><br><br>
+                        <span style="color: #e74c3c;">https://kinopoisk-premium.ru/activate</span><br><br>
                         С уважением,<br>
                         Команда Кинопоиска
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Кинопоиска — kinopoisk.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Кинопоиска — kinopoisk.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Кинопоиска', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это официальное письмо от Кинопоиска', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "kinopoisk-premium.ru" — подделка. Официальный домен — kinopoisk.ru.'
             },
-
-            // ===== 19. Почта России (безопасное) =====
             {
-                id: 19,
-                title: '📧 Письмо от "Почты России" (уведомление)',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Почты России" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">noreply@pochta.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📬 Посылка принята</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Посылка принята</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
-                        Ваша посылка принята в отделении. Отслеживать её можно по трек-номеру на сайте <span style="color: var(--red-primary);">pochta.ru</span>.<br><br>
+                        Ваша посылка принята в отделении. Отслеживать её можно по трек-номеру на сайте pochta.ru.<br><br>
                         С уважением,<br>
                         Почта России
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Нет ссылок, только трек-номер и официальный сайт.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Нет ссылок, только официальный сайт.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Почты России', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить на сайте', isCorrect: false }
+                    { text: 'Это безопасное письмо от Почты России', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить на сайте', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @pochta.ru — официальный. Нет ссылок, только рекомендация проверить на официальном сайте.'
+                explanation: 'Это безопасное письмо. Домен @pochta.ru — официальный. Нет ссылок.'
             },
-
-            // ===== 20. Тинькофф =====
             {
-                id: 20,
-                title: '📧 Письмо от "Тинькофф"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Тинькофф"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@tinkoff-confirm.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">💳 Подтверждение операции</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Подтверждение операции</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый клиент!<br><br>
                         Для подтверждения операции на сумму 25 000 ₽ перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://tinkoff-confirm.ru/verify</span><br><br>
+                        <span style="color: #e74c3c;">https://tinkoff-confirm.ru/verify</span><br><br>
                         С уважением,<br>
                         Тинькофф
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Тинькофф — tinkoff.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Тинькофф — tinkoff.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Тинькофф', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно позвонить в банк', isCorrect: false }
+                    { text: 'Это официальное письмо от Тинькофф', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно позвонить в банк', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "tinkoff-confirm.ru" — подделка. Официальный домен — tinkoff.ru.'
             },
-
-            // ===== 21. Циан =====
             {
-                id: 21,
-                title: '📧 Письмо от "Циан"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Циан"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@cian-verify.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🔑 Подтверждение объявления</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Подтверждение объявления</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Здравствуйте!<br><br>
                         Ваше объявление требует подтверждения. Перейдите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://cian-verify.ru/confirm</span><br><br>
+                        <span style="color: #e74c3c;">https://cian-verify.ru/confirm</span><br><br>
                         С уважением,<br>
                         Команда Циан
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный домен Циан — cian.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный домен Циан — cian.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Циан', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это официальное письмо от Циан', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
                 explanation: 'Это фишинг. Домен "cian-verify.ru" — подделка. Официальный домен — cian.ru.'
             },
-
-            // ===== 22. Касперский (безопасное) =====
             {
-                id: 22,
-                title: '📧 Письмо от "Касперского"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Касперского" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">noreply@kaspersky.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🛡️ Ваша подписка активна</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Ваша подписка активна</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый клиент!<br><br>
-                        Ваша подписка на Kaspersky активно. Для управления подпиской войдите в <span style="color: var(--red-primary);">личный кабинет</span> на сайте kaspersky.ru.<br><br>
+                        Ваша подписка на Kaspersky активно. Для управления подпиской войдите в личный кабинет на сайте kaspersky.ru.<br><br>
                         С уважением,<br>
                         Команда Касперского
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Нет ссылок, только официальный сайт.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Нет ссылок, только официальный сайт.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Касперского', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить в приложении', isCorrect: false }
+                    { text: 'Это безопасное письмо от Касперского', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить в приложении', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @kaspersky.ru — официальный. Нет ссылок, только рекомендация войти через официальный сайт.'
+                explanation: 'Это безопасное письмо. Домен @kaspersky.ru — официальный. Нет ссылок.'
             },
-
-            // ===== 23. Мосгорсуд =====
             {
-                id: 23,
-                title: '📧 Письмо от "Мосгорсуда"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Мосгорсуда"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@mosgorsud-check.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">⚖️ Повестка в суд</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Повестка в суд</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый гражданин!<br><br>
                         Вам назначена судебная повестка. Ознакомьтесь с ней по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://mosgorsud-check.ru/view</span><br><br>
+                        <span style="color: #e74c3c;">https://mosgorsud-check.ru/view</span><br><br>
                         С уважением,<br>
                         Мосгорсуд
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Суды не рассылают повестки по электронной почте.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Суды не рассылают повестки по электронной почте.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от Мосгорсуда', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить через госуслуги', isCorrect: false }
+                    { text: 'Это официальное письмо от Мосгорсуда', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить через госуслуги', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Суды не рассылают повестки по электронной почте. Домен "mosgorsud-check.ru" — подделка. Все официальные уведомления приходят через Госуслуги или заказными письмами.'
+                explanation: 'Это фишинг. Суды не рассылают повестки по email. Домен "mosgorsud-check.ru" — подделка.'
             },
-
-            // ===== 24. Госуслуги (безопасное) =====
             {
-                id: 24,
-                title: '📧 Письмо от "Госуслуг" (уведомление)',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "Госуслуг" (уведомление)',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #27ae60;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">noreply@gosuslugi.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">📋 Новое уведомление</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Новое уведомление</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый пользователь!<br><br>
                         В вашем личном кабинете на портале Госуслуг появилось новое уведомление.<br>
-                        Для просмотра войдите в <span style="color: var(--red-primary);">личный кабинет</span> на сайте gosuslugi.ru.<br><br>
+                        Для просмотра войдите в личный кабинет на сайте gosuslugi.ru.<br><br>
                         С уважением,<br>
                         Команда Госуслуг
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ✅ <strong style="color: #27ae60;">Подсказка:</strong> Нет ссылок, только официальный сайт.
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#27ae60;"></i>
+                    <span>Подсказка: Нет ссылок, только официальный сайт.</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это безопасное письмо от Госуслуг', isCorrect: true },
-                    { text: '❌ Это фишинг', isCorrect: false },
-                    { text: '🔍 Нужно проверить на сайте', isCorrect: false }
+                    { text: 'Это безопасное письмо от Госуслуг', isCorrect: true },
+                    { text: 'Это фишинг', isCorrect: false },
+                    { text: 'Нужно проверить на сайте', isCorrect: false }
                 ],
-                explanation: 'Это безопасное письмо. Домен @gosuslugi.ru — официальный. Нет ссылок, только рекомендация войти через официальный сайт.'
+                explanation: 'Это безопасное письмо. Домен @gosuslugi.ru — официальный. Нет ссылок.'
             },
-
-            // ===== 25. ДТП — ГИБДД =====
             {
-                id: 25,
-                title: '📧 Письмо от "ГИБДД"',
-                content: `
-                <div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
-                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px;">
+                title: 'Письмо от "ГИБДД"',
+                content: `<div style="background: var(--bg-input); border-radius: var(--radius-small); padding: 16px; margin-bottom: 12px; border-left: 4px solid #e74c3c;">
+                    <div style="display: flex; justify-content: space-between; color: var(--text-gray); font-size: 13px; margin-bottom: 8px; flex-wrap:wrap; gap:8px;">
                         <span>От: <strong style="color: var(--text-light);">info@gibdd-check.ru</strong></span>
-                        <span>Тема: <strong style="color: var(--text-light);">🚗 Штраф за нарушение ПДД</strong></span>
+                        <span>Тема: <strong style="color: var(--text-light);">Штраф за нарушение ПДД</strong></span>
                     </div>
                     <p style="color: var(--text-light); line-height: 1.6;">
                         Уважаемый водитель!<br><br>
                         Зафиксировано нарушение ПДД. Штраф: 3000 ₽.<br>
                         Оплатите по ссылке:<br>
-                        <span style="color: var(--red-primary);">https://gibdd-check.ru/pay</span><br><br>
+                        <span style="color: #e74c3c;">https://gibdd-check.ru/pay</span><br><br>
                         С уважением,<br>
                         ГИБДД
                     </p>
                 </div>
-                <div style="font-size: 14px; color: var(--text-gray); margin-top: 4px;">
-                    ⚠️ <strong style="color: #f39c12;">Подсказка:</strong> Официальный сайт ГИБДД — gibdd.ru
-                </div>
-            `,
+                <div style="font-size: 14px; color: var(--text-gray); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#f39c12;"></i>
+                    <span>Подсказка: Официальный сайт ГИБДД — gibdd.ru</span>
+                </div>`,
                 options: [
-                    { text: '✅ Это официальное письмо от ГИБДД', isCorrect: false },
-                    { text: '❌ Это фишинг', isCorrect: true },
-                    { text: '🔍 Нужно проверить на сайте Госуслуг', isCorrect: false }
+                    { text: 'Это официальное письмо от ГИБДД', isCorrect: false },
+                    { text: 'Это фишинг', isCorrect: true },
+                    { text: 'Нужно проверить на сайте Госуслуг', isCorrect: false }
                 ],
-                explanation: 'Это фишинг. Домен "gibdd-check.ru" — подделка. Официальный домен — gibdd.ru. Штрафы проверяются через Госуслуги, а не по ссылкам из писем.'
+                explanation: 'Это фишинг. Домен "gibdd-check.ru" — подделка. Штрафы проверяются через Госуслуги.'
             }
         ];
 
-        // ===== ОТОБРАЖЕНИЕ ВОПРОСА =====
+        // ============================================
+        // РЕНДЕР ВОПРОСА
+        // ============================================
         function renderQuestion() {
             const area = document.getElementById('questionArea');
             const stats = document.getElementById('resultArea');
@@ -885,7 +801,6 @@
             stats.style.display = 'none';
             const q = questions[currentQuestionIndex];
 
-            // Обновляем статистику
             document.getElementById('totalQuestions').textContent = questions.length;
             document.getElementById('correctAnswers').textContent = correctCount;
             document.getElementById('wrongAnswers').textContent = wrongCount;
@@ -894,7 +809,10 @@
 
             area.innerHTML = `
                     <div class="phishing-question">
-                        <div class="phishing-question-title">${q.title}</div>
+                        <div class="phishing-question-title">
+                            <i data-lucide="mail" style="width:18px;height:18px;vertical-align:-3px;"></i>
+                            ${q.title}
+                        </div>
                         <div class="phishing-question-content">
                             ${q.content}
                         </div>
@@ -907,15 +825,21 @@
                         </div>
                         <div id="feedbackArea" class="phishing-feedback" style="display: none;">
                             <div id="feedbackText" style="padding: 12px 16px; border-radius: var(--radius-small); margin-top: 12px;"></div>
-                            <button class="generate-btn" onclick="nextQuestion()" style="width: auto; padding: 10px 30px; margin-top: 12px;">➡️ Следующий вопрос</button>
+                            <button class="generate-btn" onclick="nextQuestion()" style="width: auto; padding: 10px 30px; margin-top: 12px; display:inline-flex; align-items:center; gap:6px; font-family:inherit;">
+                                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                                Следующий вопрос
+                            </button>
                         </div>
                     </div>
                 `;
 
             answered = false;
+            refreshIcons();
         }
 
-        // ===== ВЫБОР ОТВЕТА =====
+        // ============================================
+        // ВЫБОР ОТВЕТА
+        // ============================================
         function selectOption(index) {
             if (answered) return;
             answered = true;
@@ -925,7 +849,6 @@
             const feedback = document.getElementById('feedbackArea');
             const feedbackText = document.getElementById('feedbackText');
 
-            // Блокируем кнопки
             document.querySelectorAll('.phishing-option').forEach((btn, i) => {
                 btn.disabled = true;
                 if (i === index) {
@@ -939,26 +862,34 @@
                 correctCount++;
                 feedbackText.style.background = 'rgba(39, 174, 96, 0.2)';
                 feedbackText.style.color = '#27ae60';
-                feedbackText.innerHTML = `✅ <strong>Правильно!</strong><br><span style="font-size: 14px; font-weight: 400;">${q.explanation}</span>`;
+                feedbackText.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <i data-lucide="check-circle-2" style="width:20px;height:20px;"></i>
+                    <strong>Правильно!</strong>
+                </div><span style="font-size: 14px; font-weight: 400;">${q.explanation}</span>`;
             } else {
                 wrongCount++;
                 const correctAnswer = q.options.find(o => o.isCorrect);
                 feedbackText.style.background = 'rgba(231, 76, 60, 0.2)';
                 feedbackText.style.color = '#e74c3c';
-                feedbackText.innerHTML = `❌ <strong>Неправильно.</strong> Правильный ответ: <strong style="color: #27ae60;">${correctAnswer.text}</strong><br><span style="font-size: 14px; font-weight: 400;">${q.explanation}</span>`;
+                feedbackText.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <i data-lucide="x-circle" style="width:20px;height:20px;"></i>
+                    <strong>Неправильно.</strong> Правильный ответ: <span style="color: #27ae60; margin-left:4px;">${correctAnswer.text}</span>
+                </div><span style="font-size: 14px; font-weight: 400;">${q.explanation}</span>`;
             }
 
             feedback.style.display = 'block';
             feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            refreshIcons();
         }
 
-        // ===== СЛЕДУЮЩИЙ ВОПРОС =====
         function nextQuestion() {
             currentQuestionIndex++;
             renderQuestion();
         }
 
-        // ===== ПОКАЗАТЬ РЕЗУЛЬТАТ =====
+        // ============================================
+        // ПОКАЗАТЬ РЕЗУЛЬТАТ
+        // ============================================
         function showResult() {
             const area = document.getElementById('questionArea');
             const resultArea = document.getElementById('resultArea');
@@ -971,38 +902,40 @@
 
             let message = '';
             let color = '#e74c3c';
-            let icon = '😅';
+            let icon = 'frown';
 
             if (percent >= 80) {
-                message = `Отлично! Вы распознали ${correctCount} из ${total} фишинговых писем! 🛡️`;
+                message = `Отлично! Вы распознали ${correctCount} из ${total} фишинговых писем!`;
                 color = '#27ae60';
-                icon = '🏆';
+                icon = 'trophy';
             } else if (percent >= 60) {
-                message = `Хороший результат! Вы распознали ${correctCount} из ${total} писем. Продолжайте тренироваться! 👏`;
+                message = `Хороший результат! Вы распознали ${correctCount} из ${total} писем. Продолжайте тренироваться!`;
                 color = '#f39c12';
-                icon = '👍';
+                icon = 'thumbs-up';
             } else if (percent >= 40) {
-                message = `Средний результат. ${correctCount} из ${total}. Рекомендуем повторить признаки фишинга. 📚`;
+                message = `Средний результат. ${correctCount} из ${total}. Рекомендуем повторить признаки фишинга.`;
                 color = '#e67e22';
-                icon = '📖';
+                icon = 'book-open';
             } else {
-                message = `Нужно больше практики! ${correctCount} из ${total}. Изучите признаки фишинговых писем. 🔍`;
+                message = `Нужно больше практики! ${correctCount} из ${total}. Изучите признаки фишинговых писем.`;
                 color = '#e74c3c';
-                icon = '🔍';
+                icon = 'search';
             }
 
             resultMsg.innerHTML = `
-                    <div style="font-size: 48px; margin-bottom: 12px;">${icon}</div>
+                    <div style="margin-bottom: 12px;"><i data-lucide="${icon}" style="width:48px;height:48px;color:${color};"></i></div>
                     <div style="color: ${color};">${message}</div>
-                    <div style="font-size: 16px; font-weight: 400; color: var(--text-gray); margin-top: 8px;">
-                        ✅ Правильно: ${correctCount} | ❌ Неправильно: ${wrongCount} | 📊 Результат: ${percent}%
+                    <div style="font-size: 16px; font-weight: 400; color: var(--text-gray); margin-top: 8px; display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+                        <span><i data-lucide="check-circle-2" style="width:14px;height:14px;vertical-align:-2px;color:#27ae60;"></i> Правильно: ${correctCount}</span>
+                        <span><i data-lucide="x-circle" style="width:14px;height:14px;vertical-align:-2px;color:#e74c3c;"></i> Неправильно: ${wrongCount}</span>
+                        <span><i data-lucide="bar-chart-3" style="width:14px;height:14px;vertical-align:-2px;"></i> Результат: ${percent}%</span>
                     </div>
                 `;
 
             resultArea.style.display = 'block';
+            refreshIcons();
         }
 
-        // ===== СБРОС =====
         function resetQuiz() {
             currentQuestionIndex = 0;
             correctCount = 0;
@@ -1011,11 +944,11 @@
             renderQuestion();
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         window.onload = function () {
             loadTheme();
             renderQuestion();
-            console.log('🎣 Тренажёр по фишингу загружен');
+            refreshIcons();
+            console.log('Тренажёр по фишингу загружен');
         };
     </script>
 
